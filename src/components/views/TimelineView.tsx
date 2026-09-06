@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
-import { Plus, History, Calendar, Award, Milestone, Sparkles, Clock } from 'lucide-react';
+import { Plus, History, Calendar, Award, Milestone, Clock } from 'lucide-react';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
 

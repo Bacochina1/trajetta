@@ -168,9 +168,13 @@ export function AiCoachView() {
           })}
 
           {isTyping && (
-            <div className="flex items-center gap-2 text-xs text-[#8E9499] pl-10">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse" />
-              <span>Trajetta IA analisando seu contexto...</span>
+            <div className="flex items-center gap-2.5 text-xs text-[#8E9499] pl-10">
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse [animation-delay:300ms]" />
+              </div>
+              <span className="text-[11px]">Trajetta IA formulando reflexão serena...</span>
             </div>
           )}
         </div>

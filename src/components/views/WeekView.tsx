@@ -8,7 +8,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS, NORTH_STAR_DESCRIPTION } from '@/lib/constants';
 import { LifeArea } from '@/types';
 import { DAY_NAMES, DAY_INITIALS } from '@/lib/utils';
-import { CalendarCheck, CheckCircle2, TrendingUp, Sparkles, Edit3, Check } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, TrendingUp, Edit3, Check } from 'lucide-react';
 
 export function WeekView() {
   const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits } = useTrajetta();

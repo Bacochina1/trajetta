@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
-import { Check, ArrowRight, Sparkles, Compass, CheckCircle2 } from 'lucide-react';
+import { Check, ArrowRight, Compass, CheckCircle2 } from 'lucide-react';
 
 export function OnboardingModal() {
   const { isOnboardingOpen, completeOnboarding, setIsOnboardingOpen, user } = useTrajetta();

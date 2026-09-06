@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { LifeArea } from '@/types';
 import { LIFE_AREAS } from '@/lib/constants';
-import { Plus, Target, Check, Calendar, Flag, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Target, Check, Calendar, Flag, ChevronDown, ChevronUp } from 'lucide-react';
 
 export function GoalsView() {
   const { goals, toggleGoalMilestone, setIsNewGoalModalOpen } = useTrajetta();

@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { Flame, Compass, ArrowUpRight, Plus, Sparkles, Check, ChevronRight } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight } from 'lucide-react';
 import { LIFE_AREAS } from '@/lib/constants';
 
 export function TodayView() {
@@ -273,15 +273,36 @@ export function TodayView() {
 
           {/* Quick Evening Reflection */}
           <div className="trajetta-card p-5 space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E9499] block">
-              Registro Rápido do Dia
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E9499] block">
+                Registro Rápido do Dia
+              </span>
+              <span className="text-[10px] text-[#B8FF00] font-semibold">Evidência Real</span>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 pb-1">
+              {[
+                'Vitória discreta:',
+                'Desafio contornado:',
+                'Insight do dia:',
+              ].map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => setDailyNote((prev) => (prev ? `${prev} ` : '') + chip + ' ')}
+                  className="px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/8 text-[10px] text-[#8E9499] hover:text-[#F2F1ED] transition-colors"
+                >
+                  + {chip.replace(':', '')}
+                </button>
+              ))}
+            </div>
+
             <input
               type="text"
               value={dailyNote}
               onChange={e => setDailyNote(e.target.value)}
               placeholder="Qual vitória discreta você construiu hoje?"
-              className="w-full bg-[#111315] border border-white/10 rounded-lg px-3 py-2 text-xs text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none focus:border-[#B8FF00]"
+              className="w-full bg-[#111315] border border-white/10 rounded-lg px-3 py-2.5 text-xs text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none focus:border-[#B8FF00] transition-colors"
             />
             <div className="flex items-center justify-between">
               {noteSaved ? (
@@ -289,7 +310,7 @@ export function TodayView() {
                   <Check size={12} /> Gravado na sua trajetória
                 </span>
               ) : (
-                <span className="text-[11px] text-[#8E9499]">Evidência de evolução</span>
+                <span className="text-[11px] text-[#8E9499]">Armazenado no seu histórico pessoal</span>
               )}
               <Button
                 variant="secondary"

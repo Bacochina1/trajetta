@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS } from '@/lib/constants';
-import { Compass, Check, AlertCircle, Plus, Sparkles, Footprints, ShieldAlert } from 'lucide-react';
+import { Compass, Check, AlertCircle, Plus, Footprints, ShieldAlert } from 'lucide-react';
 
 export function JourneysView() {
   const { journeys, incrementJourneyDay, recordJourneySlip } = useTrajetta();

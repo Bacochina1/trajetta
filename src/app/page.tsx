@@ -18,6 +18,10 @@ import {
   Clock,
   Layers,
   ChevronRight,
+  ChevronDown,
+  Quote,
+  Lock,
+  Server,
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -29,6 +33,8 @@ export default function LandingPage() {
   const [waitlistCount, setWaitlistCount] = useState(1482);
   const [userPosition, setUserPosition] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeTab, setActiveTab] = useState<'trajetta' | 'tradicional'>('trajetta');
 
   useEffect(() => {
     fetch('/api/waitlist')
@@ -90,17 +96,18 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6 text-xs text-[#8E9499]">
+        <nav className="hidden md:flex items-center gap-5 text-xs text-[#8E9499]">
           <a href="#problema" className="hover:text-[#F2F1ED] transition-colors">O Problema</a>
           <a href="#pilares" className="hover:text-[#F2F1ED] transition-colors">Os 4 Pilares</a>
-          <a href="#ritual" className="hover:text-[#F2F1ED] transition-colors">O Ritual Dominical</a>
-          <a href="#mockups" className="hover:text-[#F2F1ED] transition-colors">O App em 4K</a>
+          <a href="#ritual" className="hover:text-[#F2F1ED] transition-colors">Ritual Dominical</a>
+          <a href="#depoimentos" className="hover:text-[#F2F1ED] transition-colors">Membros Beta</a>
+          <a href="#faq" className="hover:text-[#F2F1ED] transition-colors">Dúvidas Frequentes</a>
         </nav>
 
         <div className="flex items-center gap-3">
           <Link
             href="/app"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#171A1D] hover:bg-[#1F2328] border border-white/10 hover:border-white/20 text-[#F2F1ED] transition-all active:scale-[0.96]"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#171A1D] hover:bg-[#1F2328] border border-white/10 hover:border-white/20 text-[#F2F1ED] transition-all active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8FF00]"
           >
             <span>Acessar App</span>
             <ArrowRight size={13} className="text-[#B8FF00]" />
@@ -136,24 +143,35 @@ export default function LandingPage() {
           </p>
 
           {/* Formulário de Lista de Espera */}
-          <div className="pt-4 max-w-md mx-auto">
+          <div className="pt-4 max-w-lg mx-auto">
             {!submitted ? (
               <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 bg-[#171A1D]/90 p-1.5 rounded-2xl border border-white/12 shadow-2xl backdrop-blur-md">
+                  <label htmlFor="hero-name" className="sr-only">Seu Nome</label>
                   <input
+                    id="hero-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Seu nome"
+                    className="w-full sm:w-1/3 bg-transparent px-3.5 py-2.5 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none border-b sm:border-b-0 sm:border-r border-white/8"
+                  />
+                  <label htmlFor="hero-email" className="sr-only">Seu E-mail</label>
+                  <input
+                    id="hero-email"
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Digite seu melhor e-mail corporativo ou pessoal"
-                    className="flex-1 bg-[#171A1D] border border-white/12 rounded-xl px-4 py-3 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none focus:border-[#B8FF00] transition-colors"
+                    placeholder="Seu melhor e-mail"
+                    className="flex-1 bg-transparent px-3.5 py-2.5 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-5 py-3 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-xs sm:text-sm transition-all active:scale-[0.96] shadow-[0_0_25px_rgba(184,255,0,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="px-5 py-2.5 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-xs sm:text-sm transition-all active:scale-[0.96] shadow-[0_0_20px_rgba(184,255,0,0.25)] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
-                    {loading ? 'Reservando...' : 'Entrar na Lista VIP'}
+                    {loading ? 'Reservando...' : 'Entrar na Lista'}
                     <ArrowRight size={14} strokeWidth={2.5} />
                   </button>
                 </div>
@@ -252,47 +270,96 @@ export default function LandingPage() {
             </p>
           </div>
 
+          <div className="flex justify-center">
+            <div className="inline-flex p-1 rounded-xl bg-[#171A1D] border border-white/10">
+              <button
+                type="button"
+                onClick={() => setActiveTab('trajetta')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  activeTab === 'trajetta'
+                    ? 'bg-[#B8FF00] text-[#0D0F10] shadow-[0_0_15px_rgba(184,255,0,0.3)]'
+                    : 'text-[#8E9499] hover:text-[#F2F1ED]'
+                }`}
+              >
+                ✓ Sistema Trajetta (Calm Power)
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('tradicional')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  activeTab === 'tradicional'
+                    ? 'bg-red-500/20 text-red-300 border border-red-500/40'
+                    : 'text-[#8E9499] hover:text-[#F2F1ED]'
+                }`}
+              >
+                ✕ Apps Comuns de Hábitos
+              </button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* O Jeito Tradicional */}
-            <div className="p-6 rounded-2xl bg-[#171A1D] border border-red-500/20 space-y-4">
-              <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
-                <span>✕</span>
-                <span>O Ciclo Tóxico dos Apps Comuns</span>
+            <div
+              className={`p-6 sm:p-7 rounded-2xl bg-[#171A1D] border transition-all duration-300 space-y-4 ${
+                activeTab === 'tradicional'
+                  ? 'border-red-500/50 ring-1 ring-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)]'
+                  : 'border-red-500/20 opacity-75'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+                  <span>✕</span>
+                  <span>O Ciclo Tóxico dos Apps Comuns</span>
+                </div>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-red-500/10 text-red-400">
+                  Punição & Culpa
+                </span>
               </div>
-              <ul className="space-y-3 text-xs text-[#8E9499] leading-relaxed">
+              <ul className="space-y-3.5 text-xs text-[#8E9499] leading-relaxed">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold">•</span>
-                  <span><strong>Streak Zera por Qualquer Coisa:</strong> Você fez 20 dias de treino, viajou a trabalho 1 dia e o app diz que você perdeu tudo. O resultado é abandono total.</span>
+                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Streak Zera por Qualquer Coisa:</strong> Você fez 20 dias de treino, viajou a trabalho 1 dia e o app diz que você perdeu tudo. O resultado psicológico é abandono e desmotivação total.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold">•</span>
-                  <span><strong>Sobrecarga de Tarefas:</strong> Telas cheias de listas que mais parecem uma planilha de cobrança do que uma ferramenta de clareza mental.</span>
+                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Sobrecarga de Tarefas:</strong> Telas congestionadas que mais parecem uma planilha de cobrança do que uma ferramenta de clareza mental e presença.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold">•</span>
-                  <span><strong>Gamificação Infantil:</strong> Corujas e medalhinhas de desenho animado que não conversam com os desafios de um adulto em ascensão profissional.</span>
+                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Gamificação Infantil:</strong> Notificações estridentes, corujas e medalhinhas de desenho animado que não conversam com os desafios da vida adulta.</span>
                 </li>
               </ul>
             </div>
 
             {/* O Jeito Trajetta */}
-            <div className="p-6 rounded-2xl bg-[#171A1D] border border-[#B8FF00]/30 space-y-4 shadow-[0_0_30px_rgba(184,255,0,0.05)]">
-              <div className="flex items-center gap-2 text-[#B8FF00] font-bold text-sm">
-                <Check size={16} strokeWidth={2.5} />
-                <span>O Sistema Trajetta (Calm Power)</span>
+            <div
+              className={`p-6 sm:p-7 rounded-2xl bg-[#171A1D] border transition-all duration-300 space-y-4 ${
+                activeTab === 'trajetta'
+                  ? 'border-[#B8FF00]/60 ring-1 ring-[#B8FF00]/30 shadow-[0_0_35px_rgba(184,255,0,0.15)]'
+                  : 'border-[#B8FF00]/20 opacity-75'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[#B8FF00] font-bold text-sm">
+                  <Check size={16} strokeWidth={2.5} />
+                  <span>O Sistema Trajetta (Calm Power)</span>
+                </div>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#B8FF00]/10 text-[#B8FF00]">
+                  Consistência Real
+                </span>
               </div>
-              <ul className="space-y-3 text-xs text-[#F2F1ED] leading-relaxed">
+              <ul className="space-y-3.5 text-xs text-[#F2F1ED] leading-relaxed">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold">•</span>
-                  <span><strong>Recuperação Empática:</strong> A Trajetta registra &quot;17 dias construídos, 1 deslize&quot;. Sua identidade continua de pé; o foco é voltar na manhã seguinte.</span>
+                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Recuperação Empática:</strong> A Trajetta registra &quot;17 dias construídos, 1 deslize&quot;. Sua identidade continua viva; o objetivo é retornar com serenidade na manhã seguinte.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold">•</span>
-                  <span><strong>Apenas Seu Próximo Movimento:</strong> A tela de Hoje corta o ruído e te mostra exatamente a ação essencial do momento.</span>
+                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Apenas Seu Próximo Movimento:</strong> A visão de Hoje elimina a ansiedade e destaca apenas a ação inegociável do momento atual.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold">•</span>
-                  <span><strong>Memória Longitudinal:</strong> Daqui a 2 anos, a Trajetta te mostrará exatamente a linha do tempo e os marcos que te trouxeram até aqui.</span>
+                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
+                  <span><strong>Memória Longitudinal:</strong> Daqui a 2 anos, a Trajetta te mostrará a linha do tempo exata e os marcos que construíram a pessoa que você se tornou.</span>
                 </li>
               </ul>
             </div>
@@ -419,7 +486,176 @@ export default function LandingPage() {
       </section>
 
       {/* ------------------------------------------------------------- */}
-      {/* 7. CTA FINAL DE LISTA DE ESPERA                              */}
+      {/* 7. DEPOIMENTOS DE MEMBROS BETA FUNDADORES                    */}
+      {/* ------------------------------------------------------------- */}
+      <section id="depoimentos" className="py-16 sm:py-24 border-t border-white/8 bg-[#111315]/40 px-4 sm:px-8">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">Evidências Reais</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
+              Construído para quem vive na pressão do mundo real.
+            </h2>
+            <p className="text-xs sm:text-sm text-[#8E9499]">
+              Veja como profissionais em áreas de alta demanda mantêm a consistência com a Trajetta.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Depoimento 1 */}
+            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#58D6A7]/10 text-[#58D6A7]">
+                    18 Semanas North Star
+                  </span>
+                  <Quote size={14} className="text-[#8E9499]/40" />
+                </div>
+                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
+                  &ldquo;Minha rotina de plantões de 24h tornava impossível manter streaks diários. Todo app me chamava de fracasso na segunda-feira. A Trajetta é a primeira ferramenta que respeita o mundo real e registra meus dias sem culpa.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+                <img
+                  src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=120"
+                  alt="Dr. Renato Brandão"
+                  className="w-10 h-10 rounded-full object-cover border border-white/10"
+                />
+                <div>
+                  <h4 className="text-xs font-bold text-[#F2F1ED]">Dr. Renato Brandão</h4>
+                  <p className="text-[11px] text-[#8E9499]">Cirurgião Geral & Residente</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Depoimento 2 */}
+            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#A98CF7]/10 text-[#A98CF7]">
+                    Equilíbrio nos 4 Pilares
+                  </span>
+                  <Quote size={14} className="text-[#8E9499]/40" />
+                </div>
+                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
+                  &ldquo;O ritual de 15 minutos de domingo mudou a dinâmica da minha rotina. Ele corta a ansiedade de começar a semana no susto. Consigo finalmente enxergar meus hábitos de saúde sem abandonar minha carreira.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+                <img
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=120"
+                  alt="Camila Vasconcelos"
+                  className="w-10 h-10 rounded-full object-cover border border-white/10"
+                />
+                <div>
+                  <h4 className="text-xs font-bold text-[#F2F1ED]">Camila Vasconcelos</h4>
+                  <p className="text-[11px] text-[#8E9499]">Head de Operações & Mãe</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Depoimento 3 */}
+            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#B8FF00]/10 text-[#B8FF00]">
+                    Zero Sparkles • Foco Puro
+                  </span>
+                  <Quote size={14} className="text-[#8E9499]/40" />
+                </div>
+                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
+                  &ldquo;O visual escuro, sereno e sem poluição infantil parece que foi esculpido pela Linear ou Apple. Sem corujas apitando ou notificações histéricas. É foco puro e execução calma.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
+                  alt="André Miranda"
+                  className="w-10 h-10 rounded-full object-cover border border-white/10"
+                />
+                <div>
+                  <h4 className="text-xs font-bold text-[#F2F1ED]">André Miranda</h4>
+                  <p className="text-[11px] text-[#8E9499]">Engenheiro de Software Sênior</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 8. FAQ ACCORDION INTERATIVO                                   */}
+      {/* ------------------------------------------------------------- */}
+      <section id="faq" className="py-16 sm:py-24 border-t border-white/8 bg-[#0D0F10] px-4 sm:px-8">
+        <div className="max-w-3xl mx-auto space-y-10">
+          <div className="text-center space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">Transparência Total</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
+              Perguntas Frequentes
+            </h2>
+            <p className="text-xs sm:text-sm text-[#8E9499]">
+              Tudo o que você precisa saber antes de reservar seu lugar na lista prioritária.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              {
+                q: 'Qual a diferença real entre a Trajetta e apps como Notion, Habitica ou Todoist?',
+                a: 'Notion e Todoist são gerenciadores de tarefas: você anota afazeres e se depara com listas infinitas que geram ansiedade. Habitica aposta em gamificação infantil que perde a relevância rapidamente. A Trajetta é um sistema pessoal de evolução: foca no próximo movimento inegociável de hoje, conduz o ritual de fechamento dominical e preserva o histórico de quem você está se tornando no longo prazo.',
+              },
+              {
+                q: 'O que acontece na prática quando eu viajo ou tenho uma semana caótica?',
+                a: 'Você não perde seu progresso. A Trajetta opera com Recuperação Empática (Compassionate Recovery). Se você acumulou 18 dias de treino e viajou por 2 dias, o sistema registra "18 dias construídos · 2 deslizes". Sua consistência continua ativa; o objetivo é retomar na manhã seguinte sem a sensação de recomeçar do zero.',
+              },
+              {
+                q: 'Por que vocês chamam a inteligência de "Zero Sparkles"?',
+                a: 'Porque a maioria dos produtos de IA atuais apenas joga emojis brilhantes e frases motivacionais vazias. A Trajetta IA (alimentada por NVIDIA Nemotron e DeepSeek) atua como um conselheiro silencioso. Ela analisa seus dados reais aos domingos, detecta padrões de sobrecarga e faz provocações estratégicas de alto valor.',
+              },
+              {
+                q: 'Como funciona a segurança e privacidade das minhas reflexões e dados?',
+                a: 'Suas anotações, metas e histórico são protegidos por criptografia de ponta e sessões autenticadas JWT. Seus dados nunca são comercializados nem utilizados para treinar modelos públicos de terceiros.',
+              },
+              {
+                q: 'O que os membros da Lista VIP recebem no lançamento?',
+                a: 'Membros da Lista VIP garantem ativação antecipada, acesso prioritário aos modelos de IA em alta velocidade e condição vitalícia garantida no plano fundador.',
+              },
+            ].map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-xl border border-white/8 bg-[#171A1D] overflow-hidden transition-all"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    className="w-full p-4 sm:p-5 flex items-center justify-between text-left gap-4 hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B8FF00]"
+                  >
+                    <span className="text-xs sm:text-sm font-bold text-[#F2F1ED] leading-snug">
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`text-[#8E9499] transition-transform duration-200 flex-shrink-0 ${
+                        isOpen ? 'rotate-180 text-[#B8FF00]' : ''
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs text-[#8E9499] leading-relaxed border-t border-white/5 pt-3">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 9. CTA FINAL DE LISTA DE ESPERA                              */}
       {/* ------------------------------------------------------------- */}
       <section className="py-20 sm:py-28 px-4 sm:px-8 max-w-4xl mx-auto text-center space-y-8">
         <div className="w-12 h-12 rounded-2xl bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center mx-auto text-[#B8FF00]">
@@ -476,7 +712,7 @@ export default function LandingPage() {
       </section>
 
       {/* ------------------------------------------------------------- */}
-      {/* 8. FOOTER                                                     */}
+      {/* 10. FOOTER                                                    */}
       {/* ------------------------------------------------------------- */}
       <footer className="border-t border-white/8 py-10 px-4 sm:px-8 bg-[#0D0F10] text-xs text-[#8E9499]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -490,10 +726,13 @@ export default function LandingPage() {
             <Link href="/app" className="hover:text-[#F2F1ED] transition-colors">Acessar App</Link>
             <a href="#problema" className="hover:text-[#F2F1ED] transition-colors">Manifesto</a>
             <a href="#pilares" className="hover:text-[#F2F1ED] transition-colors">Pilares</a>
+            <a href="#depoimentos" className="hover:text-[#F2F1ED] transition-colors">Depoimentos</a>
+            <a href="#faq" className="hover:text-[#F2F1ED] transition-colors">FAQ</a>
           </div>
 
-          <div className="text-[11px] text-[#8E9499]/60">
-            © 2026 Trajetta. Todos os direitos reservados.
+          <div className="flex items-center gap-2 text-[11px] text-[#8E9499]">
+            <span className="w-2 h-2 rounded-full bg-[#58D6A7] animate-pulse" />
+            <span>São Paulo (gru1) • 100% Operacional</span>
           </div>
         </div>
       </footer>
