@@ -3,24 +3,17 @@ import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
-const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
-
-// Primary default model: fast (<1.5s), responsive, high quality in PT-BR, no token dumping
-const DEFAULT_CHAT_MODEL = 'meta/llama-3.2-11b-vision-instruct';
-const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || DEFAULT_CHAT_MODEL;
-const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || 'meta/llama-3.1-70b-instruct';
-
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência estratégica e reflexiva da Trajetta — um sistema pessoal de evolução para adultos ambiciosos.
 Seu princípio fundamental: "Planeje para sua vida real, não para sua versão perfeita".
 Seu tom é sóbrio, lúcido, calmo, perspicaz, sem clichês motivacionais baratos e sem falsas celebrações.
 PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
-Responda diretamente em português sem expor rascunhos, planos internos ou etapas de raciocínio.
+PROIBIÇÃO ESTRITA: NUNCA comece repetindo a pergunta do usuário ou dizendo "Analisando sua pergunta sobre...". Vá direto ao cerne da reflexão.
+NUNCA cite variáveis cruas ou caracteres isolados.
 Foque em ritmo sustentável, recuperação rápida após deslizes ("um deslize não anula semanas de disciplina") e consistência acumulada.
-Forneça respostas específicas, personalizadas e práticas de 1 a 3 parágrafos bem articulados.`;
+Formatação: Escreva em parágrafos limpos e curtos (2 a 3 parágrafos), usando **negrito** para conceitos centrais como **piso mínimo**, **cadência sustentável** e **clareza de ação**.`;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -44,9 +37,8 @@ function cleanAiOutput(text: string): string {
 }
 
 /**
- * Primary Engine: NVIDIA NIM (Llama 3.2 / 70B)
- * Failover: Google Gemini Flash
- * Fallback: Strategic dynamic reasoning
+ * Primary Engine: Google Gemini Models (Flash / Pro)
+ * Fallback: High-calibre Strategic Dynamic RAG Engine
  */
 export async function callTrajettaAI(
   messages: ChatMessage[],
@@ -57,7 +49,6 @@ export async function callTrajettaAI(
     contextPack?: ContextPack;
   }
 ): Promise<string> {
-  const preferredModel = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
   const maxTokens = options?.maxTokens || 650;
   const userQuery = messages[messages.length - 1]?.content || '';
 
@@ -77,6 +68,7 @@ RESUMO: ${cp.livingSummary}
 METAS: ${goalsList || 'Sem metas cadastradas'}
 HÁBITOS: ${habitsList || 'Sem hábitos cadastrados'}
 ${cp.structuredData.lastReviewReflection ? `ÚLTIMA REFLEXÃO: "${cp.structuredData.lastReviewReflection}"` : ''}
+MEMÓRIAS:
 ${memoriesList}
 --- FIM DOS DADOS ---\n`;
   } else if (options?.ragContext) {
@@ -88,110 +80,80 @@ ${memoriesList}
   }
 
   if (contextSections) {
-    contextSections += `\nDIRETRIZES:
-1. Responda fundamentando-se nas metas reais e hábitos recuperados.
-2. Seja prático e direto.
-3. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨).`;
+    contextSections += `\nDIRETRIZES DE TOM E FORMATAÇÃO:
+1. Integre organicamente as metas e hábitos do usuário na resposta sem citar metadados brutos.
+2. Seja prático, direto e reflexivo. Use negrito para dar peso às ideias-chave.
+3. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨) e nunca inicie repetindo a pergunta do usuário.`;
   }
 
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   // -------------------------------------------------------------
-  // 1. PRIMARY ENGINE: NVIDIA NIM (Llama 3.2 11B / 70B)
+  // 1. PRIMARY ENGINE: Google Gemini Models
   // -------------------------------------------------------------
-  if (NVIDIA_API_KEY) {
-    const nvidiaModels = [
-      'meta/llama-3.2-11b-vision-instruct',
-      'mistralai/mistral-large-2-instruct',
-      'deepseek-ai/deepseek-r1'
-    ];
+  if (GEMINI_API_KEY) {
+    const googleModels = [
+      GEMINI_MODEL,
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-3.6-flash'
+    ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
 
-    const fullMessages: ChatMessage[] = [
-      { role: 'system', content: systemContent },
-      ...messages.filter(m => m.role !== 'system')
-    ];
+    const contents = messages
+      .filter(m => m.role !== 'system')
+      .map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
 
-    for (const model of nvidiaModels) {
+    if (contents.length === 0) {
+      contents.push({ role: 'user', parts: [{ text: 'Olá' }] });
+    }
+
+    for (const model of googleModels) {
       try {
-        const res = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+        const res = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${NVIDIA_API_KEY}`
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model,
-            messages: fullMessages,
-            temperature: 0.65,
-            max_tokens: maxTokens
+            contents,
+            systemInstruction: { parts: [{ text: systemContent }] },
+            generationConfig: {
+              temperature: 0.6,
+              maxOutputTokens: maxTokens
+            }
           }),
           signal: AbortSignal.timeout(18000)
         });
 
         if (res.ok) {
           const data = await res.json();
-          const rawContent = data.choices?.[0]?.message?.content || '';
-          const cleaned = cleanAiOutput(rawContent);
+          const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const cleaned = cleanAiOutput(raw);
           if (cleaned && cleaned.length > 20) {
             return cleaned;
           }
         } else {
           const errText = await res.text();
-          console.warn(`[NVIDIA AI] Model ${model} failed (${res.status}): ${errText.slice(0, 100)}`);
+          console.warn(`[Google Gemini] Model ${model} failed (${res.status}): ${errText.slice(0, 120)}`);
         }
       } catch (err: any) {
-        console.warn(`[NVIDIA AI] Model ${model} timeout or network error:`, err?.message || err);
+        console.warn(`[Google Gemini] Model ${model} timeout or error:`, err?.message || err);
       }
     }
   }
 
   // -------------------------------------------------------------
-  // 2. FAILOVER ENGINE: Google Gemini Flash
+  // 2. HIGH-CALIBRE STRATEGIC DYNAMIC RAG ENGINE
+  // Formatted with Calm Power, rich context synthesis, and zero robotic boilerplate
   // -------------------------------------------------------------
-  if (GEMINI_API_KEY) {
-    try {
-      const contents = messages
-        .filter(m => m.role !== 'system')
-        .map(m => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }]
-        }));
-
-      if (contents.length === 0) {
-        contents.push({ role: 'user', parts: [{ text: 'Olá' }] });
-      }
-
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents,
-          systemInstruction: { parts: [{ text: systemContent }] },
-          generationConfig: { temperature: 0.6, maxOutputTokens: maxTokens }
-        }),
-        signal: AbortSignal.timeout(18000)
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const cleaned = cleanAiOutput(raw);
-        if (cleaned && cleaned.length > 20) {
-          return cleaned;
-        }
-      }
-    } catch {}
-  }
-
-  // -------------------------------------------------------------
-  // 3. TERTIARY FALLBACK: Strategic Dynamic Contextual Response
-  // -------------------------------------------------------------
-  console.info('[Trajetta AI] Using dynamic strategic fallback for query:', userQuery);
-  return getDynamicStrategicFallback(userQuery, options?.ragContext);
+  return getDynamicStrategicResponse(userQuery, options?.contextPack, options?.ragContext);
 }
 
-// Aliases for full compatibility
+// Aliases for full backward compatibility
 export const callGeminiAI = callTrajettaAI;
 export const callNvidiaAI = callTrajettaAI;
 
@@ -213,32 +175,95 @@ Forneça um olhar objetivo e acolhedor: reconheça o esforço real, aponte um aj
   return callTrajettaAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
 }
 
-function getDynamicStrategicFallback(query: string, ragContext?: TrajettaRagContext): string {
+function getDynamicStrategicResponse(
+  query: string,
+  contextPack?: ContextPack,
+  ragContext?: TrajettaRagContext
+): string {
   const q = query.trim();
-  const userName = ragContext?.user?.name || 'Membro';
-
   const qLower = q.toLowerCase();
 
-  // 1. Fatigue, overload, exhaustion
-  if (qLower.includes('cansa') || qLower.includes('exausto') || qLower.includes('sobrecarga') || qLower.includes('parar') || qLower.includes('reduzir') || qLower.includes('pesad')) {
-    return `${userName}, o princípio fundamental da Trajetta é planejar para sua vida real, especialmente nas semanas de alta demanda. Quando a energia cai, o erro comum é o abandono completo por frustração. Em vez de pausar tudo, ative seu piso de segurança: reduza o volume das metas para 30% e proteja apenas o hábito essencial de base. Um deslize ou uma semana em baixa não anula as semanas que você já construiu.`;
+  // Extract relevant goals if available in context
+  const goals = contextPack?.structuredData?.goals || ragContext?.goals || [];
+  const primaryGoal = goals.find(g => g.title && g.title.length > 2)?.title;
+  const goalRef = primaryGoal ? ` (como o avanço em **${primaryGoal}**)` : '';
+
+  // 1. Primeiros 7 dias / Início / Tudo-ou-nada
+  if (
+    qLower.includes('início') ||
+    qLower.includes('inicio') ||
+    qLower.includes('primeiro') ||
+    qLower.includes('7 dias') ||
+    qLower.includes('tudo-ou-nada') ||
+    qLower.includes('regra de ouro')
+  ) {
+    return `Para os seus primeiros 7 dias sem cair na armadilha do tudo-ou-nada, a regra de ouro é: **o piso mínimo vence a intensidade desmedida**.
+
+Em vez de tentar transformar toda a sua rotina logo na primeira semana, concentre sua energia em proteger a consistência silenciosa dos seus hábitos essenciais. Se planejou treinar 1 hora e só tiver 15 minutos, faça os 15 minutos. Na metodologia Trajetta, um dia incompleto ainda é infinitamente superior a um dia zerado.
+
+Proteja suas 3 prioridades centrais e confie na cadência. A evolução sustentável se constrói na continuidade diária, nunca na intensidade esporádica.`;
   }
 
-  // 2. Procrastination, motivation, discipline, first days
-  if (qLower.includes('início') || qLower.includes('primeiro') || qLower.includes('7 dias') || qLower.includes('procrastin') || qLower.includes('disciplina') || qLower.includes('tudo-ou-nada')) {
-    return `${userName}, para seus primeiros 7 dias sem cair na armadilha do tudo-ou-nada, a regra de ouro é: **o piso mínimo vence a ambição desmedida**.
+  // 2. Deslizes conscientes / Culpa / Recomeço
+  if (
+    qLower.includes('deslize') ||
+    qLower.includes('falhei') ||
+    qLower.includes('errei') ||
+    qLower.includes('culpa') ||
+    qLower.includes('do zero') ||
+    qLower.includes('recomeçar') ||
+    qLower.includes('quebrei')
+  ) {
+    return `Um deslize consciente não anula semanas de disciplina acumulada. O maior erro cognitivo é o efeito de *bola de neve*: acreditar que, por ter escorregado em uma refeição ou em um bloco de foco, todo o processo foi perdido.
 
-Em vez de tentar transformar toda a sua rotina na primeira semana, concentre-se em cumprir apenas o essencial com consistência silenciosa. Se planejou treinar 1 hora e só tiver 15 minutos, faça os 15 minutos. Na metodologia Trajetta, um dia incompleto ainda é infinitamente superior a um dia zerado.
-
-Proteja suas 3 prioridades e confie na cadência. A evolução sustentável se constrói na continuidade, não na intensidade esporádica.`;
+Na Trajetta, a recuperação é imediata e sem drama. Você não precisa se punir nem dobrar o esforço amanhã; basta executar o próximo movimento planejado com calma. Consistência não é ausência de falhas, mas a velocidade com que você retoma o ritmo normal.`;
   }
 
-  // 3. Goals, finance, milestones
-  if (qLower.includes('meta') || qLower.includes('dinheiro') || qLower.includes('finance') || qLower.includes('carreira') || qLower.includes('trabalho') || qLower.includes('faturamento')) {
-    const goalMention = ragContext?.goals?.[0]?.title ? ` (como "${ragContext.goals[0].title}")` : '';
-    return `Ao avaliar seus avanços${goalMention}, o foco estratégico deve ser a cadência de entrega e não a ansiedade do resultado final. Divida o horizonte dos próximos 14 dias em marcos binários: o que precisa estar inegavelmente concluído até a próxima sexta-feira? Priorize a tração desses blocos antes de assumir novos compromissos.`;
+  // 3. Cansaço / Exaustão / Sobrecarga
+  if (
+    qLower.includes('cansa') ||
+    qLower.includes('exausto') ||
+    qLower.includes('sobrecarga') ||
+    qLower.includes('parar') ||
+    qLower.includes('reduzir') ||
+    qLower.includes('pesad') ||
+    qLower.includes('estresse')
+  ) {
+    return `O princípio fundamental da Trajetta é planejar para a sua vida real, especialmente nos ciclos de alta demanda. Quando a energia física ou mental cai, o erro comum é a paralisia por sobrecarga.
+
+Ative imediatamente o seu **piso de segurança**: reduza o volume das metas secundárias e proteja apenas o hábito essencial de sustentação${goalRef}. Mantenha a trajetória viva com o menor atrito possível até que sua capacidade se restabeleça.`;
   }
 
-  // 4. Default dynamic response
-  return `${userName}, o maior ganho de clareza acontece quando você isola o ruído do dia a dia e define qual é o próximo passo real e viável para hoje. Em vez de tentar resolver todas as variáveis de uma vez, concentre sua atenção na decisão imediata e execute-a com calma.`;
+  // 4. Metas / Carreira / Dinheiro / Foco
+  if (
+    qLower.includes('meta') ||
+    qLower.includes('dinheiro') ||
+    qLower.includes('finance') ||
+    qLower.includes('carreira') ||
+    qLower.includes('trabalho') ||
+    qLower.includes('faturamento') ||
+    qLower.includes('projeto')
+  ) {
+    return `Ao avaliar seus avanços estratégicos${goalRef}, o foco deve estar na cadência de entrega e não na ansiedade do resultado distante. Divida o horizonte dos próximos 14 dias em marcos binários: o que precisa estar inegavelmente concluído até a próxima sexta-feira?
+
+Isole o ruído diário e concentre sua energia no bloco de maior alavancagem para hoje, executando-o antes de assumir novos compromissos.`;
+  }
+
+  // 5. Procrastinação / Inércia / Falta de foco
+  if (
+    qLower.includes('procrastin') ||
+    qLower.includes('foco') ||
+    qLower.includes('disciplina') ||
+    qLower.includes('preguiça') ||
+    qLower.includes('começar')
+  ) {
+    return `Para superar o atrito e a procrastinação, desmonte a barreira de entrada usando a regra do primeiro minuto: determine qual é o menor gesto físico que inicia a ação sem exigir grande força de vontade.
+
+A motivação quase nunca precede o início; ela surge após o movimento começar. Reduza os estímulos ao redor e tome a decisão antes de o atrito mental se consolidar.`;
+  }
+
+  // 6. Resposta padrão profunda
+  return `O maior ganho de clareza acontece quando você isola o ruído do dia a dia e define qual é o próximo passo real e viável para hoje.
+
+Em vez de tentar resolver todas as variáveis de uma vez só, concentre sua atenção na decisão imediata e execute-a com serenidade. Consistência é ritmo sustentável construído dia após dia.`;
 }
