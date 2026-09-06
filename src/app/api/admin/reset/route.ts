@@ -14,8 +14,6 @@ export async function POST() {
         where: {
           OR: [
             { email: 'admin@trajetta.app' },
-            { email: 'companytrajetta@gmail.com' },
-            { email: 'bacochinamatheus@gmail.com' },
             { role: 'ADMIN' },
           ],
         },

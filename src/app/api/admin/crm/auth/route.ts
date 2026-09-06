@@ -1,18 +1,32 @@
 import { NextResponse } from 'next/server';
+import { prisma, ensureDbReady } from '@/lib/db';
+import { verifyPassword } from '@/lib/auth/auth';
 
-const VALID_EMAIL = 'admin@trajetta.app';
-const VALID_EMAIL_FALLBACK = 'companytrajetta@gmail.com';
-const VALID_PASSWORD = 'TrajettaAdmin2026!';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@trajetta.app';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'TrajettaAdmin!2026#Secure';
 
 export async function POST(req: Request) {
   try {
+    await ensureDbReady();
     const { email, password } = await req.json();
 
     const cleanEmail = (email || '').trim().toLowerCase();
-    const isEmailValid = cleanEmail === VALID_EMAIL || cleanEmail === VALID_EMAIL_FALLBACK;
-    const isPassValid = password === VALID_PASSWORD;
+    let isAuthorized = false;
+    let adminName = 'Administrador Trajetta';
 
-    if (!isEmailValid || !isPassValid) {
+    if (cleanEmail === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+      isAuthorized = true;
+    } else {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: cleanEmail },
+      });
+      if (dbUser && dbUser.role === 'ADMIN' && (await verifyPassword(password, dbUser.passwordHash))) {
+        isAuthorized = true;
+        adminName = dbUser.name;
+      }
+    }
+
+    if (!isAuthorized) {
       return NextResponse.json({ ok: false, error: 'E-mail ou senha incorretos' }, { status: 401 });
     }
 
@@ -21,7 +35,7 @@ export async function POST(req: Request) {
       user: {
         email: cleanEmail,
         role: 'ADMIN',
-        name: 'Administrador Trajetta',
+        name: adminName,
       },
     });
 

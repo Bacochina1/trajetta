@@ -344,26 +344,10 @@ export async function ensureDbReady(): Promise<void> {
       {
         id: 'cmtp970550000cd7k2oor3pck',
         email: 'admin@trajetta.app',
-        name: 'Jim (Membro Fundador)',
-        passwordHash: '$2b$10$ppLmRuMDdS4U/0jKVwao2uQctVGLP/8sQgfQGnLpHdWqdBjqA6CKq', // TrajettaAdmin2026!
+        name: 'Administrador Trajetta',
+        passwordHash: '$2b$10$eBUUCZfdCEDT8nMM8hc5VeDM2FG9PjwDYPD07dkkwFOzmqcF.qjnS', // TrajettaAdmin!2026#Secure
         role: 'ADMIN',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
-      },
-      {
-        id: 'cmtp970550001cd7k2oor3pma',
-        email: 'bacochinamatheus@gmail.com',
-        name: 'Matheus Bacochina',
-        passwordHash: '$2b$10$aRcuFXP02ED9N.yQAPsxRuGcQleItzLVpvz7rA7jhcrd99UsVcIx.', // Trajetta2026!
-        role: 'ADMIN',
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=256',
-      },
-      {
-        id: 'cmtp970550002cd7k2oor3pco',
-        email: 'companytrajetta@gmail.com',
-        name: 'Matheus Trajetta',
-        passwordHash: '$2b$10$aRcuFXP02ED9N.yQAPsxRuGcQleItzLVpvz7rA7jhcrd99UsVcIx.', // Trajetta2026!
-        role: 'ADMIN',
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=256',
       }
     ];
 

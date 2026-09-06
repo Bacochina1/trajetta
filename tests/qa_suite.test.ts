@@ -17,7 +17,7 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       expect(admin).toBeDefined();
       expect(admin?.email).toBe('admin@trajetta.app');
       expect(admin?.role).toBe('ADMIN');
-      expect(admin?.name).toContain('Jim');
+      expect(admin?.name).toContain('Administrador');
     });
 
     it('deve persistir e recuperar um hábito no banco com consistência de dados', async () => {
@@ -62,11 +62,12 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       expect(isWrongMatch).toBe(false);
     });
 
-    it('a senha do Admin pré-configurado deve bater com TrajettaAdmin2026!', async () => {
+    it('a senha do Admin pré-configurado deve bater com a nova senha de segurança', async () => {
       const admin = await prisma.user.findUnique({ where: { email: 'admin@trajetta.app' } });
       expect(admin).toBeDefined();
 
-      const isValid = await verifyPassword('TrajettaAdmin2026!', admin!.passwordHash);
+      const adminPassword = process.env.ADMIN_PASSWORD || 'TrajettaAdmin!2026#Secure';
+      const isValid = await verifyPassword(adminPassword, admin!.passwordHash);
       expect(isValid).toBe(true);
     });
 
