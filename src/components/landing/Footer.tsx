@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle2, Shield } from 'lucide-react';
 
 export function Footer() {
   const [quickEmail, setQuickEmail] = useState('');
@@ -21,19 +22,19 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#040608] border-t border-white/10 px-4 xs:px-6 sm:px-10 lg:px-14 pt-12 sm:pt-16 pb-10 sm:pb-12" data-purpose="page-footer" id="contact">
+    <footer className="bg-[#040608] border-t border-white/10 px-6 sm:px-10 lg:px-14 pt-16 pb-12" data-purpose="page-footer" id="contact">
       <div className="max-w-[1440px] mx-auto">
         {/* Top row: Newsletter + Links columns */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16">
           {/* Left Column: Branding and Subscription */}
           <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-0 md:pr-6">
-            {/* Official White SVG Logo */}
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center flex-shrink-0">
+            {/* Official White Logo */}
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
                 <img
                   src="/trajetta-logo-transparent.png"
                   alt="Trajetta Logo"
-                  className="w-full h-full object-contain opacity-90"
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.25)]"
                 />
               </div>
               <span className="font-bold text-sm tracking-[0.18em] uppercase text-white">TRAJETTA</span>
@@ -58,14 +59,14 @@ export function Footer() {
                 <input
                   type="email"
                   required
+                  placeholder="Seu melhor e-mail..."
                   value={quickEmail}
                   onChange={(e) => setQuickEmail(e.target.value)}
-                  placeholder="seu.email@exemplo.com"
-                  className="bg-transparent border-0 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:ring-0 w-full px-3 py-1.5"
+                  className="bg-transparent border-none text-xs text-white placeholder-neutral-500 px-3 py-2 focus:outline-none flex-1"
                 />
                 <button
                   type="submit"
-                  className="bg-white text-black font-mono text-xs font-semibold px-4 py-1.5 rounded-md hover:bg-neutral-200 transition-colors uppercase flex-shrink-0 cursor-pointer"
+                  className="bg-white hover:bg-neutral-200 text-black text-[10px] font-bold tracking-wider uppercase px-3 py-2 rounded transition-colors"
                 >
                   CADASTRAR
                 </button>
@@ -73,99 +74,82 @@ export function Footer() {
             )}
           </div>
 
-          {/* Right 4 Columns: Navigation Links */}
-          <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-6 font-mono text-xs">
-            {/* Column 1: PÁGINAS */}
+          {/* Right Columns: Links */}
+          <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+            {/* Column 1: Navegação */}
             <div>
-              <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">PÁGINAS</h4>
-              <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
-                <li><a className="hover:text-white transition-colors" href="#visao">Visão</a></li>
-                <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos</a></li>
-                <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas</a></li>
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+                NAVEGAÇÃO
+              </span>
+              <ul className="space-y-2.5 text-xs text-neutral-400">
+                <li><a className="hover:text-white transition-colors" href="#visao">Visão de Longo Prazo</a></li>
+                <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos Semanais</a></li>
+                <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas da Vida</a></li>
                 <li><a className="hover:text-white transition-colors" href="#metodo">O Método</a></li>
-                <li><a className="hover:text-white transition-colors" href="#waitlist">Lista VIP</a></li>
+                <li><a className="hover:text-[#B8FF00] transition-colors" href="#waitlist">Lista VIP</a></li>
                 <li><a className="hover:text-white transition-colors" href="#faq">Perguntas Frequentes</a></li>
               </ul>
             </div>
 
-            {/* Column 2: METODOLOGIA */}
+            {/* Column 2: Metodologia */}
             <div>
-              <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">METODOLOGIA</h4>
-              <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
-                <li><span className="text-neutral-400">Estrela-Guia</span></li>
-                <li><span className="text-neutral-400">3 Prioridades da Semana</span></li>
-                <li><span className="text-neutral-400">Piso Mínimo</span></li>
-                <li><span className="text-neutral-400">Review de Domingo</span></li>
-                <li><span className="text-neutral-400">Retomada Sem Culpa</span></li>
-                <li><span className="text-neutral-400">Zero Streaks Punitivos</span></li>
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+                METODOLOGIA
+              </span>
+              <ul className="space-y-2.5 text-xs text-neutral-400">
+                <li><span className="text-neutral-300">Estrela-Guia</span></li>
+                <li><span className="text-neutral-300">3 Prioridades da Semana</span></li>
+                <li><span className="text-neutral-300">Piso Mínimo</span></li>
+                <li><span className="text-neutral-300">Review de Domingo</span></li>
+                <li><span className="text-neutral-300">Retomada Sem Culpa</span></li>
+                <li><span className="text-neutral-300">Zero Streaks Punitivos</span></li>
               </ul>
             </div>
 
-            {/* Column 3: SISTEMA */}
+            {/* Column 3: Sistema & Admin */}
             <div>
-              <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">SISTEMA</h4>
-              <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
-                <li><span className="text-neutral-400">Trajetta AI</span></li>
-                <li><span className="text-neutral-400">Google Gemini Flash</span></li>
-                <li><span className="text-neutral-400">Memória Longitudinal</span></li>
-                <li><span className="text-neutral-400">Mobile PWA</span></li>
-                <li><span className="text-neutral-400">Status em Tempo Real</span></li>
-              </ul>
-            </div>
-
-            {/* Column 4: LEGAL */}
-            <div>
-              <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">LEGAL</h4>
-              <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
-                <li><a className="hover:text-white transition-colors" href="#waitlist">Termos de Uso</a></li>
-                <li><a className="hover:text-white transition-colors" href="#waitlist">Privacidade</a></li>
-                <li><a className="hover:text-white transition-colors" href="#waitlist">Soberania dos Dados</a></li>
-                <li><a className="hover:text-white transition-colors" href="#contact">Suporte</a></li>
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+                SISTEMA & CRM
+              </span>
+              <ul className="space-y-2.5 text-xs text-neutral-400">
+                <li><span className="text-neutral-300">Trajetta Engine</span></li>
+                <li><span className="text-neutral-300">Google Gemini Flash</span></li>
+                <li><span className="text-neutral-300">Memória Longitudinal</span></li>
+                <li><span className="text-neutral-300">Mobile PWA</span></li>
+                <li className="pt-2">
+                  <Link
+                    href="/admin/login"
+                    className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
+                  >
+                    <Shield className="w-3 h-3 text-[#B8FF00]" />
+                    <span>Acesso Admin CRM</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar: Copyright, Operational Status & Social links */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-neutral-500">
-          <div className="flex items-center flex-wrap gap-4">
-            <span>© 2026 Trajetta. Todos os direitos reservados.</span>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="text-neutral-400">Sistema operacional em nuvem</span>
-            </div>
+        {/* Bottom row: Copyright & Instagram */}
+        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
+            <span>Trajetta © {new Date().getFullYear()} — Todos os direitos reservados.</span>
           </div>
 
-          {/* Social media icon buttons */}
-          <div className="flex items-center gap-2">
+          {/* Social Icons — Strictly Instagram @trajetta_ */}
+          <div className="flex items-center space-x-3 text-neutral-400">
             <a
-              aria-label="X"
-              className="w-8 h-8 rounded-lg bg-[#0e1218] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white/30 transition-all"
-              href="https://x.com"
+              href="https://www.instagram.com/trajetta_/"
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3.5 py-1.5 rounded-full border border-white/10 text-xs"
+              aria-label="Instagram Oficial Trajetta"
             >
-              <span className="font-bold text-xs">𝕏</span>
-            </a>
-            <a
-              aria-label="GitHub"
-              className="w-8 h-8 rounded-lg bg-[#0e1218] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white/30 transition-all"
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path>
+              <svg className="w-3.5 h-3.5 fill-pink-400" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
               </svg>
-            </a>
-            <a
-              aria-label="LinkedIn"
-              className="w-8 h-8 rounded-lg bg-[#0e1218] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white/30 transition-all"
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="font-bold text-xs">in</span>
+              <span>@trajetta_</span>
             </a>
           </div>
         </div>

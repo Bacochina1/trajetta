@@ -62,11 +62,25 @@ export async function ensureDbReady(): Promise<void> {
         "id" TEXT NOT NULL PRIMARY KEY,
         "email" TEXT NOT NULL,
         "name" TEXT,
+        "phone" TEXT,
         "source" TEXT NOT NULL DEFAULT 'landing_page',
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        "status" TEXT NOT NULL DEFAULT 'waitlist',
+        "tags" TEXT NOT NULL DEFAULT '["VIP","Lote 1"]',
+        "notes" TEXT,
+        "position" INTEGER,
+        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
     await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "Waitlist_email_key" ON "Waitlist"("email");`);
+    
+    // Add columns if table existed from earlier migrations
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "phone" TEXT;`); } catch {}
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "status" TEXT NOT NULL DEFAULT 'waitlist';`); } catch {}
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "tags" TEXT NOT NULL DEFAULT '["VIP","Lote 1"]';`); } catch {}
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "notes" TEXT;`); } catch {}
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "position" INTEGER;`); } catch {}
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "Waitlist" ADD COLUMN "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`); } catch {}
 
     await prisma.$executeRawUnsafe(`
       CREATE TABLE IF NOT EXISTS "Habit" (
