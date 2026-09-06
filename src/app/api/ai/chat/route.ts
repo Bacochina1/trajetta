@@ -5,7 +5,7 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
-    const { messages, heavyReasoning } = await req.json();
+    const { messages, heavyReasoning, ragContext } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -14,9 +14,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const reply = await callNvidiaAI(messages, { heavyReasoning: Boolean(heavyReasoning) });
+    const reply = await callNvidiaAI(messages, {
+      heavyReasoning: Boolean(heavyReasoning),
+      ragContext,
+    });
 
     return NextResponse.json({ ok: true, reply });
+
   } catch (error) {
     console.error('AI chat endpoint error:', error);
     return NextResponse.json(

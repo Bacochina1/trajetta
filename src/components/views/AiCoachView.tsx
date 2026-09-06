@@ -13,7 +13,7 @@ interface Message {
 }
 
 export function AiCoachView() {
-  const { user, goals, habits, journeys, lifeScore } = useTrajetta();
+  const { user, goals, habits, journeys, weeklyPlan, weeklyReviews, timeline, lifeScore } = useTrajetta();
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -29,8 +29,9 @@ export function AiCoachView() {
 
   const quickPrompts = [
     'Estou pensando em reduzir os treinos esse mês por causa do trabalho.',
-    'Como foi minha consistência nas últimas semanas?',
-    'Qual área da minha vida mais precisa de atenção hoje?',
+    `Como está meu avanço rumo a "${goals[0]?.title || 'minha meta principal'}"?`,
+    'Qual área da minha vida mais precisa de atenção pelo Life Score?',
+    'Analise meu histórico recente e sugira um ajuste para esta semana.',
   ];
 
   const handleSend = async (textToSend?: string) => {
@@ -55,11 +56,23 @@ export function AiCoachView() {
       }));
       history.push({ role: 'user', content: query });
 
+      const ragContext = {
+        user,
+        goals,
+        habits,
+        journeys,
+        weeklyPlan,
+        weeklyReviews,
+        timeline,
+        lifeScore,
+      };
+
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history, ragContext }),
       });
+
 
       const data = await res.json();
       const replyText = data?.reply;
@@ -122,14 +135,23 @@ export function AiCoachView() {
         </p>
       </div>
 
-      {/* Memory Context Tag */}
-      <div className="p-3 rounded-xl bg-[#171A1D] border border-white/8 flex items-center justify-between text-xs text-[#8E9499]">
+      {/* Live RAG Engine Context Badge */}
+      <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#171A1D] via-[#15181B] to-[#121416] border border-white/8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#8E9499]">
         <div className="flex items-center gap-2">
-          <Brain size={15} className="text-[#A98CF7]" />
-          <span>Contexto Ativo: <strong>{user.completedWeeksCount} semanas registradas</strong> · 4 metas ativas</span>
+          <div className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
+          <Brain size={15} className="text-[#B8FF00]" />
+          <span>
+            RAG Conectado: <strong className="text-[#F2F1ED]">{user.completedWeeksCount} semanas</strong> · {goals.length} metas · {habits.length} hábitos · Life Score
+          </span>
         </div>
-        <span className="text-[#B8FF00] font-semibold text-[11px]">Memória Estruturada</span>
+        <div className="flex items-center gap-1.5 self-start sm:self-auto">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]" />
+          <span className="text-[#B8FF00] font-bold text-[10px] tracking-wider uppercase">
+            RAG Trajetta Ativo
+          </span>
+        </div>
       </div>
+
 
       {/* Messages Thread */}
       <div className="trajetta-card p-4 sm:p-6 min-h-[400px] flex flex-col justify-between space-y-4">

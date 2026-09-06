@@ -1,3 +1,7 @@
+import { buildRagContext, TrajettaRagContext } from './ragService';
+
+export { type TrajettaRagContext };
+
 const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
 const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'deepseek-ai/deepseek-v4-pro-0813';
@@ -9,6 +13,7 @@ Seu tom é sóbrio, calmo, perspicaz, sem clichês motivacionais e sem falsas ce
 PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
 Responda diretamente em português sem expor rascunhos ou etapas de raciocínio.
 Foque em ritmo sustentável, recuperação rápida após deslizes ("um deslize não anula 17 dias de disciplina") e consistência acumulada.`;
+
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -56,14 +61,31 @@ function cleanAiOutput(text: string): string {
 
 export async function callNvidiaAI(
   messages: ChatMessage[],
-  options?: { heavyReasoning?: boolean; maxTokens?: number }
+  options?: { heavyReasoning?: boolean; maxTokens?: number; ragContext?: TrajettaRagContext }
 ): Promise<string> {
   const model = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
   const maxTokens = options?.maxTokens || 800;
+  const userQuery = messages[messages.length - 1]?.content || '';
+
+  const ragSection = options?.ragContext
+    ? `\n\n--- DADOS REAIS RECUPERADOS DA TRAJETÓRIA DO USUÁRIO (RAG ATIVO) ---\n${buildRagContext(
+        userQuery,
+        options.ragContext
+      )}\n--- FIM DOS DADOS RECUPERADOS ---\n
+DIRETRIZES FUNDAMENTAIS DE RAG:
+1. Responda fundamentando-se diretamente nas metas reais, hábitos específicos, semanas concluídas, deslizes e intenção da semana do usuário.
+2. Demonstre continuidade: o usuário não é um estranho. Trate-o pelo nome e faça referências diretas à sua trajetória real.
+3. Se perguntado sobre algo que não consta no histórico, admita com honestidade.
+4. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨).`
+    : '';
+
+
+
+  const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${ragSection}`;
 
   try {
     const fullMessages: ChatMessage[] = [
-      { role: 'system', content: TRAJETTA_SYSTEM_PROMPT },
+      { role: 'system', content: systemContent },
       ...messages,
     ];
 
@@ -86,19 +108,19 @@ export async function callNvidiaAI(
     if (!res.ok) {
       const errorText = await res.text();
       console.warn(`[NVIDIA AI API Warning] Status: ${res.status}. Body: ${errorText}`);
-      return getFallbackChatResponse(messages[messages.length - 1]?.content || '');
+      return getFallbackChatResponse(userQuery, options?.ragContext);
     }
 
     const data = await res.json();
     const reply = data.choices?.[0]?.message?.content;
     if (!reply) {
-      return getFallbackChatResponse(messages[messages.length - 1]?.content || '');
+      return getFallbackChatResponse(userQuery, options?.ragContext);
     }
 
     return cleanAiOutput(reply);
   } catch (err) {
     console.error('[NVIDIA AI Call Error]:', err);
-    return getFallbackChatResponse(messages[messages.length - 1]?.content || '');
+    return getFallbackChatResponse(userQuery, options?.ragContext);
   }
 }
 
@@ -120,13 +142,21 @@ Forneça um olhar objetivo: reconheça o esforço real, aponte um ajuste sutil p
   return callNvidiaAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
 }
 
-function getFallbackChatResponse(userPrompt: string): string {
+function getFallbackChatResponse(userPrompt: string, ragContext?: TrajettaRagContext): string {
   const lower = userPrompt.toLowerCase();
+  const userName = ragContext?.user?.name || 'Explorador';
+  const target12m = ragContext?.user?.target12Months || 'sua visão de 12 meses';
+  const weeks = ragContext?.user?.completedWeeksCount ?? 14;
+
   if (lower.includes('deslize') || lower.includes('falhei') || lower.includes('perdi')) {
-    return 'Um deslize isolado não tem o poder de anular semanas de disciplina construída. A verdadeira maestria está em fechar a brecha no dia seguinte: reduza a fricção do próximo hábito e retome sua trajetória com calma.';
+    return `Um deslize isolado não tem o poder de anular as ${weeks} semanas de disciplina que você já construiu, ${userName}. A verdadeira maestria está em fechar a brecha no dia seguinte: reduza a fricção do próximo hábito e retome sua trajetória com calma.`;
   }
   if (lower.includes('meta') || lower.includes('começar') || lower.includes('objetivo')) {
-    return 'O erro mais comum é definir a meta pelo pico de motivação e não pelo piso de um dia exaustivo. Que fração mínima dessa meta você consegue sustentar até mesmo nas semanas mais turbulentas?';
+    return `Para alcançar "${target12m}", o erro mais comum é planejar pelo pico de motivação e não pelo piso de um dia exaustivo. Que fração mínima da sua meta você consegue sustentar até mesmo nas semanas mais turbulentas?`;
   }
-  return 'O progresso real é sutil e cumulativo. Analisando sua trajetória recente, o mais valioso não é a perfeição pontual de um dia, mas a ausência de semanas abandonadas. Mantenha o foco no seu próximo movimento consciente.';
+  if (lower.includes('treino') || lower.includes('reduzir') || lower.includes('trabalho')) {
+    return `Reduzir os treinos temporariamente por conta de pico no trabalho não é retrocesso, ${userName} — é gestão de energia. Mantenha 2 sessões curtas de manutenção para proteger o hábito sem sobrecarregar sua rotina.`;
+  }
+  return `O progresso real é sutil e cumulativo, ${userName}. Você já acumula ${weeks} semanas de trajetória na Trajetta. O mais valioso não é a perfeição de um dia, mas a consistência de não abandonar o processo.`;
 }
+
