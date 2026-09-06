@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { prisma, ensureDbReady } from '@/lib/db';
 import { sendEmail, renderWelcomeEmail } from '@/lib/email/emailService';
 
 const BASE_WAITLIST_COUNT = 1480;
 
 export async function GET() {
   try {
+    await ensureDbReady();
     const count = await prisma.waitlist.count();
     return NextResponse.json({
       ok: true,
@@ -19,6 +20,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    await ensureDbReady();
     const { email, name } = await req.json();
 
     if (!email || !email.includes('@')) {

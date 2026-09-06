@@ -42,6 +42,3 @@ next-env.d.ts
 
 .vercel
 .env*
-
-prisma/dev.db*
-
