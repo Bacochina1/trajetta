@@ -68,10 +68,6 @@ export function Sidebar({
               </span>
             </div>
           </div>
-          {/* Subtle pagination dots from Trajetta aesthetic */}
-          <div className="flex items-center gap-1 text-[#8E9499]/40 text-xs tracking-widest select-none">
-            •••••
-          </div>
         </div>
 
         {/* North Star Metric Card */}
@@ -128,33 +124,6 @@ export function Sidebar({
 
         {/* Bottom Section */}
         <div className="pt-3 border-t border-white/8 space-y-2">
-          {/* AI Contextual Coach Button (No sparkles) */}
-          <button
-            onClick={() => {
-              setActiveView('ia');
-              onClose();
-            }}
-            className={cn(
-              'w-full flex items-center gap-3 p-2.5 rounded-xl border transition-colors duration-150 text-left tactile-btn',
-              activeView === 'ia'
-                ? 'bg-[#B8FF00]/10 border-[#B8FF00]/40 text-[#F2F1ED]'
-                : 'bg-[#171A1D] border-white/8 text-[#8E9499] hover:text-[#F2F1ED] hover:border-white/15'
-            )}
-          >
-            <div className="w-7 h-7 rounded-lg bg-[#A98CF7]/15 border border-[#A98CF7]/30 flex items-center justify-center text-[#A98CF7]">
-              <Brain size={15} strokeWidth={1.8} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-bold text-[#F2F1ED]">Trajetta IA</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
-              </div>
-              <span className="text-[10px] text-[#8E9499] block truncate">
-                Reflexão e ajuste de rota
-              </span>
-            </div>
-          </button>
-
           {/* User Profile Chip */}
           <button
             onClick={() => {

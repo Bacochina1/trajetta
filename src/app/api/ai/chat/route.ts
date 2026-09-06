@@ -34,6 +34,13 @@ export async function POST(req: Request) {
       contextPack,
     });
 
+    // Auto-memorize user thoughts, desires, struggles and decisions
+    if (reply && lastUserQuery) {
+      memoryService.extractAndSaveChatMemory(userId, lastUserQuery, reply).catch((err) => {
+        console.warn('Background auto memory extraction warning:', err);
+      });
+    }
+
     return NextResponse.json({ ok: true, reply });
 
   } catch (error) {

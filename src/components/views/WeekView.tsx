@@ -69,12 +69,12 @@ export function WeekView() {
         </div>
 
         {/* Action: Share & Open Review */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 w-full sm:w-auto">
           <Button
             variant="secondary"
             size="md"
             onClick={() => setIsShareOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-bold"
+            className="flex items-center justify-center gap-1.5 text-xs font-bold w-full xs:w-auto"
           >
             <Share2 size={15} className="text-[#B8FF00]" />
             <span>Compartilhar</span>
@@ -84,7 +84,7 @@ export function WeekView() {
             variant="primary"
             size="md"
             onClick={() => setIsReviewModalOpen(true)}
-            className="shadow-[0_0_25px_rgba(184,255,0,0.25)]"
+            className="shadow-[0_0_25px_rgba(184,255,0,0.25)] flex items-center justify-center w-full xs:w-auto"
           >
             <CheckCircle2 size={16} strokeWidth={2.2} />
             <span>Fazer Weekly Review</span>

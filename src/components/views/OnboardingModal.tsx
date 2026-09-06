@@ -5,20 +5,49 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { AreaBadge } from '@/components/ui/AreaBadge';
+import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
-import { Check, ArrowRight, Compass, CheckCircle2 } from 'lucide-react';
+import { Check, ArrowRight, ArrowLeft, CheckCircle2, Plus, X, Sparkles } from 'lucide-react';
+
+interface HabitChoice {
+  title: string;
+  lifeArea: LifeArea;
+  frequencyPerWeek: number;
+}
+
+const PRESET_HABITS: HabitChoice[] = [
+  { title: 'Treino de Musculação / Academia', lifeArea: 'corpo', frequencyPerWeek: 4 },
+  { title: 'Caminhada ou Corrida Leve', lifeArea: 'corpo', frequencyPerWeek: 3 },
+  { title: 'Beber 2 Litros de Água', lifeArea: 'corpo', frequencyPerWeek: 7 },
+  { title: 'Dormir 7h a 8h por Noite', lifeArea: 'corpo', frequencyPerWeek: 7 },
+  { title: 'Aporte / Economia Semanal', lifeArea: 'dinheiro', frequencyPerWeek: 1 },
+  { title: 'Revisar Gastos e Orçamento', lifeArea: 'dinheiro', frequencyPerWeek: 1 },
+  { title: 'Trabalho Focado / Deep Work (90 min)', lifeArea: 'carreira', frequencyPerWeek: 5 },
+  { title: 'Estudo Focado (30 min)', lifeArea: 'carreira', frequencyPerWeek: 4 },
+  { title: 'Noite de Qualidade em Família', lifeArea: 'vida', frequencyPerWeek: 2 },
+  { title: 'Livre de Telas antes de Dormir', lifeArea: 'vida', frequencyPerWeek: 5 },
+];
 
 export function OnboardingModal() {
   const { isOnboardingOpen, completeOnboarding, setIsOnboardingOpen, user } = useTrajetta();
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [userName, setUserName] = useState(user.name || 'Matheus');
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [userName, setUserName] = useState(user.name || '');
   const [selectedAreas, setSelectedAreas] = useState<LifeArea[]>(['corpo', 'dinheiro', 'carreira', 'vida']);
-  const [urgentArea, setUrgentArea] = useState<LifeArea>('corpo');
-  const [target12Months, setTarget12Months] = useState(
-    'Correr minha primeira meia maratona e alcançar R$ 50.000 investidos.'
-  );
+  const [selectedHabits, setSelectedHabits] = useState<HabitChoice[]>([
+    { title: 'Treino de Musculação / Academia', lifeArea: 'corpo', frequencyPerWeek: 4 },
+    { title: 'Beber 2 Litros de Água', lifeArea: 'corpo', frequencyPerWeek: 7 },
+    { title: 'Trabalho Focado / Deep Work (90 min)', lifeArea: 'carreira', frequencyPerWeek: 5 },
+  ]);
+  const [customHabitTitle, setCustomHabitTitle] = useState('');
+  const [customHabitArea, setCustomHabitArea] = useState<LifeArea>('corpo');
+  const [customHabitFreq, setCustomHabitFreq] = useState(4);
+
+  const [target12Months, setTarget12Months] = useState(user.target12Months || '');
+  const [firstGoalTitle, setFirstGoalTitle] = useState('');
+  const [firstGoalArea, setFirstGoalArea] = useState<LifeArea>('corpo');
+  const [firstGoalTargetDate, setFirstGoalTargetDate] = useState('2026-12-31');
 
   const toggleArea = (area: LifeArea) => {
     setSelectedAreas(prev =>
@@ -26,38 +55,71 @@ export function OnboardingModal() {
     );
   };
 
+  const isHabitSelected = (h: HabitChoice) => {
+    return selectedHabits.some(item => item.title.toLowerCase() === h.title.toLowerCase());
+  };
+
+  const toggleHabit = (h: HabitChoice) => {
+    if (isHabitSelected(h)) {
+      setSelectedHabits(prev => prev.filter(item => item.title.toLowerCase() !== h.title.toLowerCase()));
+    } else {
+      setSelectedHabits(prev => [...prev, h]);
+    }
+  };
+
+  const handleAddCustomHabit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customHabitTitle.trim()) return;
+    const newHabit: HabitChoice = {
+      title: customHabitTitle.trim(),
+      lifeArea: customHabitArea,
+      frequencyPerWeek: customHabitFreq,
+    };
+    setSelectedHabits(prev => [...prev, newHabit]);
+    setCustomHabitTitle('');
+  };
+
   const handleFinishOnboarding = () => {
     completeOnboarding({
-      name: userName,
-      target12Months,
-      primaryArea: urgentArea,
-      firstGoalTitle: `Compromisso inicial em ${LIFE_AREAS[urgentArea].label}`,
+      name: userName.trim() || 'Explorador',
+      target12Months: target12Months.trim(),
+      primaryArea: selectedAreas[0] || 'corpo',
+      selectedHabits,
+      firstGoalTitle: firstGoalTitle.trim(),
+      firstGoalArea,
+      firstGoalTargetDate,
     });
   };
 
   return (
     <Modal
       isOpen={isOnboardingOpen}
-      onClose={() => setIsOnboardingOpen(false)}
-      title="Bem-vindo à Trajetta"
-      subtitle="Defina o ponto de partida da sua trajetória pessoal."
+      onClose={() => {
+        // Se usuário já tem onboarding feito, pode fechar. Senão, mantém para concluir.
+        if (user.isOnboarded) setIsOnboardingOpen(false);
+      }}
+      title="Configurar Sua Trajetória"
+      subtitle="Defina seu ponto de partida real, sem metas genéricas ou sobrecarga."
       maxWidth="max-w-xl"
     >
       <div className="space-y-6">
         {/* Brand Lockup */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-black border border-white/15 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(184,255,0,0.2)]">
-            <img src="/trajetta-logo.png" alt="Trajetta Logo" className="w-full h-full object-contain p-1" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <TrajettaLogo size={32} />
+            <div>
+              <span className="text-sm font-extrabold text-[#F2F1ED] tracking-tight block">trajetta</span>
+              <span className="text-[10px] text-[#8E9499] uppercase tracking-wider">Sistema Pessoal de Evolução</span>
+            </div>
           </div>
-          <div>
-            <span className="text-sm font-extrabold text-[#F2F1ED] tracking-tight block">trajetta</span>
-            <span className="text-[10px] text-[#8E9499] uppercase tracking-wider">Sistema Pessoal de Evolução</span>
-          </div>
+          <span className="text-xs font-mono font-bold text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/25 px-2.5 py-1 rounded-full">
+            Etapa {step} de 5
+          </span>
         </div>
 
-        {/* Progress */}
-        <div className="flex items-center gap-2 border-b border-white/8 pb-3">
-          {[1, 2, 3, 4].map(s => (
+        {/* Progress Bar */}
+        <div className="flex items-center gap-1.5 border-b border-white/8 pb-4">
+          {[1, 2, 3, 4, 5].map(s => (
             <div
               key={s}
               className={`flex-1 h-1.5 rounded-full transition-colors ${
@@ -72,13 +134,13 @@ export function OnboardingModal() {
           <div className="space-y-4">
             <div>
               <span className="text-[10px] font-bold text-[#B8FF00] uppercase tracking-widest">
-                Passo 01 de 04
+                Passo 01 · Identidade
               </span>
               <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
                 Como devemos te chamar?
               </h3>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                A Trajetta constrói uma história de vida personalizada para você.
+                A Trajetta adapta todas as sugestões e o acompanhamento diretamente ao seu nome e contexto.
               </p>
             </div>
 
@@ -91,8 +153,9 @@ export function OnboardingModal() {
                 type="text"
                 value={userName}
                 onChange={e => setUserName(e.target.value)}
-                placeholder="Ex: Matheus, Jim, Sophia..."
-                className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
+                placeholder="Ex: Carlos, Ana, Lucas, Mariana..."
+                autoFocus
+                className="w-full h-11 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/30 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
               />
             </div>
 
@@ -109,18 +172,18 @@ export function OnboardingModal() {
           </div>
         )}
 
-        {/* Step 2: Áreas de foco */}
+        {/* Step 2: Áreas de Foco */}
         {step === 2 && (
           <div className="space-y-4">
             <div>
               <span className="text-[10px] font-bold text-[#B8FF00] uppercase tracking-widest">
-                Passo 02 de 04
+                Passo 02 · Dimensões
               </span>
               <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
-                O que você quer mudar na sua vida?
+                Quais áreas você quer transformar?
               </h3>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                Selecione as grandes dimensões onde você quer ver progresso palpável.
+                Selecione as grandes dimensões que você quer acompanhar na sua evolução.
               </p>
             </div>
 
@@ -154,9 +217,9 @@ export function OnboardingModal() {
               })}
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between pt-2">
               <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
-                Voltar
+                <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
                 variant="primary"
@@ -170,115 +233,238 @@ export function OnboardingModal() {
           </div>
         )}
 
-        {/* Step 3: Área mais urgente & Visão 12 meses */}
+        {/* Step 3: Hábitos Reais */}
         {step === 3 && (
           <div className="space-y-4">
             <div>
               <span className="text-[10px] font-bold text-[#B8FF00] uppercase tracking-widest">
-                Passo 03 de 04
+                Passo 03 · Hábitos Reais
               </span>
               <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
-                Qual área mais precisa da sua atenção hoje?
+                O que você realmente quer manter na rotina?
               </h3>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                Escolha a principal prioridade para o pontapé inicial.
+                Escolha apenas o que faz sentido para sua vida hoje. Nada de hábitos irreais ou punições.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              {selectedAreas.map(area => (
-                <button
-                  key={area}
-                  type="button"
-                  onClick={() => setUrgentArea(area)}
-                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-colors tactile-btn ${
-                    urgentArea === area
-                      ? 'bg-[#B8FF00] text-[#0D0F10] border-[#B8FF00]'
-                      : 'bg-[#111315] text-[#8E9499] border-white/10 hover:text-[#F2F1ED]'
-                  }`}
-                >
-                  {LIFE_AREAS[area].label}
-                </button>
-              ))}
+            {/* Quick Presets */}
+            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              {PRESET_HABITS.map(h => {
+                const selected = isHabitSelected(h);
+                return (
+                  <div
+                    key={h.title}
+                    onClick={() => toggleHabit(h)}
+                    className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all tactile-btn select-none ${
+                      selected
+                        ? 'bg-[#B8FF00]/10 border-[#B8FF00]/40 text-[#F2F1ED]'
+                        : 'bg-[#111315] border-white/8 text-[#8E9499] hover:text-[#F2F1ED]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 ${
+                          selected ? 'bg-[#B8FF00] text-[#0D0F10]' : 'border border-white/20'
+                        }`}
+                      >
+                        {selected && <Check size={10} strokeWidth={3} />}
+                      </div>
+                      <span className="text-xs font-semibold truncate">{h.title}</span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-[11px] text-[#8E9499] font-mono">{h.frequencyPerWeek}x/sem</span>
+                      <AreaBadge area={h.lifeArea} size="sm" showIcon={false} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            <div className="pt-2 space-y-1.5">
-              <label htmlFor="onboarding-target" className="block text-xs text-[#F2F1ED] font-semibold mb-1.5">
-                Onde você gostaria de estar daqui a 12 meses?
-              </label>
-              <textarea
-                id="onboarding-target"
-                value={target12Months}
-                onChange={e => setTarget12Months(e.target.value)}
-                rows={3}
-                placeholder="Ex: Correr uma meia maratona, estar com R$ 50k investidos e com o corpo descansado..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
-              />
+            {/* Add Custom Habit */}
+            <div className="pt-2 border-t border-white/8">
+              <span className="block text-[11px] font-semibold text-[#8E9499] uppercase tracking-wider mb-2">
+                Ou crie um hábito próprio:
+              </span>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  value={customHabitTitle}
+                  onChange={e => setCustomHabitTitle(e.target.value)}
+                  placeholder="Ex: Meditar 10 min, Ler 15 páginas..."
+                  className="flex-1 h-9 bg-[#111315] border border-white/10 rounded-lg px-3 text-xs text-[#F2F1ED] placeholder:text-white/30 focus:border-[#B8FF00] focus:outline-none"
+                />
+                <div className="flex gap-2">
+                  <select
+                    value={customHabitArea}
+                    onChange={e => setCustomHabitArea(e.target.value as LifeArea)}
+                    className="h-9 bg-[#111315] border border-white/10 rounded-lg px-2 text-xs text-[#F2F1ED] focus:outline-none"
+                  >
+                    <option value="corpo">Corpo</option>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="carreira">Carreira</option>
+                    <option value="vida">Vida</option>
+                  </select>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleAddCustomHabit}
+                    disabled={!customHabitTitle.trim()}
+                  >
+                    <Plus size={13} /> Adicionar
+                  </Button>
+                </div>
+              </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between pt-2">
               <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
-                Voltar
+                <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
                 variant="primary"
                 size="md"
                 onClick={() => setStep(4)}
-                disabled={!target12Months.trim()}
+                disabled={selectedHabits.length === 0}
               >
-                Gerar Meu Caminho <ArrowRight size={14} />
+                Próximo Passo ({selectedHabits.length} selecionados) <ArrowRight size={14} />
               </Button>
             </div>
           </div>
         )}
 
-        {/* Step 4: O Primeiro Momento Mágico */}
+        {/* Step 4: Alvo de 12 Meses */}
         {step === 4 && (
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
               <span className="text-[10px] font-bold text-[#B8FF00] uppercase tracking-widest">
-                Seu Caminho Inicial Trajetta
+                Passo 04 · Visão de 12 Meses
               </span>
               <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
-                Entendemos o seu momento, {userName}.
+                Onde você quer estar daqui a 1 ano?
               </h3>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                Desenhamos sua primeira semana sem sobrecarga. Quatro intenções simples para começar:
+                Descreva com suas palavras o que representaria um ano vitorioso para você.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#111315] border border-white/10 space-y-3">
-              <div className="flex items-center gap-3">
-                <AreaBadge area="corpo" size="sm" />
-                <span className="text-xs text-[#F2F1ED] font-medium">3 treinos de 45 min esta semana</span>
+            <div>
+              <label htmlFor="onboarding-target" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                Seu Compromisso Pessoal de 12 Meses
+              </label>
+              <textarea
+                id="onboarding-target"
+                value={target12Months}
+                onChange={e => setTarget12Months(e.target.value)}
+                rows={4}
+                placeholder="Ex: Aumentar o faturamento do meu negócio, manter constância de treinos 4x na semana sem lesão, e ter momentos de lazer sem telas com quem eu amo..."
+                className="w-full bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/30 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none leading-relaxed"
+              />
+            </div>
+
+            <div className="flex justify-between pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(3)}>
+                <ArrowLeft size={14} /> Voltar
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setStep(5)}
+                disabled={!target12Months.trim()}
+              >
+                Definir Primeira Meta <ArrowRight size={14} />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Primeira Meta Real & Conclusão */}
+        {step === 5 && (
+          <div className="space-y-5">
+            <div>
+              <span className="text-[10px] font-bold text-[#B8FF00] uppercase tracking-widest">
+                Passo 05 · Primeira Meta
+              </span>
+              <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
+                Qual sua primeira grande meta, {userName}?
+              </h3>
+              <p className="text-xs text-[#8E9499] mt-0.5">
+                Um objetivo mensurável e claro para concentrar seu foco neste ciclo.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label htmlFor="onboarding-first-goal" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1">
+                  Título da Meta
+                </label>
+                <input
+                  id="onboarding-first-goal"
+                  type="text"
+                  value={firstGoalTitle}
+                  onChange={e => setFirstGoalTitle(e.target.value)}
+                  placeholder="Ex: Bater R$ 30k de faturamento, Treinar 16x no mês, Guardar R$ 5.000..."
+                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/30 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
+                />
               </div>
-              <div className="flex items-center gap-3">
-                <AreaBadge area="dinheiro" size="sm" />
-                <span className="text-xs text-[#F2F1ED] font-medium">Guardar os primeiros R$ 350 para a reserva</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <AreaBadge area="carreira" size="sm" />
-                <span className="text-xs text-[#F2F1ED] font-medium">90 min diários de trabalho profundo sem distrações</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <AreaBadge area="vida" size="sm" />
-                <span className="text-xs text-[#F2F1ED] font-medium">Uma noite inteira sem telas com quem você ama</span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="onboarding-goal-area" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1">
+                    Área
+                  </label>
+                  <select
+                    id="onboarding-goal-area"
+                    value={firstGoalArea}
+                    onChange={e => setFirstGoalArea(e.target.value as LifeArea)}
+                    className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-xs text-[#F2F1ED] focus:outline-none"
+                  >
+                    <option value="corpo">Corpo & Saúde</option>
+                    <option value="dinheiro">Dinheiro & Finanças</option>
+                    <option value="carreira">Carreira & Negócios</option>
+                    <option value="vida">Vida & Equilíbrio</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="onboarding-goal-date" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1">
+                    Data Alvo
+                  </label>
+                  <input
+                    id="onboarding-goal-date"
+                    type="date"
+                    value={firstGoalTargetDate}
+                    onChange={e => setFirstGoalTargetDate(e.target.value)}
+                    className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-xs text-[#F2F1ED] focus:outline-none"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/25 text-xs text-[#F2F1ED]">
-              <strong className="text-[#B8FF00] block mb-0.5">Métrica North Star:</strong>
-              Concluir sua primeira semana colocará o marcador em 1 semana de evolução.
+            {/* Ready summary */}
+            <div className="p-4 rounded-xl bg-[#111315] border border-white/10 space-y-2 text-xs">
+              <div className="flex items-center gap-2 text-[#B8FF00] font-bold">
+                <CheckCircle2 size={15} />
+                <span>Configuração Pronta:</span>
+              </div>
+              <p className="text-[#8E9499] leading-relaxed">
+                Você terá <strong className="text-[#F2F1ED]">{selectedHabits.length} hábitos monitorados</strong> e iniciará sua semana 1 com foco e clareza.
+              </p>
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-between pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(4)}>
+                <ArrowLeft size={14} /> Voltar
+              </Button>
               <Button
                 variant="primary"
                 size="lg"
                 onClick={handleFinishOnboarding}
-                className="w-full text-sm font-bold bg-[#B8FF00] text-[#0D0F10] shadow-[0_0_30px_rgba(184,255,0,0.3)]"
+                disabled={!firstGoalTitle.trim()}
+                className="bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_25px_rgba(184,255,0,0.3)]"
               >
-                <CheckCircle2 size={16} strokeWidth={2.5} /> Começar Minha Primeira Semana
+                <CheckCircle2 size={16} strokeWidth={2.5} /> Iniciar Minha Trajetória
               </Button>
             </div>
           </div>

@@ -75,7 +75,7 @@ export function NewGoalModal() {
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            placeholder="Ex: Correr Meia Maratona (21k), Reserva de R$ 50k..."
+            placeholder="Ex: Atingir R$ 30k de faturamento, Treinar 16x no mês, Guardar R$ 5.000..."
             required
             className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
           />

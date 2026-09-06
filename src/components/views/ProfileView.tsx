@@ -38,6 +38,8 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
     timeline,
     lifeScore,
     resetToDemoData,
+    resetToZero,
+    setIsOnboardingOpen,
     setIsAuthModalOpen,
     logout,
   } = useTrajetta();
@@ -552,6 +554,30 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
             </Button>
           </div>
         </form>
+      </div>
+
+      {/* Reset Account & Redo Onboarding */}
+      <div className="p-5 rounded-2xl bg-[#14181f] border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <RotateCcw size={16} className="text-amber-400" />
+            <h3 className="text-sm font-bold text-[#F2F1ED]">Começar do Zero / Refazer Onboarding</h3>
+          </div>
+          <p className="text-xs text-[#8E9499] mt-1">
+            Limpa metas e dados herdados para que você configure sua trajetória real do zero, com seu próprio nome e hábitos.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            if (window.confirm('Tem certeza que deseja limpar os dados pré-carregados e refazer o onboarding 100% do zero?')) {
+              resetToZero();
+            }
+          }}
+          className="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 transition-all flex items-center gap-2 select-none flex-shrink-0 tactile-btn"
+        >
+          <RotateCcw size={14} />
+          <span>Resetar Conta do Zero</span>
+        </button>
       </div>
 
       {/* Logout Action Bar */}

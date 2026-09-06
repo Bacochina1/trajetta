@@ -50,19 +50,33 @@ type TrajettaContextType = {
   toggleGoalActionToday: (goalId: string, actionId: string) => void;
   updateGoalProgress: (goalId: string, newProgress: number) => void;
   createGoal: (goalData: Partial<Goal>) => void;
+  updateGoal: (goalId: string, patch: Partial<Goal>) => void;
+  deleteGoal: (goalId: string) => void;
   createHabit: (habitData: Partial<Habit>) => void;
+  updateHabit: (habitId: string, patch: Partial<Habit>) => void;
+  deleteHabit: (habitId: string) => void;
   incrementJourneyDay: (journeyId: string) => void;
   recordJourneySlip: (journeyId: string) => void;
   updateWeeklyPriority: (area: LifeArea, text: string) => void;
   completeCurrentWeek: () => void;
   submitWeeklyReview: (reviewData: Partial<WeeklyReview>) => void;
   addTimelineEvent: (eventData: Partial<TimelineEvent>) => void;
-  completeOnboarding: (data: { name: string; target12Months: string; primaryArea: LifeArea; firstGoalTitle: string }) => void;
+  completeOnboarding: (data: {
+    name: string;
+    target12Months: string;
+    primaryArea: LifeArea;
+    selectedHabits?: { title: string; lifeArea: LifeArea; frequencyPerWeek: number }[];
+    firstGoalTitle?: string;
+    firstGoalArea?: LifeArea;
+    firstGoalTargetDate?: string;
+    firstGoalMilestones?: string[];
+  }) => void;
   setIsReviewModalOpen: (open: boolean) => void;
   setIsOnboardingOpen: (open: boolean) => void;
   setIsNewGoalModalOpen: (open: boolean) => void;
   setIsAuthModalOpen: (open: boolean) => void;
   resetToDemoData: () => void;
+  resetToZero: () => void;
 };
 
 const TrajettaContext = createContext<TrajettaContextType | undefined>(undefined);
@@ -142,7 +156,14 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem('trajetta_store_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.user) setUser(parsed.user);
+        if (parsed.user) {
+          setUser(parsed.user);
+          if (!parsed.user.isOnboarded) {
+            setIsOnboardingOpen(true);
+          }
+        } else {
+          setIsOnboardingOpen(true);
+        }
         if (parsed.goals) setGoals(parsed.goals);
         if (parsed.habits) setHabits(parsed.habits);
         if (parsed.journeys) setJourneys(parsed.journeys);
@@ -150,9 +171,13 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         if (parsed.weeklyReviews) setWeeklyReviews(parsed.weeklyReviews);
         if (parsed.timeline) setTimeline(parsed.timeline);
         if (parsed.lifeScore) setLifeScore(parsed.lifeScore);
+      } else {
+        // No saved state in this browser: trigger fresh onboarding!
+        setIsOnboardingOpen(true);
       }
     } catch (e) {
       console.warn('Could not read from localStorage', e);
+      setIsOnboardingOpen(true);
     }
     setMounted(true);
   }, []);
@@ -268,6 +293,14 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const updateGoal = (goalId: string, patch: Partial<Goal>) => {
+    setGoals(prev => prev.map(g => (g.id === goalId ? { ...g, ...patch } : g)));
+  };
+
+  const deleteGoal = (goalId: string) => {
+    setGoals(prev => prev.filter(g => g.id !== goalId));
+  };
+
   const createHabit = (habitData: Partial<Habit>) => {
     const newId = 'habit-' + Date.now();
     const newHabit: Habit = {
@@ -277,10 +310,18 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       frequencyPerWeek: habitData.frequencyPerWeek || 4,
       daysCompletedThisWeek: [],
       targetDescription: habitData.targetDescription || `${habitData.frequencyPerWeek || 4}x por semana`,
-      streakWeeks: 1,
+      streakWeeks: 0,
       iconName: habitData.iconName || 'CheckCircle',
     };
     setHabits(prev => [...prev, newHabit]);
+  };
+
+  const updateHabit = (habitId: string, patch: Partial<Habit>) => {
+    setHabits(prev => prev.map(h => (h.id === habitId ? { ...h, ...patch } : h)));
+  };
+
+  const deleteHabit = (habitId: string) => {
+    setHabits(prev => prev.filter(h => h.id !== habitId));
   };
 
   const incrementJourneyDay = (journeyId: string) => {
@@ -388,25 +429,120 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     setTimeline(prev => [newEvent, ...prev]);
   };
 
-  const completeOnboarding = (data: { name: string; target12Months: string; primaryArea: LifeArea; firstGoalTitle: string }) => {
-    setUser(prev => ({
-      ...prev,
-      name: data.name || 'Matheus',
-      avatarText: (data.name || 'Matheus').charAt(0).toUpperCase(),
-      target12Months: data.target12Months,
+  const completeOnboarding = (data: {
+    name: string;
+    target12Months: string;
+    primaryArea: LifeArea;
+    selectedHabits?: { title: string; lifeArea: LifeArea; frequencyPerWeek: number }[];
+    firstGoalTitle?: string;
+    firstGoalArea?: LifeArea;
+    firstGoalTargetDate?: string;
+    firstGoalMilestones?: string[];
+  }) => {
+    const cleanedName = data.name.trim() || 'Explorador';
+    const updatedUser: UserProfile = {
+      ...user,
+      name: cleanedName,
+      avatarText: cleanedName.charAt(0).toUpperCase(),
+      target12Months: data.target12Months.trim(),
       primaryFocusArea: data.primaryArea,
       isOnboarded: true,
-    }));
+      completedWeeksCount: 0,
+    };
+    setUser(updatedUser);
 
-    if (data.firstGoalTitle) {
-      createGoal({
-        title: data.firstGoalTitle,
-        lifeArea: data.primaryArea,
-        whyItMatters: data.target12Months,
+    // Replace goals with the user's real goal if provided
+    const newGoals: Goal[] = [];
+    if (data.firstGoalTitle && data.firstGoalTitle.trim()) {
+      const gId = 'goal-' + Date.now();
+      const milestonesList = (data.firstGoalMilestones && data.firstGoalMilestones.length > 0)
+        ? data.firstGoalMilestones.map((m, idx) => ({
+            id: `${gId}-m${idx + 1}`,
+            title: m,
+            completed: false,
+            order: idx + 1,
+          }))
+        : [
+            { id: `${gId}-m1`, title: 'Primeiro avanço mensurável', completed: false, order: 1 },
+            { id: `${gId}-m2`, title: 'Consolidação e consistência', completed: false, order: 2 },
+          ];
+
+      newGoals.push({
+        id: gId,
+        title: data.firstGoalTitle.trim(),
+        description: data.target12Months ? `Meta ligada ao seu alvo de 12 meses: ${data.target12Months}` : '',
+        lifeArea: data.firstGoalArea || data.primaryArea,
+        status: 'active',
+        startDate: new Date().toISOString().split('T')[0],
+        targetDate: data.firstGoalTargetDate || '2026-12-31',
+        progress: 0,
+        whyItMatters: data.target12Months || 'Importante para a minha trajetória pessoal.',
+        milestones: milestonesList,
+        actions: [
+          { id: `${gId}-a1`, title: `Dar o primeiro passo em ${data.firstGoalTitle.trim()}`, completedToday: false },
+        ],
       });
     }
+    setGoals(newGoals);
+
+    // Replace habits with the user's selected habits
+    const newHabits: Habit[] = [];
+    if (data.selectedHabits && data.selectedHabits.length > 0) {
+      data.selectedHabits.forEach((h, idx) => {
+        newHabits.push({
+          id: 'habit-' + (Date.now() + idx),
+          title: h.title,
+          lifeArea: h.lifeArea,
+          frequencyPerWeek: h.frequencyPerWeek || 4,
+          daysCompletedThisWeek: [],
+          targetDescription: `${h.frequencyPerWeek || 4}x por semana`,
+          streakWeeks: 0,
+          iconName: 'CheckCircle',
+        });
+      });
+    }
+    setHabits(newHabits);
+
+    // Initial timeline event
+    const now = new Date();
+    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    setTimeline([
+      {
+        id: 't-' + Date.now(),
+        date: now.toISOString().split('T')[0],
+        year: now.getFullYear(),
+        month: months[now.getMonth()],
+        title: `Trajetória Iniciada: ${cleanedName}`,
+        description: data.target12Months ? `Alvo 12 meses: "${data.target12Months}"` : 'Conta criada e onboarding configurado com sucesso.',
+        type: 'milestone',
+        lifeArea: data.primaryArea,
+        tag: 'Boas-vindas',
+      },
+    ]);
 
     setIsOnboardingOpen(false);
+  };
+
+  const resetToZero = () => {
+    localStorage.removeItem('trajetta_store_v1');
+    const freshUser: UserProfile = {
+      name: '',
+      avatarText: 'T',
+      role: 'Membro Fundador',
+      isOnboarded: false,
+      target12Months: '',
+      primaryFocusArea: 'corpo',
+      completedWeeksCount: 0,
+    };
+    setUser(freshUser);
+    setGoals([]);
+    setHabits([]);
+    setJourneys([]);
+    setWeeklyPlan(INITIAL_WEEKLY_PLAN);
+    setWeeklyReviews([]);
+    setTimeline([]);
+    setLifeScore(INITIAL_LIFE_SCORE);
+    setIsOnboardingOpen(true);
   };
 
   const resetToDemoData = () => {
@@ -444,7 +580,11 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       toggleGoalActionToday,
       updateGoalProgress,
       createGoal,
+      updateGoal,
+      deleteGoal,
       createHabit,
+      updateHabit,
+      deleteHabit,
       incrementJourneyDay,
       recordJourneySlip,
       updateWeeklyPriority,
@@ -461,6 +601,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       login,
       logout,
       resetToDemoData,
+      resetToZero,
     }),
     [
       user,

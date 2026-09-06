@@ -42,7 +42,7 @@ export function WeeklyReviewModal() {
           wins: whatAdvanced,
           challenges: whatDistracted,
           completedRatio: habitRate + '%',
-          streakWeeks: user.completedWeeksCount || 14,
+          streakWeeks: user.completedWeeksCount || 1,
         }),
       });
       const data = await res.json();
@@ -55,7 +55,7 @@ export function WeeklyReviewModal() {
     }
 
     submitWeeklyReview({
-      advancedGoalsCount: 3,
+      advancedGoalsCount: goals.filter(g => g.progress > 0).length || (goals.length > 0 ? 1 : 0),
       habitsRate: habitRate,
       topArea,
       neglectedArea,

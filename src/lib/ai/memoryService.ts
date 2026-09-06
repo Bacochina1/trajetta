@@ -260,4 +260,48 @@ export const memoryService = {
       currentQuery: queryMessage,
     };
   },
+
+  async extractAndSaveChatMemory(userId: string, userMessage: string, aiResponse: string) {
+    const text = userMessage.trim();
+    if (text.length < 8) return;
+
+    let category: MemoryCategory = 'life_context';
+    let importance = 0.6;
+
+    const lower = text.toLowerCase();
+    if (lower.includes('quero') || lower.includes('meta') || lower.includes('pretendo') || lower.includes('objetivo') || lower.includes('sonho')) {
+      category = 'goal';
+      importance = 0.85;
+    } else if (lower.includes('dificuldade') || lower.includes('cansad') || lower.includes('sobrecarga') || lower.includes('reduzir') || lower.includes('atrito') || lower.includes('problema')) {
+      category = 'difficulty';
+      importance = 0.85;
+    } else if (lower.includes('prefiro') || lower.includes('gosto') || lower.includes('costumo') || lower.includes('prioridade')) {
+      category = 'preference';
+      importance = 0.75;
+    } else if (lower.includes('decidi') || lower.includes('vou começar') || lower.includes('vou parar') || lower.includes('vou fazer')) {
+      category = 'decision';
+      importance = 0.85;
+    }
+
+    try {
+      const existing = await prisma.userMemory.findFirst({
+        where: {
+          userId,
+          content: { contains: text.slice(0, 30) },
+        },
+      });
+
+      if (!existing) {
+        await this.addMemory(userId, {
+          memoryType: category,
+          content: text,
+          importance,
+          confidence: 0.88,
+          source: 'chat_conversation',
+        });
+      }
+    } catch (err) {
+      console.warn('Auto memory save warning:', err);
+    }
+  },
 };

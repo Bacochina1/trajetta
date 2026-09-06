@@ -32,47 +32,16 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Account / Login Trigger */}
-        <button
-          onClick={() => setIsAuthModalOpen(true)}
-          title="Conta & Autenticação"
-          className="min-h-[36px] px-3 py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center gap-1.5 text-xs sm:text-sm"
-        >
-          <User size={14} className="text-[#B8FF00]" />
-          <span className="hidden sm:inline font-medium">
-            {user.role?.includes('Admin') ? 'Jim (Admin)' : user.name}
-          </span>
-        </button>
-
-        {/* Sair / Logout */}
-        <button
-          onClick={logout}
-          title="Sair da conta"
-          className="min-h-[36px] px-2.5 py-1.5 rounded-lg text-[#8E9499] hover:text-red-400 hover:bg-white/5 border border-white/8 hover:border-red-500/20 tactile-btn flex items-center gap-1 text-xs"
-        >
-          <LogOut size={14} />
-          <span className="hidden sm:inline">Sair</span>
-        </button>
-
-        {/* Reset Demo Data button (Discreet) */}
-        <button
-          onClick={resetToDemoData}
-          title="Restaurar dados iniciais de demonstração"
-          className="min-h-[36px] px-3 py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 tactile-btn hidden lg:flex items-center gap-1.5 text-xs sm:text-sm"
-        >
-          <RotateCcw size={14} />
-          <span>Restaurar Demo</span>
-        </button>
-
-        {/* Nova Meta */}
+      <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        {/* Nova Meta (Hidden on tiny screens, icon on md) */}
         <Button
           variant="secondary"
           size="sm"
           onClick={() => setIsNewGoalModalOpen(true)}
+          className="hidden sm:inline-flex"
         >
           <Plus size={14} />
-          <span className="hidden sm:inline">Nova Meta</span>
+          <span>Nova Meta</span>
         </Button>
 
         {/* Weekly Review CTA Button */}
@@ -80,10 +49,34 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           variant="primary"
           size="sm"
           onClick={() => setIsReviewModalOpen(true)}
+          className="text-xs px-2.5 sm:px-3 h-8 sm:h-9"
         >
-          <CheckCircle2 size={14} strokeWidth={2.2} />
-          <span>Fechar Semana</span>
+          <CheckCircle2 size={13} strokeWidth={2.2} />
+          <span className="hidden xs:inline sm:inline">Fechar Semana</span>
+          <span className="xs:hidden sm:hidden">Revisão</span>
         </Button>
+
+        {/* Account / Login Trigger */}
+        <button
+          onClick={() => setIsAuthModalOpen(true)}
+          title="Conta & Autenticação"
+          className="w-8 h-8 sm:w-auto min-h-[32px] sm:min-h-[36px] px-0 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center justify-center gap-1.5 text-xs sm:text-sm"
+        >
+          <User size={14} className="text-[#B8FF00]" />
+          <span className="hidden md:inline font-medium truncate max-w-[100px]">
+            {user.role?.includes('Admin') ? 'Jim (Admin)' : (user.name || 'Conta')}
+          </span>
+        </button>
+
+        {/* Sair / Logout (Desktop only, mobile accesses via Profile) */}
+        <button
+          onClick={logout}
+          title="Sair da conta"
+          className="min-h-[36px] px-2.5 py-1.5 rounded-lg text-[#8E9499] hover:text-red-400 hover:bg-white/5 border border-white/8 hover:border-red-500/20 tactile-btn hidden sm:flex items-center gap-1 text-xs"
+        >
+          <LogOut size={14} />
+          <span className="hidden md:inline">Sair</span>
+        </button>
       </div>
     </header>
   );

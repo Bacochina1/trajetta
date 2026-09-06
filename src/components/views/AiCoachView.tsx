@@ -156,19 +156,19 @@ export function AiCoachView() {
         </div>
       </div>
 
-      {/* Live RAG Engine Context Badge */}
+      {/* Live Context & Memory Engine Status */}
       <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#171A1D] via-[#15181B] to-[#121416] border border-white/8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#8E9499]">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
           <Brain size={15} className="text-[#B8FF00]" />
           <span>
-            RAG Conectado: <strong className="text-[#F2F1ED]">{user.completedWeeksCount} semanas</strong> · {goals.length} metas · {habits.length} hábitos · Life Score
+            Contexto Ativo: <strong className="text-[#F2F1ED]">{user.completedWeeksCount} sem. de consistência</strong> · {goals.length} {goals.length === 1 ? 'meta' : 'metas'} · {habits.length} {habits.length === 1 ? 'hábito' : 'hábitos'}
           </span>
         </div>
         <div className="flex items-center gap-1.5 self-start sm:self-auto">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] shadow-[0_0_6px_#B8FF00]" />
           <span className="text-[#B8FF00] font-bold text-[10px] tracking-wider uppercase">
-            RAG Trajetta Ativo
+            Memória Sincronizada
           </span>
         </div>
       </div>

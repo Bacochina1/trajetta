@@ -1,13 +1,13 @@
 import { Goal, Habit, Journey, LifeScoreData, TimelineEvent, UserProfile, WeeklyPlan } from '@/types';
 
 export const INITIAL_USER: UserProfile = {
-  name: 'Matheus',
-  avatarText: 'M',
+  name: '',
+  avatarText: 'T',
   role: 'Membro Fundador',
-  isOnboarded: true,
-  target12Months: 'Correr minha primeira meia maratona, alcançar R$ 50k investidos e assumir como Head de Produto sem abrir mão do equilíbrio pessoal.',
+  isOnboarded: false,
+  target12Months: '',
   primaryFocusArea: 'corpo',
-  completedWeeksCount: 14,
+  completedWeeksCount: 0,
 };
 
 export const INITIAL_GOALS: Goal[] = [
