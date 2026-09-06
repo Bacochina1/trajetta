@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { Button } from '@/components/ui/Button';
-import { Brain, Send, Compass, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Brain, Send, Compass, ArrowRight, RefreshCw, Sparkles, Flame, Target, Scale } from 'lucide-react';
+import { generatePersonalizedPrompts, PromptSuggestion } from '@/lib/ai/promptSuggestions';
 
 interface Message {
   id: string;
@@ -26,13 +27,25 @@ export function AiCoachView() {
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'metas' | 'habitos' | 'lifescore' | 'estrategia'>('all');
+  const [refreshSeed, setRefreshSeed] = useState(0);
 
-  const quickPrompts = [
-    'Estou pensando em reduzir os treinos esse mês por causa do trabalho.',
-    `Como está meu avanço rumo a "${goals[0]?.title || 'minha meta principal'}"?`,
-    'Qual área da minha vida mais precisa de atenção pelo Life Score?',
-    'Analise meu histórico recente e sugira um ajuste para esta semana.',
-  ];
+  // Dynamic reflection prompts generated from user's live data
+  const dynamicPrompts = useMemo(() => {
+    return generatePersonalizedPrompts({
+      user,
+      goals,
+      habits,
+      journeys,
+      weeklyPlan,
+      lifeScore,
+    });
+  }, [user, goals, habits, journeys, weeklyPlan, lifeScore, refreshSeed]);
+
+  const filteredPrompts = useMemo(() => {
+    if (selectedCategory === 'all') return dynamicPrompts;
+    return dynamicPrompts.filter(p => p.category === selectedCategory);
+  }, [dynamicPrompts, selectedCategory]);
 
   const handleSend = async (textToSend?: string) => {
     const query = textToSend || input;
@@ -73,7 +86,6 @@ export function AiCoachView() {
         body: JSON.stringify({ messages: history, ragContext }),
       });
 
-
       const data = await res.json();
       const replyText = data?.reply;
 
@@ -97,9 +109,9 @@ export function AiCoachView() {
           'Eu entendo a sobrecarga de trabalho. Analisando seu histórico, você já acumulou consistência notável nos últimos meses. Em vez de abandonar o hábito, que tal reduzirmos temporariamente a duração ou frequência? Assim você não quebra a identidade construída e mantém o ritmo sem desgaste.';
       } else if (lower.includes('consistência') || lower.includes('semanas')) {
         fallback = `Você já concluiu ${user.completedWeeksCount} semanas consecutivas de planejamento na Trajetta! Mantenha a atenção aos momentos de descanso no meio da semana para sustentar essa consistência.`;
-      } else if (lower.includes('atenção') || lower.includes('área')) {
+      } else if (lower.includes('atenção') || lower.includes('área') || lower.includes('score')) {
         fallback =
-          'Pelo seu Life Score atual, a área de Dinheiro e Vida pedem atenção equilibrada. Você tem sido exemplar em Corpo e Carreira, mas o tempo com quem você ama à noite encolheu nos últimos 10 dias. Uma noite inteira livre de telas nesta semana trará um retorno enorme para seu equilíbrio.';
+          'Pelo seu Life Score atual, a área de Dinheiro e Vida pedem atenção equilibrada. Você tem sido exemplar em Corpo e Carreira, mas o tempo com quem você ama à noite encolheu nos últimos dias. Uma noite inteira livre de telas nesta semana trará um retorno enorme para seu equilíbrio.';
       } else {
         fallback = `Entendido, ${user.name}. Com base no seu compromisso de longo prazo ("${user.target12Months}"), o segredo não é acelerar na marra, mas escolher uma única ação realizável para o dia de hoje e sustentá-la com calma.`;
       }
@@ -139,7 +151,7 @@ export function AiCoachView() {
             IA da <span className="text-[#B8FF00]">Trajetta.</span>
           </h1>
           <p className="text-sm text-[#8E9499] mt-0.5">
-            Não é um chat genérico. O coach conhece seu histórico e sugere ajustes de rota realistas.
+            Não é um chat genérico. O coach conhece seu histórico real e sugere ajustes de rota calibrados.
           </p>
         </div>
       </div>
@@ -161,10 +173,9 @@ export function AiCoachView() {
         </div>
       </div>
 
-
       {/* Messages Thread */}
       <div className="trajetta-card p-4 sm:p-6 min-h-[400px] flex flex-col justify-between space-y-4">
-        <div className="space-y-4 overflow-y-auto max-h-[460px] pr-1">
+        <div className="space-y-4 overflow-y-auto max-h-[420px] pr-1">
           {messages.map(msg => {
             const isUser = msg.sender === 'user';
             return (
@@ -205,28 +216,67 @@ export function AiCoachView() {
           {isTyping && (
             <div className="flex items-center gap-2.5 text-xs text-[#8E9499] pl-10">
               <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse [animation-delay:150ms]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A98CF7] animate-pulse [animation-delay:300ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse [animation-delay:300ms]" />
               </div>
               <span className="text-[11px]">Trajetta IA formulando reflexão serena...</span>
             </div>
           )}
         </div>
 
-        {/* Quick Prompts */}
-        <div className="space-y-2 pt-2 border-t border-white/8">
-          <span className="text-[11px] font-bold text-[#8E9499] uppercase tracking-wider block">
-            Sugestões de Reflexão:
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {quickPrompts.map((p, idx) => (
+        {/* Personalized Reflection Prompts (Dynamic from user data) */}
+        <div className="space-y-2.5 pt-3 border-t border-white/8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-[#8E9499] uppercase tracking-wider flex items-center gap-1.5">
+                <Compass size={13} className="text-[#B8FF00]" />
+                Sugestões Baseadas na Sua Trajetória:
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+              {[
+                { id: 'all', label: 'Todas' },
+                { id: 'metas', label: '🎯 Metas' },
+                { id: 'habitos', label: '⚡ Hábitos' },
+                { id: 'lifescore', label: '⚖️ Life Score' },
+                { id: 'estrategia', label: '🧭 Estratégia' },
+              ].map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id as any)}
+                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-md transition-all whitespace-nowrap ${
+                    selectedCategory === cat.id
+                      ? 'bg-[#B8FF00]/15 text-[#B8FF00] border border-[#B8FF00]/30 shadow-[0_0_8px_rgba(184,255,0,0.15)]'
+                      : 'text-[#8E9499] hover:text-[#F2F1ED] bg-white/3'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Prompt Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[175px] overflow-y-auto pr-1">
+            {filteredPrompts.map(prompt => (
               <button
-                key={idx}
-                onClick={() => handleSend(p)}
-                className="text-xs text-[#8E9499] hover:text-[#F2F1ED] bg-[#111315] hover:bg-white/5 border border-white/8 px-3 py-2 rounded-lg text-left transition-colors tactile-btn min-h-[36px]"
+                key={prompt.id}
+                onClick={() => handleSend(prompt.text)}
+                className="group p-2.5 rounded-xl bg-[#12161E]/80 hover:bg-[#181E29] border border-white/8 hover:border-[#B8FF00]/30 text-left transition-all flex flex-col justify-between gap-1.5 active:scale-[0.99] shadow-sm"
               >
-                {p}
+                <div className="flex items-center justify-between w-full">
+                  <span className={`text-[9px] font-mono uppercase font-bold px-2 py-0.5 rounded-full border ${prompt.badgeColor}`}>
+                    {prompt.badge}
+                  </span>
+                  <ArrowRight size={12} className="text-[#8E9499] group-hover:text-[#B8FF00] group-hover:translate-x-0.5 transition-all" />
+                </div>
+                <p className="text-xs text-[#CED2D6] group-hover:text-white leading-relaxed line-clamp-2">
+                  {prompt.text}
+                </p>
               </button>
             ))}
           </div>
