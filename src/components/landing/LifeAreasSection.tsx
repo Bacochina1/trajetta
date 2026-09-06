@@ -122,9 +122,13 @@ export function LifeAreasSection() {
       {/* Tab Body: Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Atmospheric Preview with embedded dynamic modal */}
-        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[320px] sm:min-h-[400px] p-4 sm:p-8 flex items-center justify-center shadow-2xl">
-          {/* Background atmosphere gradient */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#06080b] via-[#0e131b] to-[#171f2a] opacity-90"></div>
+        <div className="lg:col-span-7 rounded-2xl bg-[#0c0e12] border border-white/10 relative overflow-hidden min-h-[340px] sm:min-h-[420px] p-4 sm:p-8 flex items-center justify-center shadow-2xl">
+          {/* Atmospheric landscape background matching Feature Cards */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#11161d] to-[#1c242e] opacity-85"></div>
+          <svg className="absolute inset-0 w-full h-full opacity-35 object-cover pointer-events-none" preserveAspectRatio="none" viewBox="0 0 400 300">
+            <path d="M0 160L80 110L170 170L260 90L340 140L400 100V300H0Z" fill="#040608"></path>
+            <path d="M-50 200L60 140L180 190L290 120L370 160L450 110V300H-50V200Z" fill="#020304" opacity="0.7"></path>
+          </svg>
 
           {/* Modal Preview Card */}
           <div className="relative z-10 w-full max-w-[380px] bg-[#12161e]/95 border border-white/15 rounded-xl p-5 shadow-2xl backdrop-blur-md">
