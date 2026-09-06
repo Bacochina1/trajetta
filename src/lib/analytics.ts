@@ -110,6 +110,8 @@ export type MarketingEventName =
   | 'trial_started'
   | 'signup_started'
   | 'signup_completed'
+  | 'waitlist_submit_attempt'
+  | 'waitlist_success'
   | 'faq_opened'
   | 'scroll_depth';
 

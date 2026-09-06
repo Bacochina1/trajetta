@@ -160,3 +160,25 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: #383F45;
 }
+
+/* MOSA Atmospheric & Cinematic Effects */
+.portal-frame {
+  box-shadow: 0 0 45px 10px rgba(255, 190, 100, 0.45), 0 0 100px 30px rgba(245, 158, 11, 0.25), inset 0 0 20px 4px rgba(255, 230, 180, 0.6);
+}
+
+.portal-reflection {
+  box-shadow: 0 0 60px 20px rgba(230, 160, 70, 0.3);
+  filter: blur(8px);
+}
+
+.mist-gradient {
+  background: radial-gradient(circle at 50% 60%, rgba(35, 45, 55, 0.4) 0%, rgba(7, 8, 9, 0.95) 75%);
+}
+
+.hero-bottom-fade {
+  background: linear-gradient(to bottom, transparent 65%, #060709 100%);
+}
+
+.font-mono-custom {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}

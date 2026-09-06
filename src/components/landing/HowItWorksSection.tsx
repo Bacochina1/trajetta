@@ -1,70 +1,126 @@
 'use client';
 
 import React from 'react';
-import { Target, CalendarCheck, CheckCircle2 } from 'lucide-react';
+import { Compass, Calendar, ShieldCheck, ArrowRight, Sparkles, Send } from 'lucide-react';
 
 export function HowItWorksSection() {
-  const steps = [
-    {
-      step: '1',
-      title: 'Defina onde quer chegar',
-      desc: 'Cadastre suas prioridades nas 4 áreas da vida. A Trajetta ajuda você a separar o essencial do que é apenas ruído.',
-      icon: Target,
-    },
-    {
-      step: '2',
-      title: 'Transforme em uma semana possível',
-      desc: 'Cada domingo ou segunda-feira, escolha suas 3 a 5 prioridades semanais. O capacity planning evita sobrecarga.',
-      icon: CalendarCheck,
-    },
-    {
-      step: '3',
-      title: 'Acompanhe e ajuste o próximo passo',
-      desc: 'Registre o que aconteceu com poucos toques no dia a dia. A Trajetta AI aprende seus padrões e você nunca volta ao zero.',
-      icon: CheckCircle2,
-    },
-  ];
-
   return (
-    <section className="py-20 sm:py-28 bg-[#060709] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-            Simples de Começar
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight">
-            Como a Trajetta funciona na prática
-          </h2>
-          <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed">
-            Sem sistemas complexos de produtividade que demoram horas para configurar. Você começa em 3 minutos.
-          </p>
+    <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-20 sm:py-24 border-t border-white/10" data-purpose="how-it-works" id="metodo">
+      {/* Eyebrow */}
+      <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+        <span>Como Funciona</span>
+      </div>
+
+      {/* Section Heading */}
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-12">
+        Uma direção para começar, <span className="text-neutral-500">três passos para a clareza.</span>
+      </h2>
+
+      {/* Split layout: Input Preview Left, Step Process Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* Left Side: Prompt Bar inside Dark atmospheric scenery */}
+        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] sm:min-h-[420px] p-6 flex items-end justify-center shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-[#0c1017] to-[#141a24] opacity-90"></div>
+
+          {/* Floating prompt input box matching reference */}
+          <div className="relative z-10 w-full bg-[#0d1015]/95 border border-white/15 rounded-xl p-5 shadow-2xl mb-2 backdrop-blur-md">
+            <div className="text-xs font-mono text-neutral-400 mb-6 tracking-wide">
+              Qual é a direção do seu próximo ciclo de 90 dias?
+            </div>
+
+            {/* Simulated Chip Options */}
+            <div className="flex flex-wrap gap-2 mb-5">
+              <span className="text-[11px] font-mono bg-white/5 hover:bg-white/10 text-neutral-300 px-3 py-1 rounded-full border border-white/10 cursor-pointer transition-colors">
+                Transição de Carreira
+              </span>
+              <span className="text-[11px] font-mono bg-white/5 hover:bg-white/10 text-neutral-300 px-3 py-1 rounded-full border border-white/10 cursor-pointer transition-colors">
+                Reserva de Emergência
+              </span>
+              <span className="text-[11px] font-mono bg-white/5 hover:bg-white/10 text-neutral-300 px-3 py-1 rounded-full border border-white/10 cursor-pointer transition-colors">
+                Físico Consistente
+              </span>
+            </div>
+
+            {/* Bottom Input Action Bar */}
+            <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/10">
+              <div className="flex items-center gap-2.5 text-neutral-400">
+                <span className="text-xs font-mono text-neutral-400 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+                  Trajetta AI Ativa
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono text-neutral-400 hidden sm:inline">Pressione Enter</span>
+                <button
+                  type="button"
+                  aria-label="Definir Direção"
+                  className="bg-white hover:bg-neutral-200 text-black p-2 rounded-lg transition-colors"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {steps.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={idx}
-                className="p-6 sm:p-7 rounded-2xl bg-[#0D0F10] border border-white/8 relative flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="w-8 h-8 rounded-full bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] font-mono font-extrabold text-sm flex items-center justify-center">
-                      {item.step}
-                    </span>
-                    <Icon className="w-5 h-5 text-[#8E9499]" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-[#F2F1ED]">
-                    {item.title}
-                  </h3>
-                </div>
-                <p className="text-xs sm:text-sm text-[#8E9499] leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            );
-          })}
+        {/* Right Side: Step Process List */}
+        <div className="lg:col-span-5 flex flex-col space-y-8">
+          {/* Step 1 */}
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#181d26] border border-white/15 text-white font-mono text-xs flex items-center justify-center font-bold">
+              1
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-white font-sans tracking-tight mb-1">
+                Definir sua Estrela-Guia
+              </h3>
+              <p className="text-sm text-neutral-400 font-light leading-relaxed">
+                Saia do modo sobrevivência. Estabeleça para onde você quer ir nos próximos 12 meses nas 4 áreas essenciais da sua vida.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#181d26] border border-white/15 text-white font-mono text-xs flex items-center justify-center font-bold">
+              2
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-white font-sans tracking-tight mb-1">
+                Planejar em Ciclos Semanais
+              </h3>
+              <p className="text-sm text-neutral-400 font-light leading-relaxed">
+                Escolha apenas 3 prioridades reais para a semana e defina o piso mínimo para os dias difíceis. Menos volume, mais profundidade.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#181d26] border border-white/15 text-white font-mono text-xs flex items-center justify-center font-bold">
+              3
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-white font-sans tracking-tight mb-1">
+                Acompanhar sem Punição
+              </h3>
+              <p className="text-sm text-neutral-400 font-light leading-relaxed">
+                Domingo é o momento de fechar o ciclo com a Trajetta AI. Se a rotina pesou, o sistema recalibra com serenidade e sem culpa.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <a
+              href="#waitlist"
+              className="inline-flex items-center space-x-2 text-xs font-mono font-medium text-[#B8FF00] hover:text-white transition-colors"
+            >
+              <span>Quero entrar no próximo lote de convites</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </div>
     </section>

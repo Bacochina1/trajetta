@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
-import { appendUtmToUrl, trackMarketingEvent } from '@/lib/analytics';
-import { Menu, X, ArrowRight, User } from 'lucide-react';
+import { Menu, X, ArrowRight, User, Sparkles } from 'lucide-react';
+import { trackMarketingEvent } from '@/lib/analytics';
 
 interface NavbarProps {
   isAuthenticated?: boolean;
@@ -18,111 +17,121 @@ export function Navbar({ isAuthenticated, user }: NavbarProps) {
     trackMarketingEvent('hero_cta_clicked', { location: 'navbar', cta_name: ctaName });
   };
 
-  const navLinks = [
-    { label: 'O Método', href: '#metodo' },
-    { label: 'O Ciclo', href: '#ciclo' },
-    { label: 'Timeline', href: '#timeline' },
-    { label: 'Trajetta AI', href: '#ia' },
-    { label: 'Planos', href: '#planos' },
-    { label: 'FAQ', href: '#faq' },
-  ];
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#060709]/80 backdrop-blur-xl border-b border-white/[0.06] transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="group flex items-center gap-2">
-          <TrajettaLogo size={28} showWordmark wordmarkClassName="font-extrabold text-lg tracking-tight text-[#F2F1ED] group-hover:text-white transition-colors" />
-        </Link>
+    <header className="sticky top-0 z-50 max-w-[1440px] w-full mx-auto px-4 sm:px-10 lg:px-14 pt-4 sm:pt-6 flex items-center justify-between pointer-events-auto">
+      {/* Brand Logo with Concentric Trajetta Emblem */}
+      <Link href="/" className="flex items-center space-x-3 text-white tracking-wider group focus:outline-none">
+        <span className="w-7 h-7 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" strokeOpacity="0.3"></circle>
+            <circle cx="12" cy="12" r="6.5" strokeOpacity="0.65"></circle>
+            <circle cx="12" cy="12" r="3" strokeOpacity="1" fill="#B8FF00" fillOpacity="0.9"></circle>
+          </svg>
+        </span>
+        <span className="font-bold text-[15px] tracking-[0.18em] text-white">TRAJETTA</span>
+      </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-7" aria-label="Navegação Principal">
-          {navLinks.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-xs lg:text-sm font-medium text-[#8E9499] hover:text-[#F2F1ED] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B8FF00] rounded-md px-1 py-0.5"
-            >
-              {item.label}
-            </a>
-          ))}
+      {/* Navigation & Action Buttons */}
+      <div className="flex items-center space-x-2.5 sm:space-x-3">
+        {/* Center Nav Links Pill (Desktop) */}
+        <nav className="hidden md:flex items-center bg-[#1e2329]/80 backdrop-blur-md rounded-full px-6 py-2.5 border border-white/10 text-[13px] font-medium text-neutral-300 space-x-7 shadow-2xl">
+          <a className="hover:text-white transition-colors duration-200" href="#visao">Visão</a>
+          <a className="hover:text-white transition-colors duration-200" href="#ciclos">Ciclos</a>
+          <a className="hover:text-white transition-colors duration-200" href="#areas">4 Áreas</a>
+          <a className="hover:text-white transition-colors duration-200" href="#metodo">O Método</a>
+          <a className="hover:text-[#B8FF00] transition-colors duration-200" href="#waitlist">Lista VIP</a>
         </nav>
 
-        {/* Action CTAs */}
-        <div className="hidden sm:flex items-center gap-3">
-          {isAuthenticated ? (
-            <Link
-              href="/app"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all"
-            >
-              <User className="w-3.5 h-3.5 text-[#B8FF00]" />
-              <span className="truncate max-w-[120px]">{user?.name || 'Meu Painel'}</span>
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="text-xs font-medium text-[#8E9499] hover:text-[#F2F1ED] transition-colors px-3 py-2"
-              >
-                Entrar
-              </Link>
-              <Link
-                href={appendUtmToUrl('/register')}
-                onClick={() => handleCtaClick('Começar 14 dias grátis')}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] hover:shadow-[0_0_20px_rgba(184,255,0,0.3)] transition-all transform active:scale-95"
-              >
-                <span>Começar 14 dias grátis</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </>
-          )}
-        </div>
+        {/* Waitlist Signup CTA Button */}
+        <a
+          href="#waitlist"
+          onClick={() => handleCtaClick('navbar_waitlist')}
+          className="bg-white hover:bg-neutral-100 text-black text-[11px] sm:text-[12px] font-bold tracking-wider uppercase px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-white/5 active:scale-95"
+        >
+          <span>LISTA VIP</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </a>
 
-        {/* Mobile Hamburger Button */}
+        {/* Login or Dashboard Button */}
+        {isAuthenticated ? (
+          <Link
+            href="/app"
+            className="bg-[#1e2329]/90 hover:bg-[#2a3038] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200 flex items-center space-x-1.5"
+          >
+            <User className="w-3.5 h-3.5 text-[#B8FF00]" />
+            <span className="hidden sm:inline truncate max-w-[90px]">{user?.name?.split(' ')[0] || 'Painel'}</span>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className="bg-[#1e2329]/90 hover:bg-[#2a3038] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200"
+          >
+            LOGIN
+          </Link>
+        )}
+
+        {/* Mobile Menu Toggle Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          type="button"
-          aria-expanded={mobileMenuOpen}
-          aria-label="Abrir menu de navegação"
-          className="sm:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg bg-[#14181F] text-[#8E9499] hover:text-white border border-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8FF00] active:scale-95 transition-transform"
+          className="md:hidden p-2 rounded-full bg-[#1e2329]/90 border border-white/10 text-neutral-300 hover:text-white"
+          aria-label="Abrir Menu"
         >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden bg-[#0D0F10] border-b border-white/10 px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top duration-200">
-          <nav className="flex flex-col space-y-1">
-            {navLinks.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-medium text-[#8E9499] hover:text-[#B8FF00] min-h-[42px] flex items-center px-3 rounded-lg hover:bg-white/[0.03] transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <div className="pt-3 border-t border-white/8 flex flex-col gap-2">
+        <div className="absolute top-16 left-4 right-4 bg-[#0d1015]/95 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-xl flex flex-col space-y-4 md:hidden z-50">
+          <a
+            href="#visao"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-neutral-300 hover:text-white py-1"
+          >
+            Visão
+          </a>
+          <a
+            href="#ciclos"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-neutral-300 hover:text-white py-1"
+          >
+            Ciclos
+          </a>
+          <a
+            href="#areas"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-neutral-300 hover:text-white py-1"
+          >
+            4 Áreas da Vida
+          </a>
+          <a
+            href="#metodo"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-neutral-300 hover:text-white py-1"
+          >
+            O Método
+          </a>
+          <a
+            href="#faq"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-medium text-neutral-300 hover:text-white py-1"
+          >
+            Perguntas Frequentes
+          </a>
+          <div className="pt-3 border-t border-white/10 flex flex-col space-y-2">
+            <a
+              href="#waitlist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center bg-white text-black font-bold text-xs uppercase py-3 rounded-full"
+            >
+              Entrar na Lista VIP
+            </a>
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center min-h-[44px] flex items-center justify-center text-xs font-semibold text-[#8E9499] hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+              className="w-full text-center bg-[#1e2329] text-white font-medium text-xs uppercase py-2.5 rounded-full border border-white/10"
             >
-              Já tenho conta (Entrar)
-            </Link>
-            <Link
-              href={appendUtmToUrl('/register')}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleCtaClick('Começar 14 dias grátis - mobile');
-              }}
-              className="w-full inline-flex items-center justify-center gap-2 min-h-[48px] py-3 rounded-xl text-xs font-bold bg-[#B8FF00] text-[#060709] shadow-[0_0_20px_rgba(184,255,0,0.25)] active:scale-95 transition-transform"
-            >
-              <span>Começar 14 dias grátis</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              Entrar na Conta
             </Link>
           </div>
         </div>

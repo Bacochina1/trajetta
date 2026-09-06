@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth/auth';
-import { callNvidiaAI } from '@/lib/ai/aiService';
+import { callGeminiAI } from '@/lib/ai/aiService';
 import { PROMPT_REGISTRY } from '@/lib/ai/promptVersioning';
 import { modelRouter } from '@/lib/ai/modelRouter';
 
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       { role: 'user' as const, content: `Entrada do usuário: "${rawText.trim()}"` }
     ];
 
-    const aiResponse = await callNvidiaAI(messages, {
+    const aiResponse = await callGeminiAI(messages, {
       maxTokens: route.maxTokens
     });
 

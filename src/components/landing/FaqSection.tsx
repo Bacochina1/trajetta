@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
 
 export function FaqSection() {
@@ -9,32 +9,28 @@ export function FaqSection() {
 
   const faqs = [
     {
-      q: 'A Trajetta é um aplicativo de hábitos?',
-      a: 'Hábitos fazem parte da Trajetta, mas o produto conecta hábitos, metas nas 4 áreas essenciais, planejamento semanal, revisões de domingo e histórico de evolução. Ela funciona como um sistema completo de trajetória, e não apenas uma lista isolada.',
+      q: 'Quando vou receber meu convite de acesso?',
+      a: 'Liberamos novos acessos em pequenos lotes graduais. Ao se cadastrar na Lista VIP, sua posição fica registrada e você receberá um e-mail com seu link exclusivo assim que a próxima turma abrir.',
     },
     {
-      q: 'Preciso organizar toda a minha vida antes de começar?',
-      a: 'Não. Pelo contrário: a Trajetta ajuda você a começar pequeno, escolhendo apenas uma ou duas prioridades possíveis para os próximos dias. O onboarding dura menos de 3 minutos.',
+      q: 'A Trajetta é mais um aplicativo de hábitos ou listas?',
+      a: 'Não. A maioria dos apps foca em micro-tarefas e streaks punitivos. A Trajetta conecta visão de 12 meses, planejamento semanal em 3 prioridades, pisos mínimos para dias difíceis e revisões de domingo com IA contextual.',
     },
     {
-      q: 'O que acontece se eu parar de usar durante alguns dias?',
-      a: 'Seu histórico não desaparece nem zera. Nós não usamos streaks punitivos. Você pode retomar de onde parou usando o Modo Retomada com um clique, sem carregar listas acumuladas ou culpa.',
+      q: 'O que significa "sistema sem punição"?',
+      a: 'Significa que se você passar 4 dias sem abrir o app, seu histórico não zera e você não recebe alertas vermelhos de culpa. O sistema recalibra o plano da semana sem drama, porque consistência real se constrói na vida como ela é.',
     },
     {
-      q: 'A Trajetta AI toma decisões por mim?',
-      a: 'Não. A IA não substitui seu julgamento nem altera seus dados sem sua autorização. Ela apenas observa seu histórico e sugere ajustes quando percebe que a sua rotina ficou pesada demais.',
+      q: 'Quem entrar na Lista VIP terá condições especiais?',
+      a: 'Sim. Os membros cadastrados na lista de espera terão prioridade na fila e acesso à condição vitalícia de Membro Fundador, com valor de assinatura protegido contra reajustes futuros.',
     },
     {
-      q: 'Posso apagar ou exportar minhas informações?',
-      a: 'Sim, a qualquer momento. Você pode visualizar todas as memórias salvas, editar dados, exportar um arquivo completo em JSON/CSV ou solicitar a exclusão definitiva da sua conta.',
+      q: 'Como funciona a Trajetta AI?',
+      a: 'A Trajetta AI utiliza tecnologia Google Gemini Flash combinada com um motor de memória que aprende o seu histórico. Ela não cospe clichês motivacionais; ela lê seus ciclos e sugere ajustes objetivos no ritmo da sua rotina.',
     },
     {
-      q: 'Vai existir aplicativo para celular?',
-      a: 'A Trajetta já funciona como um Web App (PWA) de alta performance, 100% otimizado para celulares. Você pode adicioná-la à tela de início do seu iPhone ou Android hoje mesmo. Aplicativos nativos dedicados na App Store e Google Play estão no roadmap oficial.',
-    },
-    {
-      q: 'Como funcionam os 14 dias grátis?',
-      a: 'Você cria sua conta em segundos e tem acesso a todas as funcionalidades do plano Pro durante 14 dias inteiros. Não há cobrança antes do término do período de teste, e você pode cancelar quando quiser.',
+      q: 'Meus dados e reflexões pessoais são privados?',
+      a: 'Sim, com soberania absoluta. Suas reflexões não são vendidas para anunciantes nem compartilhadas com terceiros. Você pode exportar todos os seus dados ou solicitar exclusão a qualquer momento.',
     },
   ];
 
@@ -47,46 +43,57 @@ export function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-20 sm:py-28 bg-[#080A0C] border-y border-white/[0.06] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-            Respostas Diretas
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight">
-            Perguntas Frequentes
+    <section id="faq" className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-20 sm:py-28 border-t border-white/10" data-purpose="faq-section">
+      {/* Eyebrow */}
+      <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+        <span>Perguntas Frequentes</span>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        {/* Left Col: Heading & CTA */}
+        <div className="lg:col-span-5">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
+            Tudo o que você <span className="text-neutral-500">precisa saber</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#8E9499]">
-            Tudo o que você precisa saber para começar sua primeira semana com clareza.
+          <p className="text-sm text-neutral-400 font-light leading-relaxed mb-8">
+            Dúvidas claras e diretas sobre o funcionamento da lista VIP, a metodologia sem punição e a segurança dos seus dados.
           </p>
+
+          <a
+            href="#waitlist"
+            className="inline-flex items-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5"
+          >
+            <span>ENTRAR NA LISTA VIP</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-3.5">
+        {/* Right Col: Accordion */}
+        <div className="lg:col-span-7 space-y-3">
           {faqs.map((item, idx) => {
             const isOpen = openIdx === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-[#0D0F10] border border-white/8 overflow-hidden transition-colors"
+                className="border border-white/10 rounded-2xl bg-[#0a0d12] overflow-hidden transition-colors"
               >
                 <button
-                  type="button"
                   onClick={() => toggleFaq(idx)}
-                  aria-expanded={isOpen}
-                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B8FF00]"
+                  className="w-full text-left px-5 sm:px-6 py-5 flex items-center justify-between gap-4 focus:outline-none"
                 >
-                  <span className="text-sm sm:text-base font-bold text-[#F2F1ED] leading-snug">
+                  <span className="text-sm sm:text-base font-normal text-white">
                     {item.q}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#8E9499] flex-shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-[#B8FF00]' : ''
+                    className={`w-4 h-4 text-neutral-400 flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-white' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#8E9499] leading-relaxed border-t border-white/6 pt-4 animate-in fade-in duration-200">
+                  <div className="px-5 sm:px-6 pb-5 pt-1 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed border-t border-white/5">
                     {item.a}
                   </div>
                 )}

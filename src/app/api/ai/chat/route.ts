@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { callNvidiaAI } from '@/lib/ai/aiService';
+import { callGeminiAI } from '@/lib/ai/aiService';
 import { getSessionUser } from '@/lib/auth/auth';
 import { memoryService } from '@/lib/ai/memoryService';
 
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       console.warn('Could not assemble memory context pack:', e);
     }
 
-    const reply = await callNvidiaAI(messages, {
+    const reply = await callGeminiAI(messages, {
       heavyReasoning: Boolean(heavyReasoning),
       ragContext,
       contextPack,

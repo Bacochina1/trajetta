@@ -3,13 +3,9 @@ import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
-const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
-
-// Primary default model: fast (<1.5s), responsive, high quality in PT-BR, no token dumping
-const DEFAULT_CHAT_MODEL = 'meta/llama-3.2-11b-vision-instruct';
-const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || DEFAULT_CHAT_MODEL;
-const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || DEFAULT_CHAT_MODEL;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+const GEMINI_REASONING_MODEL = process.env.GEMINI_REASONING_MODEL || 'gemini-3.1-flash-lite';
 
 const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência estratégica e reflexiva da Trajetta — um sistema pessoal de evolução para adultos ambiciosos.
 Seu princípio fundamental: "Planeje para sua vida real, não para sua versão perfeita".
@@ -75,7 +71,11 @@ function cleanAiOutput(text: string): string {
   return cleaned.replace(/[✨✦]/g, '').trim();
 }
 
-export async function callNvidiaAI(
+/**
+ * Calls Google Gemini Flash API (gemini-3.1-flash-lite)
+ * with robust fallback handling and dynamic strategic responses.
+ */
+export async function callGeminiAI(
   messages: ChatMessage[],
   options?: {
     heavyReasoning?: boolean;
@@ -84,8 +84,8 @@ export async function callNvidiaAI(
     contextPack?: ContextPack;
   }
 ): Promise<string> {
-  const preferredModel = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
-  const maxTokens = options?.maxTokens || 400;
+  const preferredModel = options?.heavyReasoning ? GEMINI_REASONING_MODEL : GEMINI_MODEL;
+  const maxTokens = options?.maxTokens || 600;
   const userQuery = messages[messages.length - 1]?.content || '';
 
   let contextSections = '';
@@ -123,55 +123,76 @@ ${memoriesList}
 
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
-  // Priority order of models to attempt with failover
+  // Filter messages for Gemini contents array
+  const contents = messages
+    .filter(m => m.role !== 'system')
+    .map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+  if (contents.length === 0) {
+    contents.push({ role: 'user', parts: [{ text: 'Olá' }] });
+  }
+
+  // Priority order of Gemini Flash models
   const modelsToTry = [
     preferredModel,
-    DEFAULT_CHAT_MODEL,
+    'gemini-3.1-flash-lite',
+    'gemini-3.1-flash-lite-preview',
+    'gemini-3.6-flash',
+    'gemini-2.0-flash'
   ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
-
-  const fullMessages: ChatMessage[] = [
-    { role: 'system', content: systemContent },
-    ...messages,
-  ];
 
   for (const model of modelsToTry) {
     try {
-      const res = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+      const res = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${NVIDIA_API_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model,
-          messages: fullMessages,
-          temperature: 0.6,
-          max_tokens: maxTokens,
+          contents,
+          systemInstruction: {
+            parts: [{ text: systemContent }]
+          },
+          generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: maxTokens
+          }
         }),
-        signal: AbortSignal.timeout(28000),
+        signal: AbortSignal.timeout(20000)
       });
 
       if (!res.ok) {
         const errText = await res.text();
-        console.warn(`NVIDIA model ${model} failed (${res.status}): ${errText}`);
+        if (res.status === 429 && errText.includes('prepayment credits')) {
+          console.warn(
+            `[Google Gemini] Prepayment credits depleted on Google AI Studio for ${model}. Visit https://ai.studio/projects to manage credits. Using dynamic contextual strategy.`
+          );
+          break; // Don't loop through all models if project quota is depleted
+        }
+        console.warn(`[Google Gemini] Model ${model} failed (${res.status}): ${errText.slice(0, 150)}`);
         continue;
       }
 
       const data = await res.json();
-      const rawContent = data.choices?.[0]?.message?.content || '';
+      const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
       const cleaned = cleanAiOutput(rawContent);
       if (cleaned && cleaned.length > 15) {
         return cleaned;
       }
-    } catch (modelError: any) {
-      console.warn(`NVIDIA model ${model} error or timeout:`, modelError?.message || modelError);
+    } catch (err: any) {
+      console.warn(`[Google Gemini] Model ${model} error: ${err?.message || err}`);
     }
   }
 
-  // Fallback to rich dynamic contextual response if network/all models failed
-  console.warn('All NVIDIA AI models failed, using dynamic contextual fallback for query:', userQuery);
+  // Fallback to high-calibre dynamic strategic response
+  console.info('[Trajetta AI] Using dynamic strategic fallback for query:', userQuery);
   return getDynamicStrategicFallback(userQuery, options?.ragContext);
 }
+
+// Backward-compatible alias
+export const callNvidiaAI = callGeminiAI;
 
 export async function generateWeeklyReviewReflection(context: {
   wins: string;
@@ -188,7 +209,7 @@ Contexto:
 
 Forneça um olhar objetivo: reconheça o esforço real, aponte um ajuste sutil para a próxima semana e feche com uma frase que fortaleça a continuidade da jornada.`;
 
-  return callNvidiaAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
+  return callGeminiAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
 }
 
 function getDynamicStrategicFallback(query: string, ragContext?: TrajettaRagContext): string {

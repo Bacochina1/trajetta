@@ -13,8 +13,8 @@ export interface ModelRouteConfig {
 
 export const modelRouter = {
   getRoute(task: AiTaskType): ModelRouteConfig {
-    const defaultModel = process.env.NVIDIA_CHAT_MODEL || 'meta/llama-3.2-11b-vision-instruct';
-    const reasoningModel = process.env.NVIDIA_REASONING_MODEL || 'meta/llama-3.2-11b-vision-instruct';
+    const defaultModel = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+    const reasoningModel = process.env.GEMINI_REASONING_MODEL || 'gemini-3.1-flash-lite';
 
     switch (task) {
       case 'quick_extraction':

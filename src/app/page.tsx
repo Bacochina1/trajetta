@@ -4,36 +4,29 @@ import React, { useEffect } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { captureUtmParams, initScrollDepthTracking, trackMarketingEvent } from '@/lib/analytics';
 
-// Modular Landing Sections
+// MOSA AI Layout Sections (Waitlist-Only Conversion)
 import { Navbar } from '@/components/landing/Navbar';
 import { HeroSection } from '@/components/landing/HeroSection';
-import { PainSection } from '@/components/landing/PainSection';
-import { MethodSection } from '@/components/landing/MethodSection';
-import { ProductCycleSection } from '@/components/landing/ProductCycleSection';
-import { TimelineSection } from '@/components/landing/TimelineSection';
-import { TrajettaAiSection } from '@/components/landing/TrajettaAiSection';
-import { NonPunitiveSection } from '@/components/landing/NonPunitiveSection';
+import { SubHeaderSection } from '@/components/landing/SubHeaderSection';
+import { FeatureCardsGrid } from '@/components/landing/FeatureCardsGrid';
 import { LifeAreasSection } from '@/components/landing/LifeAreasSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
-import { AudienceSection } from '@/components/landing/AudienceSection';
-import { SocialProofSection } from '@/components/landing/SocialProofSection';
-import { PrivacySection } from '@/components/landing/PrivacySection';
-import { PricingSection } from '@/components/landing/PricingSection';
+import { WaitlistSection } from '@/components/landing/WaitlistSection';
 import { FaqSection } from '@/components/landing/FaqSection';
-import { FinalCtaSection } from '@/components/landing/FinalCtaSection';
 import { Footer } from '@/components/landing/Footer';
 
 export default function LandingPage() {
   const { isAuthenticated, user } = useTrajetta();
 
   useEffect(() => {
-    // 1. Capture and persist UTM parameters across funnel
+    // 1. Capture and persist UTM parameters across marketing funnel
     captureUtmParams();
 
     // 2. Track initial landing view
     trackMarketingEvent('page_view', {
       title: 'Trajetta — Seu Sistema Pessoal de Evolução',
       referrer: document.referrer || 'direct',
+      mode: 'waitlist_only',
     });
 
     // 3. Initialize scroll depth tracking (25%, 50%, 75%, 100%)
@@ -44,59 +37,35 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#060709] text-[#F2F1ED] selection:bg-[#B8FF00] selection:text-[#060709] font-sans">
-      {/* 1. Sticky Navigation */}
+    <div className="min-h-screen bg-[#060709] text-[#ffffff] selection:bg-[#B8FF00] selection:text-[#060709] font-sans antialiased overflow-x-hidden">
+      {/* 1. Floating Capsule Navbar */}
       <Navbar isAuthenticated={isAuthenticated} user={user} />
 
-      {/* Main Content Sections in Canonical Flow */}
-      <main id="main-content">
-        {/* 2. Hero: Headline, Subheadline, CTA, Evidence */}
+      {/* Main Content Sections */}
+      <main id="main-content" className="relative z-10 flex flex-col">
+        {/* 2. Hero Section: Cinematic mountains, luminous golden portal, flying silhouettes, headline, and waitlist CTAs */}
         <HeroSection />
 
-        {/* 3. Pain / Identification: Viver no automático, esquecer metas, recomeçar */}
-        <PainSection />
+        {/* 3. Sub-Section Transition Header: Introducing Message & Large Lead Typography */}
+        <SubHeaderSection />
 
-        {/* 4. O Método Trajetta: Direção -> Semana -> Ação -> Reflexão -> Ajuste -> Evolução */}
-        <MethodSection />
+        {/* 4. Feature Cards Grid: 3 Atmospheric Cards (Ciclo Semanal, IA com Memória, Guia Silencioso) */}
+        <FeatureCardsGrid />
 
-        {/* 5. O Ciclo do Produto: Uma semana por vez (Hoje, Semana, Hábitos, Review) */}
-        <ProductCycleSection />
-
-        {/* 6. Timeline em Destaque: Outro app mostra sua lista; Trajetta mostra o caminho */}
-        <TimelineSection />
-
-        {/* 7. Trajetta AI: Memória ativa de contexto & Diálogo exemplar com botões */}
-        <TrajettaAiSection />
-
-        {/* 8. Filosofia de Não-Punição: Você não precisa voltar para o zero */}
-        <NonPunitiveSection />
-
-        {/* 9. As 4 Áreas Essenciais: Corpo, Dinheiro, Carreira, Vida */}
+        {/* 5. As 4 Áreas da Vida (Use Cases): Corpo, Dinheiro, Carreira, Mente com Abas Interativas */}
         <LifeAreasSection />
 
-        {/* 10. Como Funciona em 3 Passos Simples */}
+        {/* 6. Como Funciona: Mockup de Prompt Reflexivo e Stepper de 3 Passos */}
         <HowItWorksSection />
 
-        {/* 11. Para Quem É / Para Quem Não É */}
-        <AudienceSection />
+        {/* 7. Lista VIP / Acesso Antecipado: Formulário com Integração ManyChat + Resend e Vagas de Fundador (Sem checkout/preço!) */}
+        <WaitlistSection />
 
-        {/* 12. Prova de Confiança: Primeiros Usuários */}
-        <SocialProofSection />
-
-        {/* 13. Soberania e Privacidade dos Dados: Sua trajetória continua sendo sua */}
-        <PrivacySection />
-
-        {/* 14. Precificação: 14 dias grátis, Pro Mensal R$ 29,90, Pro Anual R$ 239,90 e Fundadores */}
-        <PricingSection />
-
-        {/* 15. FAQ com Objeções Reais */}
+        {/* 8. Perguntas Frequentes: Respostas diretas sobre a metodologia e o lote de convites */}
         <FaqSection />
-
-        {/* 16. CTA Final: Seu futuro não precisa começar de novo toda segunda-feira */}
-        <FinalCtaSection />
       </main>
 
-      {/* 17. Rodapé */}
+      {/* 9. Minimalist Dark Footer: Newsletter, 4 Colunas, Status do Sistema e Redes */}
       <Footer />
     </div>
   );

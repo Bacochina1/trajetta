@@ -1,179 +1,118 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { appendUtmToUrl, trackMarketingEvent } from '@/lib/analytics';
-import { ArrowRight, Play, ShieldCheck, Check, Sparkles, TrendingUp, Calendar, Compass } from 'lucide-react';
+import { ArrowRight, Sparkles, Shield, Compass, CheckCircle2 } from 'lucide-react';
+import { trackMarketingEvent } from '@/lib/analytics';
 
 export function HeroSection() {
-  const handlePrimaryCta = () => {
-    trackMarketingEvent('hero_cta_clicked', { location: 'hero', text: 'Começar 14 dias grátis' });
-  };
-
-  const handleSecondaryCta = () => {
-    trackMarketingEvent('secondary_cta_clicked', { location: 'hero', text: 'Ver como funciona' });
+  const handleCtaClick = (ctaName: string) => {
+    trackMarketingEvent('hero_cta_clicked', { location: 'hero', cta_name: ctaName });
   };
 
   return (
-    <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-20 sm:pb-28 overflow-hidden">
-      {/* Subtle radial ambient glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[400px] bg-gradient-to-b from-[#B8FF00]/[0.07] to-transparent rounded-full blur-3xl pointer-events-none" />
+    <section className="relative w-full min-h-[950px] lg:min-h-[1050px] flex flex-col justify-between overflow-hidden" data-purpose="hero-section" id="visao">
+      {/* 1. Cinematic Backdrop */}
+      <div className="absolute inset-0 pointer-events-none select-none" data-purpose="cinematic-backdrop">
+        {/* Sky & mountain dark atmospheric layers */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#222e38] via-[#151c24] to-[#060709]"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto space-y-6 sm:space-y-7">
-          {/* Badge */}
-          <div className="inline-flex flex-wrap items-center justify-center gap-1.5 xs:gap-2 px-3 py-1.5 rounded-full bg-[#171B20] border border-white/10 text-[10px] xs:text-[11px] sm:text-xs font-medium text-[#8E9499] shadow-sm max-w-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_#B8FF00] animate-pulse flex-shrink-0" />
-            <span className="truncate">Construído com os primeiros usuários</span>
-            <span className="text-white/20 hidden xs:inline">|</span>
-            <span className="text-[#F2F1ED] font-semibold">14 dias grátis</span>
+        {/* Mountain silhouette shapes */}
+        <svg className="absolute w-full h-[85%] bottom-0 opacity-40 mix-blend-multiply" fill="none" preserveAspectRatio="none" viewBox="0 0 1440 800">
+          <path d="M0 450L210 260L460 380L720 220L980 340L1240 180L1440 320V800H0V450Z" fill="#0b1016"></path>
+          <path d="M-100 520L280 320L580 440L880 290L1180 410L1480 260V800H-100V520Z" fill="#06090e" opacity="0.8"></path>
+        </svg>
+
+        {/* Flying silhouettes in sky */}
+        <div className="absolute inset-0 z-10 opacity-75">
+          <svg className="absolute top-[12%] left-[17%] w-20 sm:w-28 h-20 sm:h-28 text-black opacity-90 drop-shadow-md transform -rotate-12" fill="currentColor" viewBox="0 0 100 100">
+            <path d="M50 42 C40 20 20 12 0 18 C15 32 35 44 48 48 C38 62 20 72 5 78 C25 76 42 66 52 52 C62 66 79 76 99 78 C84 72 66 62 56 48 C69 44 89 32 104 18 C84 12 64 20 54 42 Z"></path>
+          </svg>
+          <svg className="absolute top-[8%] left-[36%] w-24 sm:w-32 h-24 sm:h-32 text-black opacity-90 drop-shadow-md transform rotate-6" fill="currentColor" viewBox="0 0 100 100">
+            <path d="M48 44 C36 24 16 16 0 20 C16 32 34 44 46 48 C34 64 16 75 0 80 C22 78 38 68 50 54 C60 68 76 78 98 80 C82 75 64 64 52 48 C64 44 82 32 98 20 C82 16 62 24 50 44 Z"></path>
+          </svg>
+          <svg className="absolute top-[18%] left-[23%] w-20 sm:w-28 h-20 sm:h-28 text-black opacity-90 transform -rotate-45" fill="currentColor" viewBox="0 0 100 100">
+            <path d="M50 42 C40 20 20 12 0 18 C15 32 35 44 48 48 C38 62 20 72 5 78 C25 76 42 66 52 52 C62 66 79 76 99 78 C84 72 66 62 56 48 C69 44 89 32 104 18 C84 12 64 20 54 42 Z"></path>
+          </svg>
+          <svg className="absolute top-[23%] left-[45%] w-16 sm:w-24 h-16 sm:h-24 text-black opacity-90 transform rotate-12" fill="currentColor" viewBox="0 0 100 100">
+            <path d="M48 44 C36 24 16 16 0 20 C16 32 34 44 46 48 C34 64 16 75 0 80 C22 78 38 68 50 54 C60 68 76 78 98 80 C82 75 64 64 52 48 C64 44 82 32 98 20 C82 16 62 24 50 44 Z"></path>
+          </svg>
+        </div>
+
+        {/* Luminous Golden Doorway / Portal Feature */}
+        <div className="absolute left-[50%] lg:left-[47.5%] top-[190px] sm:top-[230px] -translate-x-1/2 flex flex-col items-center pointer-events-none">
+          {/* Portal frame */}
+          <div className="w-[76px] sm:w-[88px] h-[150px] sm:h-[175px] border-[3px] border-amber-200 portal-frame bg-amber-100/10 backdrop-blur-[2px] relative z-20 rounded-[2px]">
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-300/40 via-amber-100/20 to-transparent"></div>
+          </div>
+          {/* Water waterline divide */}
+          <div className="w-[280px] sm:w-[380px] h-[2px] bg-gradient-to-r from-transparent via-amber-200/50 to-transparent my-1 blur-[1px]"></div>
+          {/* Portal water reflection */}
+          <div className="w-[72px] sm:w-[82px] h-[140px] sm:h-[160px] bg-gradient-to-b from-amber-300/45 to-transparent portal-reflection opacity-65 transform scale-y-95"></div>
+        </div>
+
+        {/* Soft atmospheric gradient fog to base black */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-transparent opacity-95"></div>
+        <div className="absolute inset-0 hero-bottom-fade"></div>
+      </div>
+
+      {/* 2. Hero Content Body */}
+      <div className="relative z-30 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-32 sm:pt-40 pb-16 sm:pb-20 mt-auto" data-purpose="hero-content">
+        <div className="max-w-3xl">
+          {/* Waitlist Status Pill */}
+          <div className="inline-flex items-center space-x-2 text-xs font-mono tracking-wide text-neutral-300 bg-[#1e2329]/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 mb-6 shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse"></span>
+            <span>Acesso Antecipado • Lista VIP Liberada</span>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#F2F1ED] leading-[1.15]">
-            Torne visível quem você{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#B8FF00] via-[#D4FF5E] to-white">
-              está se tornando.
-            </span>
+          {/* Main Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-[72px] leading-[1.06] font-normal tracking-[-0.03em] text-white">
+            Torne visível quem você<br />
+            está se tornando.
           </h1>
 
-          {/* Subheadline */}
-          <p className="text-sm sm:text-lg lg:text-xl text-[#8E9499] leading-relaxed max-w-2xl mx-auto font-normal">
-            Planeje suas semanas, acompanhe metas, hábitos e áreas da sua vida e tenha uma IA que aprende com sua trajetória para ajudar você a continuar avançando.
+          {/* Subtitle */}
+          <p className="mt-6 text-base sm:text-lg text-neutral-300/85 font-normal max-w-xl leading-relaxed tracking-tight">
+            O sistema pessoal que une direção de longo prazo, ciclos semanais sem punição e clareza silenciosa para as áreas que realmente importam da sua vida.
           </p>
 
-          {/* CTAs */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
-            <Link
-              href={appendUtmToUrl('/register')}
-              onClick={handlePrimaryCta}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 min-h-[48px] rounded-xl text-xs sm:text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_30px_rgba(184,255,0,0.3)] hover:shadow-[0_0_40px_rgba(184,255,0,0.4)] transition-all transform active:scale-95"
+          {/* CTA Action Buttons */}
+          <div className="mt-8 flex flex-wrap items-center gap-3.5">
+            <a
+              href="#waitlist"
+              onClick={() => handleCtaClick('hero_primary_waitlist')}
+              className="inline-flex items-center justify-center bg-white hover:bg-neutral-200 text-neutral-900 text-[12px] font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-full transition duration-150 shadow-xl shadow-white/10 active:scale-95"
             >
-              <span>Começar 14 dias grátis</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              <span>GARANTIR VAGA NA LISTA VIP</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2" />
+            </a>
 
             <a
               href="#metodo"
-              onClick={handleSecondaryCta}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 min-h-[48px] rounded-xl text-xs sm:text-sm font-semibold bg-[#14181F] text-[#F2F1ED] border border-white/10 hover:border-white/20 hover:bg-[#1A1F27] transition-all"
+              onClick={() => handleCtaClick('hero_secondary_method')}
+              className="inline-flex items-center justify-center bg-[#14181f]/70 hover:bg-[#1a212b]/80 backdrop-blur-md text-white border border-white/20 text-[12px] font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-full transition duration-150"
             >
-              <Play className="w-3.5 h-3.5 text-[#B8FF00]" fill="currentColor" />
-              <span>Ver como funciona</span>
+              <span>CONHECER O MÉTODO</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2 text-neutral-400" />
             </a>
-          </div>
-
-          {/* Micro trust indicators */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#8E9499]">
-            <div className="inline-flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-[#B8FF00]" />
-              <span>Sem cartão de crédito para iniciar</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-[#B8FF00]" />
-              <span>Zero streaks punitivos</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-[#B8FF00]" />
-              <span>Dados 100% seus e exportáveis</span>
-            </div>
           </div>
         </div>
 
-        {/* Hero Visual Evidence: Authentic Dashboard Snapshot */}
-        <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
-          <div className="relative rounded-2xl sm:rounded-3xl p-2 sm:p-3 bg-gradient-to-b from-white/10 via-white/[0.03] to-transparent border border-white/15 shadow-[0_20px_80px_rgba(0,0,0,0.8)]">
-            {/* Top Bar Preview */}
-            <div className="rounded-xl sm:rounded-2xl bg-[#0D0F10] border border-white/[0.08] overflow-hidden">
-              <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between bg-[#121518]/60">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/60" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/60" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/60" />
-                  <span className="ml-2 text-xs font-mono text-[#8E9499] hidden sm:inline">trajetta.app · semana 37</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#B8FF00]/10 border border-[#B8FF00]/25 text-[11px] font-semibold text-[#B8FF00]">
-                  <Compass className="w-3 h-3" />
-                  <span>Trajetta AI · Motor Cognitivo v3</span>
-                </div>
-              </div>
+        {/* Hero Pillars / Social Proof Row */}
+        <div className="mt-14 sm:mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row md:items-center justify-between text-xs text-neutral-400 gap-y-4" data-purpose="social-proof">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-normal tracking-normal text-[12.5px] sm:text-[13px]">
+            <span className="text-neutral-500 font-normal mr-1">Pilares do Sistema:</span>
+            <span className="text-neutral-200 font-medium">Direção Pessoal</span>
+            <span className="text-neutral-600">/</span>
+            <span className="text-neutral-200 font-medium">4 Áreas da Vida</span>
+            <span className="text-neutral-600">/</span>
+            <span className="text-neutral-200 font-medium">Ciclos Sem Punição</span>
+            <span className="text-neutral-600">/</span>
+            <span className="text-neutral-200 font-medium">IA com Memória Contextual</span>
+          </div>
 
-              {/* Internal Mock Dashboard Content */}
-              <div className="p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-gradient-to-br from-[#0D0F10] to-[#08090A]">
-                {/* Left Column: Weekly Focus */}
-                <div className="lg:col-span-7 space-y-4">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/8">
-                    <div>
-                      <span className="text-[11px] uppercase tracking-wider text-[#8E9499] font-bold">Semana 37</span>
-                      <h2 className="text-base sm:text-lg font-extrabold text-[#F2F1ED]">Minhas Prioridades Reais</h2>
-                    </div>
-                    <span className="text-xs px-2.5 py-1 rounded-lg bg-[#1A1F27] text-[#B8FF00] font-mono font-semibold">
-                      Ritmo Sustentável (4/5)
-                    </span>
-                  </div>
-
-                  {/* Priority Cards */}
-                  <div className="space-y-2.5">
-                    <div className="p-3.5 rounded-xl bg-[#14181F] border border-white/8 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-[#B8FF00]/10 flex items-center justify-center text-[#B8FF00] font-bold text-xs">
-                          C
-                        </div>
-                        <div>
-                          <div className="text-xs sm:text-sm font-semibold text-[#F2F1ED]">Treinos de força (3x na semana)</div>
-                          <div className="text-[11px] text-[#8E9499]">Corpo · Piso mínimo: 20 min</div>
-                        </div>
-                      </div>
-                      <span className="text-xs font-bold text-[#B8FF00]">3/3 ✓</span>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl bg-[#14181F] border border-white/8 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-xs">
-                          D
-                        </div>
-                        <div>
-                          <div className="text-xs sm:text-sm font-semibold text-[#F2F1ED]">Revisar orçamento mensal & aportes</div>
-                          <div className="text-[11px] text-[#8E9499]">Dinheiro · Reserva de emergência</div>
-                        </div>
-                      </div>
-                      <span className="text-xs font-semibold text-[#8E9499]">Hoje</span>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl bg-[#14181F] border border-white/8 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs">
-                          P
-                        </div>
-                        <div>
-                          <div className="text-xs sm:text-sm font-semibold text-[#F2F1ED]">Finalizar proposta de transição de carreira</div>
-                          <div className="text-[11px] text-[#8E9499]">Carreira · Meta Q3</div>
-                        </div>
-                      </div>
-                      <span className="text-xs font-bold text-[#B8FF00]">Concluído</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column: AI Live Context & Insight */}
-                <div className="lg:col-span-5 flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-[#14181F] border border-[#B8FF00]/20 relative overflow-hidden">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#B8FF00]" />
-                      <span className="text-xs font-bold text-[#F2F1ED] tracking-tight">Trajetta AI · Memória Ativa</span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-[#C9CDD1] leading-relaxed italic">
-                      “Você sustentou o piso mínimo de treinos mesmo com a semana pesada no trabalho. Isso mantém sua constância viva sem sobrecarga mental.”
-                    </p>
-                  </div>
-
-                  <div className="pt-4 mt-4 border-t border-white/8 flex items-center justify-between text-[11px] text-[#8E9499]">
-                    <span>Volume Acumulado: 42 semanas</span>
-                    <span className="text-[#B8FF00] font-bold">Zero Streaks Punitivos</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center space-x-2 text-neutral-400 font-mono text-[11.5px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+            <span>Sem streaks punitivos • 100% focado na vida real</span>
           </div>
         </div>
       </div>
