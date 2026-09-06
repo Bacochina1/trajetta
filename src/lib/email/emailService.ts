@@ -12,7 +12,8 @@ export async function sendEmail({ to, subject, html, userId }: SendEmailOptions)
 
   if (apiKey) {
     try {
-      const fromEmail = process.env.RESEND_FROM || 'Trajetta <onboarding@resend.dev>';
+      // Use Resend's provided domain onboarding@resend.dev for guaranteed delivery
+      const fromEmail = 'onboarding@resend.dev';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {

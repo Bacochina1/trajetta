@@ -51,16 +51,24 @@ export async function POST(req: Request) {
       notes: cleanPhone ? `Cadastrado com WhatsApp: ${cleanPhone}` : 'Cadastrado na landing page',
     });
 
-    // 2. Notify owner immediately (always works)
-    sendOwnerNotification(cleanEmail, cleanName, cleanPhone, newPosition).catch(() => {});
+    // 2. Notify owner immediately via Resend onboarding@resend.dev (AWAITED to guarantee delivery!)
+    try {
+      await sendOwnerNotification(cleanEmail, cleanName, cleanPhone, newPosition);
+    } catch (e) {
+      console.warn('[sendOwnerNotification error]:', e);
+    }
 
-    // 3. Try to send confirmation email to lead
+    // 3. Send confirmation email to lead (AWAITED to guarantee delivery!)
     const welcomeHtml = renderWelcomeEmail(cleanName, newPosition);
-    sendEmail({
-      to: cleanEmail,
-      subject: `Você está na Lista VIP da Trajetta — Vaga #${newPosition} Confirmada`,
-      html: welcomeHtml,
-    }).catch(() => {});
+    try {
+      await sendEmail({
+        to: cleanEmail,
+        subject: `Você está na Lista VIP da Trajetta — Vaga #${newPosition} Confirmada`,
+        html: welcomeHtml,
+      });
+    } catch (e) {
+      console.warn('[sendEmail welcome error]:', e);
+    }
 
     return NextResponse.json({
       ok: true,
