@@ -64,7 +64,7 @@ export function LifeAreasSection() {
   const current = areasData[activeTab];
 
   return (
-    <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-20 sm:py-24 border-t border-white/10" data-purpose="use-cases" id="areas">
+    <section className="max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-16 sm:py-24 border-t border-white/10" data-purpose="use-cases" id="areas">
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
@@ -72,12 +72,12 @@ export function LifeAreasSection() {
       </div>
 
       {/* Section Heading */}
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
         Um sistema unificado, <span className="text-neutral-500">clareza para toda a sua vida.</span>
       </h2>
 
       {/* Tab Navigation List */}
-      <div className="flex flex-wrap items-center gap-4 sm:gap-8 border-b border-white/10 pb-3 mb-12 text-xs font-mono">
+      <div className="flex items-center gap-4 sm:gap-8 border-b border-white/10 pb-3 mb-10 text-xs font-mono overflow-x-auto no-scrollbar whitespace-nowrap">
         <button
           onClick={() => setActiveTab('corpo')}
           className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 ${
@@ -122,7 +122,7 @@ export function LifeAreasSection() {
       {/* Tab Body: Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Atmospheric Preview with embedded dynamic modal */}
-        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[360px] sm:min-h-[400px] p-6 sm:p-8 flex items-center justify-center shadow-2xl">
+        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[320px] sm:min-h-[400px] p-4 sm:p-8 flex items-center justify-center shadow-2xl">
           {/* Background atmosphere gradient */}
           <div className="absolute inset-0 bg-gradient-to-tr from-[#06080b] via-[#0e131b] to-[#171f2a] opacity-90"></div>
 

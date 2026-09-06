@@ -20,12 +20,12 @@ import {
 
 export function FeatureCardsGrid() {
   return (
-    <section className="relative z-20 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pb-28 sm:pb-32" data-purpose="feature-cards" id="ciclos">
+    <section className="relative z-20 max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 pb-20 sm:pb-32" data-purpose="feature-cards" id="ciclos">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* CARD 1: Ciclo da Semana */}
         <div className="flex flex-col group">
           {/* Visual Container Mockup */}
-          <div className="relative w-full aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-6 shadow-2xl">
+          <div className="relative w-full min-h-[290px] sm:aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-4 sm:p-6 shadow-2xl">
             {/* Atmospheric landscape background with mountains and mist */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#11161d] to-[#1c242e] opacity-80"></div>
             <svg className="absolute inset-0 w-full h-full opacity-35 object-cover pointer-events-none" preserveAspectRatio="none" viewBox="0 0 400 300">
@@ -81,7 +81,7 @@ export function FeatureCardsGrid() {
         {/* CARD 2: Inteligência com Memória */}
         <div className="flex flex-col group">
           {/* Visual Container Mockup */}
-          <div className="relative w-full aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-5 sm:p-6 shadow-2xl">
+          <div className="relative w-full min-h-[290px] sm:aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-4 sm:p-6 shadow-2xl">
             {/* Background mood mist */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#12161d] to-[#1a232f] opacity-75"></div>
 

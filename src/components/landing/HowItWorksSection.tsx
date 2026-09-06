@@ -5,7 +5,7 @@ import { Compass, Calendar, ShieldCheck, ArrowRight, Sparkles, Send } from 'luci
 
 export function HowItWorksSection() {
   return (
-    <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-20 sm:py-24 border-t border-white/10" data-purpose="how-it-works" id="metodo">
+    <section className="max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-16 sm:py-24 border-t border-white/10" data-purpose="how-it-works" id="metodo">
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
@@ -13,14 +13,14 @@ export function HowItWorksSection() {
       </div>
 
       {/* Section Heading */}
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-12">
+      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-10">
         Uma direção para começar, <span className="text-neutral-500">três passos para a clareza.</span>
       </h2>
 
       {/* Split layout: Input Preview Left, Step Process Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Prompt Bar inside Dark atmospheric scenery */}
-        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] sm:min-h-[420px] p-6 flex items-end justify-center shadow-2xl">
+        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[300px] sm:min-h-[420px] p-4 sm:p-6 flex items-end justify-center shadow-2xl">
           <div className="absolute inset-0 bg-gradient-to-t from-black via-[#0c1017] to-[#141a24] opacity-90"></div>
 
           {/* Floating prompt input box matching reference */}

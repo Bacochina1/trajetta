@@ -21,22 +21,22 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#040608] border-t border-white/10 px-6 sm:px-10 lg:px-14 pt-16 pb-12" data-purpose="page-footer" id="contact">
+    <footer className="bg-[#040608] border-t border-white/10 px-4 xs:px-6 sm:px-10 lg:px-14 pt-12 sm:pt-16 pb-10 sm:pb-12" data-purpose="page-footer" id="contact">
       <div className="max-w-[1440px] mx-auto">
         {/* Top row: Newsletter + Links columns */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16">
           {/* Left Column: Branding and Subscription */}
           <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-0 md:pr-6">
-            {/* Concentric circle logo */}
+            {/* Official White SVG Logo */}
             <div className="flex items-center gap-2.5 mb-4">
-              <span className="w-7 h-7 flex items-center justify-center text-white">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" strokeOpacity="0.3"></circle>
-                  <circle cx="12" cy="12" r="6.5" strokeOpacity="0.65"></circle>
-                  <circle cx="12" cy="12" r="3" strokeOpacity="1" fill="#B8FF00" fillOpacity="0.9"></circle>
-                </svg>
-              </span>
-              <span className="font-mono text-sm tracking-[0.2em] font-semibold uppercase text-white">TRAJETTA</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center flex-shrink-0">
+                <img
+                  src="/trajetta-logo.svg"
+                  alt="Trajetta Logo"
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.25)]"
+                />
+              </div>
+              <span className="font-bold text-sm tracking-[0.18em] uppercase text-white">TRAJETTA</span>
             </div>
 
             <p className="text-xs text-neutral-400 leading-relaxed mb-6 max-w-sm">

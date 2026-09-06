@@ -77,7 +77,7 @@ export function WaitlistSection() {
   };
 
   return (
-    <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-20 sm:py-28 border-t border-white/10" data-purpose="pricing-plans" id="waitlist">
+    <section className="max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-16 sm:py-28 border-t border-white/10" data-purpose="pricing-plans" id="waitlist">
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse"></span>
@@ -86,7 +86,7 @@ export function WaitlistSection() {
 
       {/* Section Heading */}
       <div className="max-w-3xl mb-12">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
+        <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
           Garanta sua vaga no <span className="text-neutral-500">próximo ciclo de convites</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed">
@@ -96,7 +96,7 @@ export function WaitlistSection() {
       </div>
 
       {/* Central Waitlist Card */}
-      <div className="relative rounded-3xl bg-[#090c10] border border-white/15 p-6 sm:p-12 overflow-hidden shadow-2xl mb-16">
+      <div className="relative rounded-2xl sm:rounded-3xl bg-[#090c10] border border-white/15 p-4 xs:p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xl mb-14">
         {/* Subtle background glow */}
         <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#B8FF00]/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -151,7 +151,7 @@ export function WaitlistSection() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Ex.: Carlos Mendes"
-                      className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
+                      className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
                     />
                   </div>
 
@@ -164,7 +164,7 @@ export function WaitlistSection() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="(11) 98765-4321"
-                      className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
+                      className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
                     />
                   </div>
                 </div>
@@ -179,7 +179,7 @@ export function WaitlistSection() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="seu.email@exemplo.com"
-                    className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
+                    className="w-full bg-[#12161f] border border-white/15 rounded-xl px-4 py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/40 transition-colors font-sans"
                   />
                 </div>
 

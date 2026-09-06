@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useTrajetta } from '@/context/TrajettaContext';
 import { captureUtmParams, initScrollDepthTracking, trackMarketingEvent } from '@/lib/analytics';
 
 // MOSA AI Layout Sections (Waitlist-Only Conversion)
@@ -16,8 +15,6 @@ import { FaqSection } from '@/components/landing/FaqSection';
 import { Footer } from '@/components/landing/Footer';
 
 export default function LandingPage() {
-  const { isAuthenticated, user } = useTrajetta();
-
   useEffect(() => {
     // 1. Capture and persist UTM parameters across marketing funnel
     captureUtmParams();
@@ -39,7 +36,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#060709] text-[#ffffff] selection:bg-[#B8FF00] selection:text-[#060709] font-sans antialiased overflow-x-hidden">
       {/* 1. Floating Capsule Navbar */}
-      <Navbar isAuthenticated={isAuthenticated} user={user} />
+      <Navbar />
 
       {/* Main Content Sections */}
       <main id="main-content" className="relative z-10 flex flex-col">
