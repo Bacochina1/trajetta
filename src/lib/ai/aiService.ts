@@ -3,18 +3,18 @@ import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
+// -------------------------------------------------------------------
+// GOOGLE GEMINI EXCLUSIVE ENGINE CONFIGURATION
+// -------------------------------------------------------------------
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
-
-const TRAJETTA_SYSTEM_PROMPT = `Você é o estrategista de vida e IA do Trajetta — um sistema pessoal de evolução para pessoas lúcidas e ambiciosas.
+const TRAJETTA_SYSTEM_PROMPT = `Você é o estrategista de vida e inteligência artificial oficial do Trajetta — um sistema pessoal de evolução para pessoas lúcidas e ambiciosas.
 Seu princípio inegociável: "Planeje para sua vida real, nunca para sua versão perfeita".
-Seu tom é sóbrio, calmo, perspicaz, sem clichês motivacionais baratos, sem falsas celebrações e sem arrogância.
+Seu tom é sóbrio, calmo, perspicaz, acolhedor, sem clichês motivacionais baratos, sem falsas celebrações e sem arrogância.
 
 DIRETRIZES FUNDAMENTAIS DE COMPORTAMENTO:
-1. PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
+1. PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou qualquer emoji infantil.
 2. PROIBIÇÃO ESTRITA: NUNCA comece repetindo a pergunta do usuário ou dizendo "Analisando sua pergunta...", "Em relação a...", ou "Você perguntou...". Vá direto ao cerne com elegância e maturidade.
 3. NUNCA cite variáveis cruas, metadados soltos ou caracteres isolados (como objetivo de "k"). Integre o contexto de forma natural e invisível.
 4. Se o usuário digitar algo curto, vago ou fragmentado (ex: "pla", "plano", "ajuda", "rotina", "hoje"), interprete como uma busca por foco ou planejamento e ofereça caminhos imediatos e estruturados.
@@ -46,10 +46,9 @@ function cleanAiOutput(text: string): string {
 }
 
 /**
- * Multi-Tier Trajetta AI Engine:
- * Tier 1: Google Gemini (if configured and authorized)
- * Tier 2: NVIDIA Live LLM (sub-second high-intelligence engine)
- * Tier 3: High-Calibre Dynamic Strategic RAG Synthesizer
+ * Trajetta AI Engine (Powered exclusively by Google Gemini):
+ * 1. Google Gemini Flash / Pro (gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash, gemini-3.1-flash-lite)
+ * 2. High-Calibre Calm Power Dynamic RAG Synthesizer
  */
 export async function callTrajettaAI(
   messages: ChatMessage[],
@@ -99,15 +98,16 @@ ${memoriesList}
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   // -------------------------------------------------------------
-  // TIER 1: Google Gemini Models
+  // GOOGLE GEMINI ENGINE
   // -------------------------------------------------------------
-  if (GEMINI_API_KEY && !GEMINI_API_KEY.includes('AQ.Ab8RN6L9Q8vKEKohsMMkBKiZurPlKq')) {
+  if (GEMINI_API_KEY) {
     const googleModels = [
       GEMINI_MODEL,
       'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-3.1-flash-lite'
+      'gemini-3.1-flash-lite',
+      'gemini-pro'
     ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
 
     const contents = messages
@@ -147,58 +147,13 @@ ${memoriesList}
           }
         }
       } catch {
-        // Failover gracefully to next tier
+        // Fall through to next model or strategic engine
       }
     }
   }
 
   // -------------------------------------------------------------
-  // TIER 2: Live High-Intelligence LLM (NVIDIA/Llama 3.2 11B Instruct)
-  // -------------------------------------------------------------
-  if (NVIDIA_API_KEY) {
-    const liveModels = [
-      'meta/llama-3.2-11b-vision-instruct',
-      'mistralai/mistral-7b-instruct-v0.3'
-    ];
-
-    const fullMessages: ChatMessage[] = [
-      { role: 'system', content: systemContent },
-      ...messages
-    ];
-
-    for (const model of liveModels) {
-      try {
-        const res = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${NVIDIA_API_KEY}`
-          },
-          body: JSON.stringify({
-            model,
-            messages: fullMessages,
-            temperature: 0.5,
-            max_tokens: maxTokens
-          }),
-          signal: AbortSignal.timeout(15000)
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const rawContent = data.choices?.[0]?.message?.content || '';
-          const cleaned = cleanAiOutput(rawContent);
-          if (cleaned && cleaned.length > 20) {
-            return cleaned;
-          }
-        }
-      } catch {
-        // Failover to dynamic strategic response
-      }
-    }
-  }
-
-  // -------------------------------------------------------------
-  // TIER 3: HIGH-CALIBRE STRATEGIC DYNAMIC RAG ENGINE
+  // CALM POWER DYNAMIC STRATEGIC ENGINE
   // -------------------------------------------------------------
   return getDynamicStrategicResponse(userQuery, options?.contextPack, options?.ragContext);
 }
