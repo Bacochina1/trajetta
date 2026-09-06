@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { callNvidiaAI } from '@/lib/ai/aiService';
+import { getSessionUser } from '@/lib/auth/auth';
+import { memoryService } from '@/lib/ai/memoryService';
 
 export const maxDuration = 60;
 
@@ -14,9 +16,22 @@ export async function POST(req: Request) {
       );
     }
 
+    const user = await getSessionUser();
+    const userId = user?.id || 'demo-user';
+    const lastUserQuery = messages[messages.length - 1]?.content || '';
+
+    // Assemble Level 1, 2, 3 Memory Pack
+    let contextPack;
+    try {
+      contextPack = await memoryService.assembleContextPack(userId, lastUserQuery);
+    } catch (e) {
+      console.warn('Could not assemble memory context pack:', e);
+    }
+
     const reply = await callNvidiaAI(messages, {
       heavyReasoning: Boolean(heavyReasoning),
       ragContext,
+      contextPack,
     });
 
     return NextResponse.json({ ok: true, reply });

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
@@ -18,6 +18,8 @@ import {
   FileText,
   AlertTriangle,
   RotateCcw,
+  Brain,
+  Plus,
 } from 'lucide-react';
 
 interface ProfileViewProps {
@@ -37,6 +39,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
     lifeScore,
     resetToDemoData,
     setIsAuthModalOpen,
+    logout,
   } = useTrajetta();
 
   const [notifications, setNotifications] = useState({
@@ -48,6 +51,69 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   const [exportSuccess, setExportSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
+
+  // Memory Engine State
+  const [memories, setMemories] = useState<Array<{ id: string; memoryType: string; content: string; importance: number; confidence: number; source?: string }>>([]);
+  const [livingSummary, setLivingSummary] = useState<string>('');
+  const [memoryLoading, setMemoryLoading] = useState(false);
+  const [newMemoryType, setNewMemoryType] = useState('preference');
+  const [newMemoryContent, setNewMemoryContent] = useState('');
+  const [addingMemory, setAddingMemory] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/memory')
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          setMemories(data.memories || []);
+          if (data.livingSummary?.summary) {
+            setLivingSummary(data.livingSummary.summary);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleAddMemory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMemoryContent.trim()) return;
+    setAddingMemory(true);
+    try {
+      const res = await fetch('/api/memory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memoryType: newMemoryType, content: newMemoryContent, importance: 0.7, confidence: 0.9, source: 'user_settings' }),
+      });
+      const data = await res.json();
+      if (data.ok && data.memory) {
+        setMemories(prev => [data.memory, ...prev]);
+        setNewMemoryContent('');
+      }
+    } catch {
+      // error
+    } finally {
+      setAddingMemory(false);
+    }
+  };
+
+  const handleDeleteMemory = async (id: string) => {
+    try {
+      await fetch(`/api/memory/${id}`, { method: 'DELETE' });
+      setMemories(prev => prev.filter(m => m.id !== id));
+    } catch {
+      // error
+    }
+  };
+
+  const handlePurgeMemories = async () => {
+    if (!confirm('Deseja realmente apagar todas as memórias da IA?')) return;
+    try {
+      await fetch('/api/memory/all', { method: 'DELETE' });
+      setMemories([]);
+    } catch {
+      // error
+    }
+  };
 
   // Export all user data as JSON (LGPD Compliance)
   const handleExportData = () => {
@@ -366,6 +432,146 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
         </div>
       </div>
 
+      {/* Memory Engine Section (RAG & Personal Memory) */}
+      <div className="trajetta-card p-6 border border-white/8 space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/8">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/20 flex items-center justify-center text-[#B8FF00]">
+              <Brain size={18} />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-[#F2F1ED] flex items-center gap-2">
+                <span>Memória da IA & RAG Pessoal</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#B8FF00]/10 text-[#B8FF00] border border-[#B8FF00]/20">
+                  {memories.length} fatos
+                </span>
+              </h2>
+              <p className="text-xs text-[#8E9499]">
+                O que a inteligência da Trajetta aprendeu sobre sua rotina, padrões e preferências.
+              </p>
+            </div>
+          </div>
+
+          {memories.length > 0 && (
+            <button
+              onClick={handlePurgeMemories}
+              className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg border border-red-500/20 hover:bg-red-500/10"
+            >
+              <Trash2 size={13} />
+              <span>Limpar Todas</span>
+            </button>
+          )}
+        </div>
+
+        {/* Living Summary */}
+        {livingSummary && (
+          <div className="p-4 rounded-xl bg-[#14181f] border border-white/8 space-y-1.5">
+            <span className="text-[10px] font-mono text-[#8E9499] uppercase tracking-wider">
+              Nível 1 • Resumo Vivo da sua Fase Atual
+            </span>
+            <p className="text-xs text-[#F2F1ED] leading-relaxed">
+              "{livingSummary}"
+            </p>
+          </div>
+        )}
+
+        {/* Memories List */}
+        <div className="space-y-2.5">
+          <span className="text-[10px] font-mono text-[#8E9499] uppercase tracking-wider">
+            Nível 3 • Memórias Semânticas & Padrões Verificados
+          </span>
+
+          {memories.length === 0 ? (
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/10 text-center text-xs text-[#8E9499]">
+              Nenhuma memória gravada ainda. Conforme você conversar com a IA e registrar revisões, padrões verificados aparecerão aqui.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-1">
+              {memories.map(m => (
+                <div key={m.id} className="p-3 rounded-xl bg-[#14181f] border border-white/8 flex items-start justify-between gap-3 group">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[#B8FF00]">
+                        {m.memoryType}
+                      </span>
+                      <span className="text-[10px] text-[#8E9499]">
+                        Confiança: {Math.round((m.confidence || 0.85) * 100)}%
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#F2F1ED] break-words">
+                      {m.content}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteMemory(m.id)}
+                    title="Excluir memória"
+                    className="p-1.5 text-[#8E9499] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Add Memory Form */}
+        <form onSubmit={handleAddMemory} className="pt-3 border-t border-white/8 space-y-3">
+          <span className="text-[10px] font-mono text-[#8E9499] uppercase tracking-wider">
+            Adicionar Memória Manualmente
+          </span>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <select
+              value={newMemoryType}
+              onChange={e => setNewMemoryType(e.target.value)}
+              className="h-10 px-3 bg-[#14181f] border border-white/10 rounded-xl text-xs text-[#F2F1ED] focus:border-[#B8FF00] focus:outline-none"
+            >
+              <option value="preference">Preferência</option>
+              <option value="goal">Meta / Foco</option>
+              <option value="behavior_pattern">Padrão de Comportamento</option>
+              <option value="difficulty">Dificuldade / Desafio</option>
+              <option value="routine">Rotina</option>
+              <option value="constraint">Restrição Real</option>
+            </select>
+            <input
+              type="text"
+              value={newMemoryContent}
+              onChange={e => setNewMemoryContent(e.target.value)}
+              placeholder="Ex: Prefiro treinar pela manhã e costumo viajar às terças..."
+              className="flex-1 h-10 px-3.5 bg-[#14181f] border border-white/10 rounded-xl text-xs text-[#F2F1ED] placeholder-[#8E9499]/50 focus:border-[#B8FF00] focus:outline-none"
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              disabled={addingMemory || !newMemoryContent.trim()}
+              className="text-xs h-10 px-4"
+            >
+              <Plus size={14} />
+              <span>Gravar</span>
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      {/* Logout Action Bar */}
+      <div className="p-5 rounded-2xl bg-[#14181f] border border-white/8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-sm font-bold text-[#F2F1ED]">Sessão de Usuário</h3>
+          <p className="text-xs text-[#8E9499]">
+            Conectado como {user.name} ({user.role?.includes('Admin') ? 'Membro Fundador' : 'Usuário'}). Desconecte para acessar a tela de login.
+          </p>
+        </div>
+        <button
+          onClick={logout}
+          className="px-5 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/20 transition-all flex items-center gap-2 select-none"
+        >
+          <LogOut size={15} />
+          <span>Sair da Conta (Logout)</span>
+        </button>
+      </div>
+
+      
       {/* Institutional Footer */}
       <div className="text-center space-y-1 text-[11px] text-[#8E9499]/60 pt-4">
         <div>Trajetta • Versão 1.0 (Setembro de 2026)</div>

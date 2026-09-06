@@ -1,4 +1,5 @@
 import { buildRagContext, TrajettaRagContext } from './ragService';
+import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
@@ -14,17 +15,14 @@ PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
 Responda diretamente em português sem expor rascunhos ou etapas de raciocínio.
 Foque em ritmo sustentável, recuperação rápida após deslizes ("um deslize não anula 17 dias de disciplina") e consistência acumulada.`;
 
-
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
 function cleanAiOutput(text: string): string {
-  // Strip <think>...</think> tags
   let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
-  // If model produced a thinking process / scratchpad:
   if (cleaned.toLowerCase().includes("thinking process") || cleaned.toLowerCase().includes("analyze user input")) {
     const parts = cleaned.split(/\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Refine:?)\s*:?\s*\n?/i);
     if (parts.length > 1 && parts[parts.length - 1].trim().length > 20) {
@@ -50,38 +48,69 @@ function cleanAiOutput(text: string): string {
     }
   }
 
-  // If still polluted with thinking process prefix, provide clean Trajetta synthesis
   if (cleaned.toLowerCase().includes("analyze user input") || cleaned.toLowerCase().includes("here's a thinking process")) {
     cleaned = 'Sua trajetória não exige perfeição cega, mas continuidade adaptável. Em semanas de sobrecarga profissional, preserve seu piso de consistência reduzindo o volume sem abrir mão do hábito.';
   }
 
-  // Strictly enforce Zero Sparkles (neither ✨ nor ✦)
   return cleaned.replace(/[✨✦]/g, '').trim();
 }
 
 export async function callNvidiaAI(
   messages: ChatMessage[],
-  options?: { heavyReasoning?: boolean; maxTokens?: number; ragContext?: TrajettaRagContext }
+  options?: {
+    heavyReasoning?: boolean;
+    maxTokens?: number;
+    ragContext?: TrajettaRagContext;
+    contextPack?: ContextPack;
+  }
 ): Promise<string> {
   const model = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
   const maxTokens = options?.maxTokens || 800;
   const userQuery = messages[messages.length - 1]?.content || '';
 
-  const ragSection = options?.ragContext
-    ? `\n\n--- DADOS REAIS RECUPERADOS DA TRAJETÓRIA DO USUÁRIO (RAG ATIVO) ---\n${buildRagContext(
-        userQuery,
-        options.ragContext
-      )}\n--- FIM DOS DADOS RECUPERADOS ---\n
-DIRETRIZES FUNDAMENTAIS DE RAG:
-1. Responda fundamentando-se diretamente nas metas reais, hábitos específicos, semanas concluídas, deslizes e intenção da semana do usuário.
-2. Demonstre continuidade: o usuário não é um estranho. Trate-o pelo nome e faça referências diretas à sua trajetória real.
-3. Se perguntado sobre algo que não consta no histórico, admita com honestidade.
-4. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨).`
-    : '';
+  let contextSections = '';
 
+  // 1. Semantic Memory Engine Pack (Level 1, 2, 3)
+  if (options?.contextPack) {
+    const cp = options.contextPack;
+    const goalsList = cp.structuredData.goals.map(g => `${g.title} (${g.progress}% concluído) - Motivo: ${g.whyItMatters}`).join('; ');
+    const habitsList = cp.structuredData.habits.map(h => `${h.name} (${h.area}, ${h.streakWeeks} semanas de streak)`).join('; ');
+    const memoriesList = cp.relevantMemories.length > 0
+      ? cp.relevantMemories.map(m => `- [${m.memoryType.toUpperCase()} | Confiança ${Math.round(m.confidence * 100)}%] ${m.content}`).join('\n')
+      : '- Nenhuma memória pregressa conflitante registrada ainda.';
 
+    contextSections += `\n\n--- MEMÓRIA VIVA & HISTÓRICO PESSOAL (MEMORY ENGINE TRAJETTA) ---
+NÍVEL 1: RESUMO VIVO DO USUÁRIO (QUEM É ESTA PESSOA AGORA):
+${cp.livingSummary}
 
-  const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${ragSection}`;
+NÍVEL 2: FATOS ESTRUTURADOS OBJETIVOS (SQL VERIFICADO):
+- Metas Ativas: ${goalsList || 'Sem metas cadastradas'}
+- Hábitos Principais: ${habitsList || 'Sem hábitos cadastrados'}
+- Consistência Recente: ${cp.structuredData.recentConsistency}%
+${cp.structuredData.lastReviewReflection ? `- Última Reflexão Semanal: "${cp.structuredData.lastReviewReflection}"` : ''}
+
+NÍVEL 3: PADRÕES COMPORTAMENTAIS & MEMÓRIAS SEMÂNTICAS RELEVANTES:
+${memoriesList}
+--- FIM DA MEMÓRIA PESSOAL ---\n`;
+  }
+
+  // 2. Legacy Trajetta Rag Context if provided
+  if (options?.ragContext) {
+    contextSections += `\n\n--- DADOS REAIS RECUPERADOS DA TRAJETÓRIA (RAG ATIVO) ---\n${buildRagContext(
+      userQuery,
+      options.ragContext
+    )}\n--- FIM DOS DADOS RECUPERADOS ---\n`;
+  }
+
+  if (contextSections) {
+    contextSections += `\nDIRETRIZES DE CONTINUIDADE PESSOAL:
+1. Responda fundamentando-se nas metas reais, hábitos e memórias recuperadas.
+2. Demonstre continuidade: você conhece o usuário e a fase atual da vida dele.
+3. Se o usuário estiver sobrecarregado, recomende sustentação de piso mínimo em vez de desistência total.
+4. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨).`;
+  }
+
+  const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   try {
     const fullMessages: ChatMessage[] = [
@@ -98,29 +127,25 @@ DIRETRIZES FUNDAMENTAIS DE RAG:
       body: JSON.stringify({
         model,
         messages: fullMessages,
+        temperature: 0.5,
+        top_p: 0.85,
         max_tokens: maxTokens,
-        temperature: 0.6,
       }),
-      // 25 seconds timeout for remote LLM inference
-      signal: AbortSignal.timeout(25000),
+      signal: AbortSignal.timeout(12000),
     });
 
     if (!res.ok) {
-      const errorText = await res.text();
-      console.warn(`[NVIDIA AI API Warning] Status: ${res.status}. Body: ${errorText}`);
-      return getFallbackChatResponse(userQuery, options?.ragContext);
+      const errText = await res.text();
+      console.warn(`NVIDIA API response error (${res.status}): ${errText}`);
+      throw new Error(`NVIDIA API error: ${res.status}`);
     }
 
     const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content;
-    if (!reply) {
-      return getFallbackChatResponse(userQuery, options?.ragContext);
-    }
-
-    return cleanAiOutput(reply);
-  } catch (err) {
-    console.error('[NVIDIA AI Call Error]:', err);
-    return getFallbackChatResponse(userQuery, options?.ragContext);
+    const rawContent = data.choices?.[0]?.message?.content || '';
+    return cleanAiOutput(rawContent);
+  } catch (error) {
+    console.error('NVIDIA AI invocation failed, using local Trajetta strategist fallback:', error);
+    return getLocalStrategicFallback(userQuery);
   }
 }
 
@@ -142,21 +167,16 @@ Forneça um olhar objetivo: reconheça o esforço real, aponte um ajuste sutil p
   return callNvidiaAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
 }
 
-function getFallbackChatResponse(userPrompt: string, ragContext?: TrajettaRagContext): string {
-  const lower = userPrompt.toLowerCase();
-  const userName = ragContext?.user?.name || 'Explorador';
-  const target12m = ragContext?.user?.target12Months || 'sua visão de 12 meses';
-  const weeks = ragContext?.user?.completedWeeksCount ?? 14;
+function getLocalStrategicFallback(query: string): string {
+  const q = query.toLowerCase();
 
-  if (lower.includes('deslize') || lower.includes('falhei') || lower.includes('perdi')) {
-    return `Um deslize isolado não tem o poder de anular as ${weeks} semanas de disciplina que você já construiu, ${userName}. A verdadeira maestria está em fechar a brecha no dia seguinte: reduza a fricção do próximo hábito e retome sua trajetória com calma.`;
+  if (q.includes('reduzir') || q.includes('treino') || q.includes('trabalho') || q.includes('corrida') || q.includes('tempo')) {
+    return 'Reduzir temporariamente o volume para 2 ou 3 treinos leves de manutenção é uma decisão madura quando a demanda de trabalho se intensifica. O objetivo na Trajetta é manter a linha de base ativa, evitando que um período de sobrecarga quebre a identidade de constância que você já construiu.';
   }
-  if (lower.includes('meta') || lower.includes('começar') || lower.includes('objetivo')) {
-    return `Para alcançar "${target12m}", o erro mais comum é planejar pelo pico de motivação e não pelo piso de um dia exaustivo. Que fração mínima da sua meta você consegue sustentar até mesmo nas semanas mais turbulentas?`;
+
+  if (q.includes('meta') || q.includes('maratona') || q.includes('dinheiro') || q.includes('50k')) {
+    return 'Olhando para suas metas, o ritmo atual está alinhado com o horizonte de longo prazo. O foco desta semana deve ser proteger os hábitos de base (sono, treino leve e aportes programados) sem adicionar atrito desnecessário à sua rotina.';
   }
-  if (lower.includes('treino') || lower.includes('reduzir') || lower.includes('trabalho')) {
-    return `Reduzir os treinos temporariamente por conta de pico no trabalho não é retrocesso, ${userName} — é gestão de energia. Mantenha 2 sessões curtas de manutenção para proteger o hábito sem sobrecarregar sua rotina.`;
-  }
-  return `O progresso real é sutil e cumulativo, ${userName}. Você já acumula ${weeks} semanas de trajetória na Trajetta. O mais valioso não é a perfeição de um dia, mas a consistência de não abandonar o processo.`;
+
+  return 'Sua trajetória é construída pela consistência acumulada dos dias normais, não por picos isolados de heroísmo. Escolha a menor ação de avanço para hoje e mantenha o ritmo.';
 }
-

@@ -21,11 +21,34 @@ import { OnboardingModal } from '@/components/views/OnboardingModal';
 import { NewGoalModal } from '@/components/views/NewGoalModal';
 import { AuthModal } from '@/components/views/AuthModal';
 import { PaywallModal } from '@/components/views/PaywallModal';
+import { AuthGateView } from '@/components/views/AuthGateView';
 
 export default function TrajettaAppPage() {
-  const { activeView, isAuthModalOpen, setIsAuthModalOpen } = useTrajetta();
+  const {
+    activeView,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    isAuthenticated,
+    authLoading,
+    login,
+  } = useTrajetta();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+
+  // While checking session
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#060709] flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-[#B8FF00] border-t-transparent animate-spin" />
+        <span className="text-xs font-mono text-[#8E9499] uppercase tracking-wider">Verificando sessão...</span>
+      </div>
+    );
+  }
+
+  // If user is not authenticated, show the login gate
+  if (!isAuthenticated) {
+    return <AuthGateView onLoginSuccess={login} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0D0F10] text-[#F2F1ED] flex">
@@ -66,4 +89,3 @@ export default function TrajettaAppPage() {
     </div>
   );
 }
-

@@ -4,10 +4,10 @@ import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { Menu, Plus, CheckCircle2, RotateCcw, User } from 'lucide-react';
+import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut } from 'lucide-react';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
-  const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen } = useTrajetta();
+  const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen, logout } = useTrajetta();
   const dateFormatted = getCurrentDateFormatted();
 
   return (
@@ -43,6 +43,16 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           <span className="hidden sm:inline font-medium">
             {user.role?.includes('Admin') ? 'Jim (Admin)' : user.name}
           </span>
+        </button>
+
+        {/* Sair / Logout */}
+        <button
+          onClick={logout}
+          title="Sair da conta"
+          className="min-h-[36px] px-2.5 py-1.5 rounded-lg text-[#8E9499] hover:text-red-400 hover:bg-white/5 border border-white/8 hover:border-red-500/20 tactile-btn flex items-center gap-1 text-xs"
+        >
+          <LogOut size={14} />
+          <span className="hidden sm:inline">Sair</span>
         </button>
 
         {/* Reset Demo Data button (Discreet) */}

@@ -2,26 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 import {
   CheckCircle2,
   ArrowRight,
   Brain,
-  Compass,
   Activity,
   Landmark,
   Briefcase,
   HeartHandshake,
-  ShieldCheck,
-  Flame,
   Check,
-  AlertCircle,
-  Clock,
-  Layers,
+  RotateCcw,
+  Copy,
+  Share2,
+  Bookmark,
+  MoreHorizontal,
   ChevronRight,
-  ChevronDown,
-  Quote,
-  Lock,
-  Server,
+  Sparkles as SparklesIcon,
+  ShieldCheck,
+  Send,
+  Sliders,
+  CheckCheck
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -29,12 +30,11 @@ export default function LandingPage() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [waitlistCount, setWaitlistCount] = useState(1482);
-  const [userPosition, setUserPosition] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [activeTab, setActiveTab] = useState<'trajetta' | 'tradicional'>('trajetta');
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [activeUseCase, setActiveUseCase] = useState<number>(0);
+  const [footerEmail, setFooterEmail] = useState('');
+  const [footerSubmitted, setFooterSubmitted] = useState(false);
 
   useEffect(() => {
     fetch('/api/waitlist')
@@ -49,693 +49,844 @@ export default function LandingPage() {
 
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setError('Por favor, digite um e-mail válido.');
-      return;
-    }
-
-    setError(null);
+    if (!email) return;
     setLoading(true);
-
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ email, name, source: 'mosa_sales_page_hero' }),
       });
-
       const data = await res.json();
-      if (data.ok) {
+      if (data?.ok) {
         setSubmitted(true);
-        setAlreadyRegistered(Boolean(data.alreadyRegistered));
-        setUserPosition(data.position || waitlistCount + 1);
         if (data.totalCount) setWaitlistCount(data.totalCount);
-      } else {
-        setError(data.error || 'Erro ao registrar. Tente novamente.');
       }
     } catch {
-      setError('Falha de conexão. Tente novamente em instantes.');
+      // ignore
     } finally {
       setLoading(false);
     }
   };
 
+  const handleFooterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!footerEmail) return;
+    try {
+      await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: footerEmail, source: 'footer_newsletter' }),
+      });
+      setFooterSubmitted(true);
+    } catch {
+      // ignore
+    }
+  };
+
+  const useCases = [
+    {
+      title: 'Corpo & Saúde',
+      area: 'corpo',
+      headline: 'Sustente constância física sem queimar largada ou viver no tudo-ou-nada.',
+      description: 'Defina metas claras como correr sua primeira prova, bater volume de treino semanal ou regular o sono. Registre o ritmo real da sua rotina.',
+      accent: '#58D6A7',
+      mockupLabel: 'Meta Ativa: Meia Maratona (21 km)',
+      mockupStatus: '48% concluído • 3 treinos esta semana',
+      actionTitle: 'Treino de rodagem leve (6 km)',
+    },
+    {
+      title: 'Dinheiro & Finanças',
+      area: 'dinheiro',
+      headline: 'Construa sua reserva e patrimônio com previsibilidade matemática.',
+      description: 'Aporte de forma consistente, acompanhe marcos de liquidez e blinde sua estabilidade emocional contra decisões impulsivas.',
+      accent: '#F08A76',
+      mockupLabel: 'Meta Ativa: Reserva R$ 50.000',
+      mockupStatus: '72% concluído • R$ 36.000 acumulados',
+      actionTitle: 'Aporte programado da semana',
+    },
+    {
+      title: 'Carreira & Negócios',
+      area: 'carreira',
+      headline: 'Avance estrategicamente sem sacrificar sua vida pessoal.',
+      description: 'Mapeie promoções, entregas de alto impacto e expansão profissional enquanto mantém um teto saudável de capacidade semanal.',
+      accent: '#A98CF7',
+      mockupLabel: 'Meta Ativa: Transição para Head de Produto',
+      mockupStatus: '60% concluído • Liderança estratégica',
+      actionTitle: 'Alinhar roadmap do trimestre',
+    },
+    {
+      title: 'Vida & Equilíbrio',
+      area: 'vida',
+      headline: 'Feche cada semana com clareza mental e paz de espírito.',
+      description: 'Nossa revisão semanal guiada de 4 etapas ajuda você a calibrar vitórias, absorver aprendizados e planejar os próximos 7 dias.',
+      accent: '#6FAEF7',
+      mockupLabel: 'Revisão Semanal: Semana 14 de 52',
+      mockupStatus: '85% de consistência • 0 atrito',
+      actionTitle: 'Revisão Dominical guiada pela IA',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#0D0F10] text-[#F2F1ED] selection:bg-[#B8FF00] selection:text-[#0D0F10] overflow-x-hidden font-sans">
-      {/* ------------------------------------------------------------- */}
-      {/* 1. TOPBAR NAVEGAÇÃO                                           */}
-      {/* ------------------------------------------------------------- */}
-      <header className="sticky top-0 z-50 bg-[#0D0F10]/85 backdrop-blur-md border-b border-white/8 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(184,255,0,0.15)]">
-            <img src="/trajetta-logo.png" alt="Trajetta Logo" className="w-full h-full object-contain p-0.5" />
+    <div className="bg-[#060709] text-white min-h-screen selection:bg-[#B8FF00]/20 selection:text-[#B8FF00] overflow-x-hidden font-sans">
+      <style>{`
+        .portal-frame {
+          box-shadow: 0 0 45px 10px rgba(184, 255, 0, 0.35), 0 0 100px 30px rgba(184, 255, 0, 0.18), inset 0 0 20px 4px rgba(184, 255, 0, 0.45);
+        }
+        .portal-reflection {
+          box-shadow: 0 0 60px 20px rgba(184, 255, 0, 0.25);
+          filter: blur(8px);
+        }
+        .hero-bottom-fade {
+          background: linear-gradient(to bottom, transparent 65%, #060709 100%);
+        }
+      `}</style>
+
+      {/* BEGIN: HeroSection */}
+      <section className="relative w-full min-h-[1020px] flex flex-col justify-between overflow-hidden" data-purpose="hero-section">
+        {/* Cinematic Backdrop with Luminous North Star Portal, Mountains, Water */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" data-purpose="cinematic-backdrop">
+          {/* Dark atmospheric sky gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#172028] via-[#0e141a] to-[#060709]"></div>
+
+          {/* Mountain silhouettes */}
+          <svg className="absolute w-full h-[85%] bottom-0 opacity-40 mix-blend-multiply" fill="none" preserveAspectRatio="none" viewBox="0 0 1440 800">
+            <path d="M0 450L210 260L460 380L720 220L980 340L1240 180L1440 320V800H0V450Z" fill="#080c10"></path>
+            <path d="M-100 520L280 320L580 440L880 290L1180 410L1480 260V800H-100V520Z" fill="#040608" opacity="0.8"></path>
+          </svg>
+
+          {/* Soaring silhouettes */}
+          <div className="absolute inset-0 z-10 pointer-events-none opacity-75">
+            <svg className="absolute top-[12%] left-[17%] w-24 h-24 text-black opacity-80 drop-shadow-md transform -rotate-12" fill="currentColor" viewBox="0 0 100 100">
+              <path d="M50 42 C40 20 20 12 0 18 C15 32 35 44 48 48 C38 62 20 72 5 78 C25 76 42 66 52 52 C62 66 79 76 99 78 C84 72 66 62 56 48 C69 44 89 32 104 18 C84 12 64 20 54 42 Z"></path>
+            </svg>
+            <svg className="absolute top-[9%] left-[38%] w-28 h-28 text-black opacity-80 drop-shadow-md transform rotate-6" fill="currentColor" viewBox="0 0 100 100">
+              <path d="M48 44 C36 24 16 16 0 20 C16 32 34 44 46 48 C34 64 16 75 0 80 C22 78 38 68 50 54 C60 68 76 78 98 80 C82 75 64 64 52 48 C64 44 82 32 98 20 C82 16 62 24 50 44 Z"></path>
+            </svg>
+            <svg className="absolute top-[20%] left-[24%] w-24 h-24 text-black opacity-80 transform -rotate-45" fill="currentColor" viewBox="0 0 100 100">
+              <path d="M50 42 C40 20 20 12 0 18 C15 32 35 44 48 48 C38 62 20 72 5 78 C25 76 42 66 52 52 C62 66 79 76 99 78 C84 72 66 62 56 48 C69 44 89 32 104 18 C84 12 64 20 54 42 Z"></path>
+            </svg>
           </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold tracking-tight text-base text-[#F2F1ED] leading-none">trajetta</span>
-            <span className="text-[10px] text-[#8E9499] tracking-wider uppercase mt-1">Evolução Pessoal</span>
+
+          {/* Luminous North Star Portal Doorway */}
+          <div className="absolute left-[48%] top-[240px] -translate-x-1/2 flex flex-col items-center pointer-events-none">
+            {/* Portal structure themed in Trajetta Neon Lime */}
+            <div className="w-[88px] h-[175px] border-[2.5px] border-[#B8FF00]/90 portal-frame bg-[#B8FF00]/10 backdrop-blur-[2px] relative z-20 rounded-[3px]">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#B8FF00]/35 via-[#B8FF00]/15 to-transparent"></div>
+            </div>
+            {/* Water waterline divide */}
+            <div className="w-[380px] h-[2px] bg-gradient-to-r from-transparent via-[#B8FF00]/50 to-transparent my-1 blur-[1px]"></div>
+            {/* Water reflection */}
+            <div className="w-[82px] h-[160px] bg-gradient-to-b from-[#B8FF00]/30 to-transparent portal-reflection opacity-65 transform scale-y-95"></div>
           </div>
+
+          {/* Bottom fade */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-transparent opacity-95"></div>
+          <div className="absolute inset-0 hero-bottom-fade"></div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-5 text-xs text-[#8E9499]">
-          <a href="#problema" className="hover:text-[#F2F1ED] transition-colors">O Problema</a>
-          <a href="#pilares" className="hover:text-[#F2F1ED] transition-colors">Os 4 Pilares</a>
-          <a href="#ritual" className="hover:text-[#F2F1ED] transition-colors">Ritual Dominical</a>
-          <a href="#depoimentos" className="hover:text-[#F2F1ED] transition-colors">Membros Beta</a>
-          <a href="#faq" className="hover:text-[#F2F1ED] transition-colors">Dúvidas Frequentes</a>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/app"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 min-h-[36px] rounded-lg text-sm font-semibold bg-[#171A1D] hover:bg-[#1F2328] border border-white/10 hover:border-white/20 text-[#F2F1ED] transition-all active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8FF00]"
-          >
-            <span>Acessar App</span>
-            <ArrowRight size={14} className="text-[#B8FF00]" />
+        {/* BEGIN: MainHeader */}
+        <header className="relative z-50 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-8 flex items-center justify-between" data-purpose="site-header">
+          {/* Brand Logo without black container */}
+          <Link href="/" className="flex items-center space-x-3 text-white tracking-wider group">
+            <TrajettaLogo size={32} showWordmark wordmarkClassName="font-extrabold text-lg tracking-tight text-white" />
           </Link>
-        </div>
-      </header>
 
-      {/* ------------------------------------------------------------- */}
-      {/* 2. HERO SECTION COM FORMULÁRIO DE LISTA DE ESPERA             */}
-      {/* ------------------------------------------------------------- */}
-      <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-8 max-w-6xl mx-auto">
-        {/* Glow ambient background */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#B8FF00]/6 blur-[140px] pointer-events-none rounded-full" />
+          {/* Navigation Pill & Actions */}
+          <div className="flex items-center space-x-2.5">
+            <nav className="hidden md:flex items-center bg-[#14181f]/85 backdrop-blur-md rounded-full px-5 py-2 border border-white/10 text-[13px] font-medium text-neutral-300 space-x-6 shadow-xl">
+              <a className="hover:text-white transition-colors duration-200" href="#overview">Visão Geral</a>
+              <a className="hover:text-white transition-colors duration-200" href="#use-cases">4 Áreas</a>
+              <a className="hover:text-white transition-colors duration-200" href="#how-it-works">Como Funciona</a>
+              <a className="hover:text-white transition-colors duration-200" href="#pricing">Planos</a>
+            </nav>
 
-        <div className="text-center max-w-3xl mx-auto space-y-6 relative z-10">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#8E9499]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
-            <span>LISTA VIP EXCLUSIVA • ACESSO ANTECIPADO 2026</span>
+            {/* CTA Button */}
+            <a
+              href="#how-it-works"
+              className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
+            >
+              <span>Começar</span>
+              <ArrowRight size={14} className="mt-[-1px]" />
+            </a>
+
+            {/* Login Button (Opens Login Gate /app) */}
+            <Link
+              href="/app"
+              className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[12px] font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full border border-white/10 transition-colors duration-200"
+            >
+              LOGIN
+            </Link>
+          </div>
+        </header>
+        {/* END: MainHeader */}
+
+        {/* BEGIN: HeroContent */}
+        <div className="relative z-30 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-32 pb-20 mt-auto" data-purpose="hero-content" id="overview">
+          <div className="max-w-3xl">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14181f] border border-white/10 text-[11px] font-mono text-[#B8FF00] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
+              <span>SISTEMA DE EVOLUÇÃO PESSOAL PARA ADULTOS AMBICIOSOS</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-6xl lg:text-[70px] leading-[1.06] font-normal tracking-[-0.03em] text-white">
+              O Sistema Completo para<br />
+              <span className="text-[#B8FF00] font-medium">Sua Evolução Pessoal.</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mt-6 text-base sm:text-lg text-neutral-300/85 font-normal max-w-xl leading-relaxed tracking-tight">
+              Planeje para sua vida real, não para sua versão perfeita. Metas de longo prazo, hábitos com ritmo sustentável, revisão semanal guiada e IA com memória viva da sua trajetória.
+            </p>
+
+            {/* CTA Action Buttons */}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
+              >
+                <span>ENTRAR NA LISTA VIP</span>
+                <ArrowRight size={15} className="ml-2" />
+              </a>
+
+              <Link
+                href="/app"
+                className="inline-flex items-center justify-center bg-[#14181f]/80 hover:bg-[#1c232d] backdrop-blur-md text-white border border-white/20 text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition duration-150"
+              >
+                <span>ACESSAR PLATAFORMA</span>
+                <ChevronRight size={15} className="ml-1.5 text-neutral-400" />
+              </Link>
+            </div>
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-[#F2F1ED] leading-[1.08]">
-            Planeje para sua <span className="text-[#B8FF00]">vida real</span>,<br className="hidden sm:inline" />
-            não para sua versão perfeita.
-          </h1>
+          {/* Social Proof / Methodology Row */}
+          <div className="mt-16 sm:mt-24 pt-8 flex flex-col md:flex-row md:items-center justify-end text-xs text-neutral-400 gap-y-2 border-t border-white/5" data-purpose="social-proof">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-normal tracking-normal text-[13px]">
+              <span className="text-neutral-500 font-normal mr-1">Metodologia baseada em</span>
+              <span className="text-neutral-200 font-medium">James Clear (Hábitos Atômicos)</span>
+              <span className="text-neutral-600">/</span>
+              <span className="text-neutral-200 font-medium">Tiago Forte (Segundo Cérebro)</span>
+              <span className="text-neutral-600">/</span>
+              <span className="text-neutral-200 font-medium">Metodologia OKR</span>
+              <span className="text-neutral-600">/</span>
+              <span className="text-[#B8FF00] font-medium">Calm Power Design</span>
+            </div>
+          </div>
+        </div>
+        {/* END: HeroContent */}
+      </section>
+      {/* END: HeroSection */}
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-[#8E9499] leading-relaxed max-w-2xl mx-auto font-normal">
-            A maioria dos aplicativos de hábitos te cobra perfeição e te faz sentir culpa no primeiro dia em que você falha. 
-            A <strong className="text-[#F2F1ED]">Trajetta</strong> foi desenhada para adultos ambiciosos: metas progressivas, 
-            consistência humana e um ritual dominical de reflexão com IA.
-          </p>
+      {/* BEGIN: SectionHeader */}
+      <section className="relative z-20 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pt-20 pb-12" data-purpose="sub-section-header">
+        <div className="inline-flex items-center space-x-2 text-xs font-mono tracking-wide text-neutral-400 mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+          <span>A Nova Forma de Evoluir</span>
+        </div>
+        <h2 className="text-3xl sm:text-5xl lg:text-[56px] font-normal tracking-tight leading-[1.1]">
+          <span className="text-white">Sustente o ritmo da sua vida,</span>
+          <br />
+          <span className="text-[#555d68]">sem ansiedade e sem recaídas silenciosas.</span>
+        </h2>
+      </section>
+      {/* END: SectionHeader */}
 
-          {/* Formulário de Lista de Espera */}
-          <div className="pt-4 max-w-lg mx-auto">
-            {!submitted ? (
-              <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-                <div className="flex flex-col sm:flex-row gap-2 bg-[#171A1D]/90 p-1.5 rounded-2xl border border-white/12 shadow-2xl backdrop-blur-md">
-                  <label htmlFor="hero-name" className="sr-only">Seu Nome</label>
+      {/* BEGIN: FeatureCardsGrid (Authentic App Mockups) */}
+      <section className="relative z-20 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 pb-32" data-purpose="feature-cards">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* CARD 1: Ritmo Sustentável (Habits & Routine Pipeline) */}
+          <div className="flex flex-col group">
+            <div className="relative w-full aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-6 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#11161d] to-[#1c242e] opacity-80"></div>
+              <svg className="absolute inset-0 w-full h-full opacity-30 object-cover" preserveAspectRatio="none" viewBox="0 0 400 300">
+                <path d="M0 160L80 110L170 170L260 90L340 140L400 100V300H0Z" fill="#040608"></path>
+              </svg>
+
+              {/* Real Habit Flow Nodes from Trajetta */}
+              <div className="relative z-10 w-full max-w-[260px] flex flex-col items-center">
+                <div className="bg-[#14181f]/95 border border-[#B8FF00]/30 text-[11px] font-mono text-[#B8FF00] px-3.5 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5">
+                  <Activity size={12} />
+                  <span>06:30 • Rotina Matinal (Corpo)</span>
+                </div>
+                <div className="w-[1px] h-4 bg-white/20"></div>
+
+                <div className="w-full bg-[#14181f]/95 border border-white/10 px-3 py-2 rounded-lg flex items-center justify-between text-[11px] font-mono text-neutral-200 shadow-lg">
+                  <div className="flex items-center space-x-2 truncate">
+                    <CheckCircle2 size={14} className="text-[#58D6A7] flex-shrink-0" />
+                    <span className="truncate">Treino de Corrida (6 km)</span>
+                  </div>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#58D6A7]/15 text-[#58D6A7]">Feito</span>
+                </div>
+                <div className="w-[1px] h-4 bg-white/20"></div>
+
+                <div className="w-full bg-[#14181f]/95 border border-white/10 px-3 py-2 rounded-lg flex items-center justify-between text-[11px] font-mono text-neutral-300 shadow-lg">
+                  <div className="flex items-center space-x-2 truncate">
+                    <Brain size={14} className="text-[#B8FF00] flex-shrink-0" />
+                    <span className="truncate">Consistência Semanal: 82%</span>
+                  </div>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-white">4/4 dias</span>
+                </div>
+                <div className="w-[1px] h-4 bg-white/20"></div>
+
+                <div className="w-full bg-[#14181f]/95 border border-white/10 px-3 py-2 rounded-lg flex items-center space-x-2 text-[11px] font-mono text-neutral-400 shadow-lg">
+                  <RotateCcw size={13} className="text-neutral-400 flex-shrink-0" />
+                  <span className="truncate">Revisão Dominical programada</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <h3 className="text-base font-medium font-mono text-white tracking-wide flex items-center gap-2">
+                <span>Ritmo Sustentável</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#58D6A7]/15 text-[#58D6A7]">Zero Culpa</span>
+              </h3>
+              <p className="mt-2 text-sm text-neutral-400 font-light leading-relaxed">
+                Automatize hábitos diários sem streaks artificiais que punem imprevistos reais. Se você deslizar um dia, o sistema recalibra o piso sem zerar seu progresso acumulado.
+              </p>
+            </div>
+          </div>
+
+          {/* CARD 2: IA com Memória Viva (Strategic AI Coach Mockup) */}
+          <div className="flex flex-col group">
+            <div className="relative w-full aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-5 sm:p-6 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#12161d] to-[#1a232f] opacity-75"></div>
+
+              {/* Trajetta AI Coach Chat Dialog Modal */}
+              <div className="relative z-10 w-full max-w-[320px] bg-[#14181f]/95 border border-white/15 rounded-xl p-4 shadow-2xl backdrop-blur-md">
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/8">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 rounded-full bg-[#B8FF00]/20 flex items-center justify-center text-[#B8FF00]">
+                      <Brain size={12} />
+                    </div>
+                    <span className="text-xs font-mono font-medium text-white">Trajetta AI • Memória Ativa</span>
+                  </div>
+                  <span className="text-[9px] font-mono text-[#8E9499]">NVIDIA DeepSeek</span>
+                </div>
+
+                <div className="pt-3 pb-3 text-[11px] leading-relaxed space-y-2">
+                  <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-neutral-300">
+                    <span className="text-[9px] font-mono text-[#8E9499] block mb-0.5">Matheus:</span>
+                    "Estou pensando em reduzir os treinos esse mês por causa do trabalho."
+                  </div>
+                  <div className="p-2 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/20 text-[#F2F1ED] text-[10.5px]">
+                    <span className="text-[9px] font-mono text-[#B8FF00] block mb-0.5">Trajetta Coach:</span>
+                    "Decisão madura, Matheus. Na sua meta de meia maratona, manter 2 a 3 treinos leves preserva 85% do seu condicionamento sem quebrar seu foco na transição para Head de Produto."
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-white/8 text-neutral-400 text-xs">
+                  <div className="flex items-center space-x-3">
+                    <button className="hover:text-white" title="Regenerar"><RotateCcw size={12} /></button>
+                    <button className="hover:text-white" title="Copiar"><Copy size={12} /></button>
+                    <button className="hover:text-white" title="Salvar"><Bookmark size={12} /></button>
+                  </div>
+                  <span className="text-[9px] font-mono text-[#B8FF00]">RAG Pessoal Ativo</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <h3 className="text-base font-medium font-mono text-white tracking-wide flex items-center gap-2">
+                <span>IA com Memória Viva</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#B8FF00]/15 text-[#B8FF00]">Contextual</span>
+              </h3>
+              <p className="mt-2 text-sm text-neutral-400 font-light leading-relaxed">
+                Um estrategista que lembra quem você é, de suas metas em corpo, dinheiro e carreira, e evolui junto com as fases reais da sua vida. Sem conselhos genéricos de internet.
+              </p>
+            </div>
+          </div>
+
+          {/* CARD 3: Visão Integrada (Metas & Life Areas Mockup) */}
+          <div className="flex flex-col group">
+            <div className="relative w-full aspect-[4/3.5] rounded-xl overflow-hidden border border-white/10 bg-[#0c0e12] flex items-center justify-center p-6 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090b] via-[#10141a] to-[#1c242c] opacity-80"></div>
+              <svg className="absolute inset-0 w-full h-full opacity-30 object-cover" preserveAspectRatio="none" viewBox="0 0 400 300">
+                <path d="M0 130L90 180L210 110L290 170L400 90V300H0Z" fill="#040608"></path>
+              </svg>
+
+              {/* 3 Core Life Area Action Chips */}
+              <div className="relative z-10 w-full max-w-[280px] space-y-2.5">
+                {/* Chip 1: Corpo */}
+                <div className="bg-[#14181f]/95 border border-white/15 px-3 py-2 rounded-xl flex items-center justify-between text-[11px] shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-2 text-neutral-200 truncate mr-2">
+                    <Activity size={14} className="text-[#58D6A7] flex-shrink-0" />
+                    <span className="truncate font-mono">Meia Maratona (21k)</span>
+                  </div>
+                  <span className="bg-[#58D6A7]/20 text-[#58D6A7] font-semibold text-[10px] px-2.5 py-0.5 rounded-md flex-shrink-0">
+                    48%
+                  </span>
+                </div>
+
+                {/* Chip 2: Dinheiro */}
+                <div className="bg-[#14181f]/95 border border-white/15 px-3 py-2 rounded-xl flex items-center justify-between text-[11px] shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-2 text-neutral-200 truncate mr-2">
+                    <Landmark size={14} className="text-[#F08A76] flex-shrink-0" />
+                    <span className="truncate font-mono">Reserva R$ 50.000</span>
+                  </div>
+                  <span className="bg-[#F08A76]/20 text-[#F08A76] font-semibold text-[10px] px-2.5 py-0.5 rounded-md flex-shrink-0">
+                    72%
+                  </span>
+                </div>
+
+                {/* Chip 3: Carreira */}
+                <div className="bg-[#14181f]/95 border border-white/15 px-3 py-2 rounded-xl flex items-center justify-between text-[11px] shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-2 text-neutral-200 truncate mr-2">
+                    <Briefcase size={14} className="text-[#A98CF7] flex-shrink-0" />
+                    <span className="truncate font-mono">Head de Produto</span>
+                  </div>
+                  <span className="bg-[#A98CF7]/20 text-[#A98CF7] font-semibold text-[10px] px-2.5 py-0.5 rounded-md flex-shrink-0">
+                    60%
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <h3 className="text-base font-medium font-mono text-white tracking-wide flex items-center gap-2">
+                <span>Visão Integrada</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#A98CF7]/15 text-[#A98CF7]">4 Dimensões</span>
+              </h3>
+              <p className="mt-2 text-sm text-neutral-400 font-light leading-relaxed">
+                Suas metas distribuídas com clareza em Corpo, Dinheiro, Carreira e Vida. Elimine a fragmentação entre dezenas de ferramentas e veja todo o seu progresso em um único painel.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* END: FeatureCardsGrid */}
+
+      {/* BEGIN: UseCasesSection (4 Life Areas) */}
+      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="use-cases" id="use-cases">
+        <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+          <span>4 Áreas Fundamentais</span>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+          Quatro dimensões da sua vida, <span className="text-neutral-500">em um só ecossistema.</span>
+        </h2>
+
+        {/* Tab Navigation List */}
+        <div className="flex flex-wrap items-center gap-6 border-b border-white/10 pb-3 mb-10 text-xs font-mono">
+          {useCases.map((uc, i) => (
+            <button
+              key={uc.title}
+              onClick={() => setActiveUseCase(i)}
+              className={`pb-3 -mb-[13px] font-medium tracking-wide transition-all ${
+                activeUseCase === i
+                  ? 'text-[#B8FF00] border-b-2 border-[#B8FF00]'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              {uc.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Body: Split Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Side: Mockup Preview */}
+          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] p-6 flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#030507] via-[#0d121a] to-[#151c27] opacity-80"></div>
+            <div className="relative z-10 w-full max-w-md bg-[#14181f]/95 border border-white/15 rounded-2xl p-6 shadow-2xl backdrop-blur-md space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/8">
+                <span className="text-xs font-mono font-medium text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: useCases[activeUseCase].accent }} />
+                  <span>{useCases[activeUseCase].mockupLabel}</span>
+                </span>
+                <span className="text-[10px] font-mono text-neutral-400">Ativa</span>
+              </div>
+              <p className="text-xs text-neutral-300">
+                {useCases[activeUseCase].mockupStatus}
+              </p>
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2.5 text-xs text-neutral-200">
+                  <CheckCircle2 size={16} className="text-[#B8FF00]" />
+                  <span>{useCases[activeUseCase].actionTitle}</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white">Hoje</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Content Details */}
+          <div className="lg:col-span-5 flex flex-col items-start pl-0 lg:pl-6">
+            <span className="text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+              {useCases[activeUseCase].title}
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-white mb-4">
+              {useCases[activeUseCase].headline}
+            </h3>
+            <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
+              {useCases[activeUseCase].description}
+            </p>
+            <a
+              href="#how-it-works"
+              className="bg-[#B8FF00] text-[#0D0F10] font-bold text-xs font-mono px-6 py-3 rounded-full hover:bg-[#a5e600] transition-all uppercase tracking-wider"
+            >
+              Começar Agora
+            </a>
+          </div>
+        </div>
+      </section>
+      {/* END: UseCasesSection */}
+
+      {/* BEGIN: HowItWorksSection */}
+      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="how-it-works" id="how-it-works">
+        <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+          <span>Como Funciona</span>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-12">
+          Um processo sóbrio em <span className="text-neutral-500">três passos para clareza absoluta.</span>
+        </h2>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Side: Waitlist / VIP Form */}
+          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] p-6 flex items-end justify-center">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-[#0c1017] to-[#141a24] opacity-90"></div>
+            <div className="relative z-10 w-full bg-[#0e1218]/95 border border-white/15 rounded-2xl p-6 shadow-2xl mb-2">
+              <div className="text-xs font-mono text-[#B8FF00] mb-2 tracking-wide flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]" />
+                <span>Lista VIP de Acesso Antecipado ({waitlistCount} inscritos)</span>
+              </div>
+              <p className="text-xs text-neutral-300 mb-4">
+                Garanta sua vaga como Membro Fundador com benefícios vitalícios de IA.
+              </p>
+
+              {submitted ? (
+                <div className="p-4 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-xs flex items-center gap-3">
+                  <CheckCircle2 size={18} className="flex-shrink-0" />
+                  <div>
+                    <span className="font-bold block">Inscrição confirmada com sucesso!</span>
+                    <span className="text-neutral-300">Você receberá um convite direto para ativar sua conta na primeira rodada.</span>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleWaitlistSubmit} className="space-y-3">
                   <input
-                    id="hero-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Seu nome"
-                    className="w-full sm:w-1/3 bg-transparent px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:outline-none border-b sm:border-b-0 sm:border-r border-white/8"
+                    className="w-full h-10 px-3 bg-[#14181f] border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]"
                   />
-                  <label htmlFor="hero-email" className="sr-only">Seu E-mail</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="seu.email@exemplo.com"
+                      className="flex-1 h-10 px-3 bg-[#14181f] border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="h-10 px-5 bg-[#B8FF00] text-[#0D0F10] font-mono text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#a5e600] transition-all flex items-center gap-1.5 flex-shrink-0"
+                    >
+                      <span>{loading ? '...' : 'Garantir Vaga'}</span>
+                      <ArrowRight size={13} />
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+
+          {/* Right Side: 3 Steps Stepper */}
+          <div className="lg:col-span-5 flex flex-col justify-center space-y-8 pl-0 lg:pl-6">
+            <div className="border-l-2 border-[#B8FF00] pl-5 relative">
+              <div className="flex items-center gap-2 text-sm font-mono text-white font-medium mb-1.5">
+                <span>1 — Defina suas Metas de Longo Prazo</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed font-sans">
+                Selecione as áreas prioritárias (Corpo, Dinheiro, Carreira, Vida) e divida objetivos ambiciosos em marcos trimestrais executáveis.
+              </p>
+            </div>
+
+            <div className="border-l-2 border-white/20 pl-5 relative">
+              <div className="flex items-center gap-2 text-sm font-mono text-neutral-200 font-medium mb-1.5">
+                <span>2 — Sustente Hábitos Diários sem Culpa</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed font-sans">
+                Execute suas ações semanais no ritmo real da sua vida. Dias difíceis não apagam sua consistência acumulada.
+              </p>
+            </div>
+
+            <div className="border-l-2 border-white/20 pl-5 relative">
+              <div className="flex items-center gap-2 text-sm font-mono text-neutral-200 font-medium mb-1.5">
+                <span>3 — Revise e Calibre com a IA</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed font-sans">
+                Aos domingos, faça a revisão semanal guiada com seu estrategista de IA, que lembra de toda a sua trajetória e orienta os próximos passos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* END: HowItWorksSection */}
+
+      {/* BEGIN: PricingSection */}
+      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="pricing-plans" id="pricing">
+        <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+          <span>Planos & Investimento</span>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+          Escolha o plano ideal <span className="text-neutral-500">para o seu horizonte.</span>
+        </h2>
+
+        {/* Toggle Switch */}
+        <div className="flex items-center gap-3 text-xs font-mono mb-12">
+          <span className={billingCycle === 'monthly' ? 'text-white font-medium' : 'text-neutral-400'}>Mensal</span>
+          <div
+            onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+            className="w-11 h-6 bg-[#161a22] border border-white/20 rounded-full p-0.5 flex items-center cursor-pointer select-none"
+          >
+            <div
+              className={`w-4 h-4 bg-[#B8FF00] rounded-full transition-transform ${
+                billingCycle === 'yearly' ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            ></div>
+          </div>
+          <span className={billingCycle === 'yearly' ? 'text-white font-medium' : 'text-neutral-400'}>Anual</span>
+          <span className="bg-[#B8FF00]/15 text-[#B8FF00] border border-[#B8FF00]/30 font-mono text-[10px] px-2 py-0.5 rounded-full font-medium ml-1">
+            20% OFF
+          </span>
+        </div>
+
+        {/* 3 Pricing Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Card 1: Starter */}
+          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-7 flex flex-col justify-between hover:border-white/25 transition-all">
+            <div>
+              <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium mb-3">Gratuito</h3>
+              <div className="text-3xl sm:text-4xl font-semibold text-white mb-3">
+                R$ 0 <span className="text-xs font-normal text-neutral-500 font-mono">/mês</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed min-h-[36px] mb-6">
+                Para quem quer começar a organizar metas e hábitos básicos sem custo.
+              </p>
+              <Link
+                href="/app"
+                className="w-full py-2.5 rounded-full border border-white/20 text-xs font-mono font-medium text-white hover:bg-white/10 transition-colors mb-8 flex items-center justify-center"
+              >
+                Começar Grátis
+              </Link>
+              <div className="relative flex items-center justify-center my-6">
+                <div className="border-t border-white/10 w-full"></div>
+                <span className="bg-[#090c10] px-3 text-[11px] font-mono text-neutral-500 uppercase tracking-widest absolute">Recursos</span>
+              </div>
+              <ul className="space-y-3.5 text-xs text-neutral-300 font-sans">
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Até 3 Metas Ativas</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Rastreador de Hábitos Essenciais</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Revisão Semanal básica</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Card 2: Pro (Highlighted) */}
+          <div className="rounded-2xl bg-[#0e131a] border border-[#B8FF00]/40 p-7 flex flex-col justify-between relative shadow-[0_0_40px_rgba(184,255,0,0.15)] hover:border-[#B8FF00]/70 transition-all">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium">Pro</h3>
+                <span className="bg-[#B8FF00]/15 text-[#B8FF00] border border-[#B8FF00]/30 font-mono text-[10px] px-2.5 py-0.5 rounded-full">Recomendado</span>
+              </div>
+              <div className="text-3xl sm:text-4xl font-semibold text-white mb-3">
+                {billingCycle === 'yearly' ? 'R$ 23' : 'R$ 29'}{' '}
+                <span className="text-xs font-normal text-neutral-500 font-mono">/mês</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed min-h-[36px] mb-6">
+                A experiência completa com IA que lembra da sua vida, RAG pessoal e capacidade ilimitada.
+              </p>
+              <a
+                href="#how-it-works"
+                className="w-full py-2.5 rounded-full bg-[#B8FF00] text-[#0D0F10] text-xs font-mono font-bold hover:bg-[#a5e600] transition-colors mb-8 flex items-center justify-center uppercase tracking-wider shadow-lg shadow-[#B8FF00]/20"
+              >
+                Garantir Vaga Pro
+              </a>
+              <div className="relative flex items-center justify-center my-6">
+                <div className="border-t border-white/10 w-full"></div>
+                <span className="bg-[#0e131a] px-3 text-[11px] font-mono text-neutral-500 uppercase tracking-widest absolute">Recursos Pro</span>
+              </div>
+              <ul className="space-y-3.5 text-xs text-neutral-300 font-sans">
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>IA com Memória Viva & RAG Pessoal</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Metas & Hábitos Ilimitados</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Revisão Semanal com reflexões profundas</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Diagnóstico periódico Life Score</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Exportação de Dados LGPD completa</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Card 3: Fundador / Lifetime */}
+          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-7 flex flex-col justify-between hover:border-white/25 transition-all">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium">Fundador</h3>
+                <span className="bg-white/10 text-white font-mono text-[10px] px-2 py-0.5 rounded-full">Exclusivo</span>
+              </div>
+              <div className="text-3xl sm:text-4xl font-semibold text-white mb-3">
+                Vitalício
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed min-h-[36px] mb-6">
+                Acesso perpétuo para os primeiros 200 membros com canal direto de feedback.
+              </p>
+              <a
+                href="#how-it-works"
+                className="w-full py-2.5 rounded-full border border-white/20 text-xs font-mono font-medium text-white hover:bg-white/10 transition-colors mb-8 flex items-center justify-center"
+              >
+                Consultar Vaga
+              </a>
+              <div className="relative flex items-center justify-center my-6">
+                <div className="border-t border-white/10 w-full"></div>
+                <span className="bg-[#090c10] px-3 text-[11px] font-mono text-neutral-500 uppercase tracking-widest absolute">Vantagens</span>
+              </div>
+              <ul className="space-y-3.5 text-xs text-neutral-300 font-sans">
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Acesso vitalício sem mensalidades</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Selo oficial de Membro Fundador</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Acesso prioritário a novos modelos de IA</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span>Canal direto com o time de engenharia</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* END: PricingSection */}
+
+      {/* BEGIN: Footer */}
+      <footer className="bg-[#040608] border-t border-white/10 px-6 sm:px-10 lg:px-14 pt-16 pb-12" data-purpose="page-footer" id="contact">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16">
+            <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-0 md:pr-6">
+              <div className="flex items-center gap-2.5 mb-4">
+                <TrajettaLogo size={28} showWordmark wordmarkClassName="font-extrabold text-base tracking-tight text-white" />
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed mb-6 max-w-sm">
+                Seu sistema integrado de evolução pessoal. Planeje para sua vida real, construa consistência sustentável e alcance suas metas.
+              </p>
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest mb-2.5">FIQUE POR DENTRO</span>
+
+              {footerSubmitted ? (
+                <div className="text-xs text-[#B8FF00] font-mono flex items-center gap-2">
+                  <Check size={14} />
+                  <span>Inscrito com sucesso nas atualizações!</span>
+                </div>
+              ) : (
+                <form onSubmit={handleFooterSubmit} className="flex items-center bg-[#0d1015] border border-white/15 rounded-xl p-1 w-full max-w-sm focus-within:border-[#B8FF00] transition-colors">
                   <input
-                    id="hero-email"
                     type="email"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Seu melhor e-mail"
-                    className="flex-1 bg-transparent px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:outline-none"
+                    value={footerEmail}
+                    onChange={(e) => setFooterEmail(e.target.value)}
+                    placeholder="seu.email@exemplo.com"
+                    className="bg-transparent border-0 text-xs font-mono text-white placeholder-neutral-500 focus:ring-0 w-full px-3 py-1.5 focus:outline-none"
                   />
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="px-6 py-3 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-sm transition-all active:scale-[0.96] shadow-[0_0_20px_rgba(184,255,0,0.25)] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white min-h-[44px]"
+                    className="bg-[#B8FF00] text-[#0D0F10] font-mono text-xs font-bold px-4 py-1.5 rounded-lg hover:bg-[#a5e600] transition-colors uppercase"
                   >
-                    {loading ? 'Reservando...' : 'Entrar na Lista'}
-                    <ArrowRight size={15} strokeWidth={2.5} />
+                    OK
                   </button>
-                </div>
-
-                {error && (
-                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs sm:text-sm text-red-400 flex items-center justify-center gap-2">
-                    <AlertCircle size={15} />
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-center gap-3 pt-1 text-xs text-[#8E9499]">
-                  <span className="flex items-center gap-1.5">
-                    <Check size={14} className="text-[#B8FF00]" /> Acesso Gratuito no Lançamento
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1.5 text-[#F2F1ED] font-semibold">
-                    <Flame size={14} className="text-[#B8FF00]" /> {waitlistCount.toLocaleString('pt-BR')} pessoas na fila
-                  </span>
-                </div>
-              </form>
-            ) : (
-              <div className="p-6 rounded-2xl bg-[#171A1D] border border-[#B8FF00]/40 text-center space-y-3 shadow-[0_0_30px_rgba(184,255,0,0.15)]">
-                <div className="w-12 h-12 rounded-full bg-[#B8FF00]/15 border border-[#B8FF00]/40 flex items-center justify-center mx-auto text-[#B8FF00]">
-                  <CheckCircle2 size={24} />
-                </div>
-                <h3 className="text-lg font-bold text-[#F2F1ED]">
-                  {alreadyRegistered ? 'Você já está na Lista VIP!' : 'Vaga Reservada com Sucesso!'}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#8E9499]">
-                  Sua posição na fila de acesso é <strong className="text-[#B8FF00]">#{userPosition}</strong>. 
-                  Enviamos uma confirmação detalhada para seu e-mail.
-                </p>
-                <div className="pt-2">
-                  <Link
-                    href="/app"
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#B8FF00] text-[#0D0F10] font-bold text-sm min-h-[40px] shadow-[0_0_15px_rgba(184,255,0,0.2)]"
-                  >
-                    <span>Testar Sistema Agora (Acesso Demonstração)</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ------------------------------------------------------------- */}
-        {/* 3. HERO MOCKUP 4K EM DESTAQUE (TITANIUM SMARTPHONE)           */}
-        {/* ------------------------------------------------------------- */}
-        <div id="mockups" className="mt-14 sm:mt-20 relative">
-          <div className="relative rounded-2xl sm:rounded-3xl border border-white/10 bg-gradient-to-b from-[#171A1D] to-[#111315] p-2 sm:p-4 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
-            <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#B8FF00]/10 blur-[120px] pointer-events-none rounded-full" />
-            <img
-              src="/trajetta-mockup-hero.jpg"
-              alt="Trajetta Mobile Mockup 4K"
-              className="w-full h-auto rounded-xl sm:rounded-2xl object-cover"
-            />
-
-            {/* Floating Highlights overlaying the mockup */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 sm:pt-6">
-              <div className="p-3.5 rounded-xl bg-[#111315]/80 border border-white/8 backdrop-blur-md">
-                <span className="text-[10px] font-bold tracking-wider text-[#B8FF00] uppercase block">North Star Metric</span>
-                <p className="text-xs font-semibold text-[#F2F1ED] mt-1">14 Semanas Concluídas de 52</p>
-                <p className="text-[11px] text-[#8E9499] mt-0.5">Visão cumulativa do ano, sem a frustração de streaks diários frágeis.</p>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-[#111315]/80 border border-white/8 backdrop-blur-md">
-                <span className="text-[10px] font-bold tracking-wider text-[#58D6A7] uppercase block">Compassionate Slip</span>
-                <p className="text-xs font-semibold text-[#F2F1ED] mt-1">17 dias construídos · 1 deslize</p>
-                <p className="text-[11px] text-[#8E9499] mt-0.5">Um deslize isolado não apaga 17 dias de disciplina. Sua trajetória continua viva.</p>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-[#111315]/80 border border-white/8 backdrop-blur-md">
-                <span className="text-[10px] font-bold tracking-wider text-[#A98CF7] uppercase block">Reflexão com IA</span>
-                <p className="text-xs font-semibold text-[#F2F1ED] mt-1">Nemotron & DeepSeek</p>
-                <p className="text-[11px] text-[#8E9499] mt-0.5">Conselhos adultos e realistas aos domingos, sem clichês e com zero sparkles.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 4. SEÇÃO DO PROBLEMA (O CONTRASTE COM APPS COMUNS)            */}
-      {/* ------------------------------------------------------------- */}
-      <section id="problema" className="py-16 sm:py-24 border-t border-white/8 bg-[#111315]/50 px-4 sm:px-8">
-        <div className="max-w-5xl mx-auto space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F08A76]">O Contraste</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
-              Por que você desiste dos outros aplicativos de hábitos?
-            </h2>
-            <p className="text-xs sm:text-sm text-[#8E9499]">
-              A maioria das ferramentas foi criada para estudantes ou usa gamificação infantil que quebra ao menor sinal de estresse do mundo real.
-            </p>
-          </div>
-
-          <div className="flex justify-center">
-            <div className="inline-flex p-1 rounded-xl bg-[#171A1D] border border-white/10">
-              <button
-                type="button"
-                onClick={() => setActiveTab('trajetta')}
-                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                  activeTab === 'trajetta'
-                    ? 'bg-[#B8FF00] text-[#0D0F10] shadow-[0_0_15px_rgba(184,255,0,0.3)]'
-                    : 'text-[#8E9499] hover:text-[#F2F1ED]'
-                }`}
-              >
-                ✓ Sistema Trajetta (Calm Power)
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('tradicional')}
-                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                  activeTab === 'tradicional'
-                    ? 'bg-red-500/20 text-red-300 border border-red-500/40'
-                    : 'text-[#8E9499] hover:text-[#F2F1ED]'
-                }`}
-              >
-                ✕ Apps Comuns de Hábitos
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* O Jeito Tradicional */}
-            <div
-              className={`p-6 sm:p-7 rounded-2xl bg-[#171A1D] border transition-all duration-300 space-y-4 ${
-                activeTab === 'tradicional'
-                  ? 'border-red-500/50 ring-1 ring-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)]'
-                  : 'border-red-500/20 opacity-75'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
-                  <span>✕</span>
-                  <span>O Ciclo Tóxico dos Apps Comuns</span>
-                </div>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-red-500/10 text-red-400">
-                  Punição & Culpa
-                </span>
-              </div>
-              <ul className="space-y-3.5 text-xs text-[#8E9499] leading-relaxed">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Streak Zera por Qualquer Coisa:</strong> Você fez 20 dias de treino, viajou a trabalho 1 dia e o app diz que você perdeu tudo. O resultado psicológico é abandono e desmotivação total.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Sobrecarga de Tarefas:</strong> Telas congestionadas que mais parecem uma planilha de cobrança do que uma ferramenta de clareza mental e presença.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Gamificação Infantil:</strong> Notificações estridentes, corujas e medalhinhas de desenho animado que não conversam com os desafios da vida adulta.</span>
-                </li>
-              </ul>
+                </form>
+              )}
             </div>
 
-            {/* O Jeito Trajetta */}
-            <div
-              className={`p-6 sm:p-7 rounded-2xl bg-[#171A1D] border transition-all duration-300 space-y-4 ${
-                activeTab === 'trajetta'
-                  ? 'border-[#B8FF00]/60 ring-1 ring-[#B8FF00]/30 shadow-[0_0_35px_rgba(184,255,0,0.15)]'
-                  : 'border-[#B8FF00]/20 opacity-75'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#B8FF00] font-bold text-sm">
-                  <Check size={16} strokeWidth={2.5} />
-                  <span>O Sistema Trajetta (Calm Power)</span>
-                </div>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#B8FF00]/10 text-[#B8FF00]">
-                  Consistência Real
-                </span>
-              </div>
-              <ul className="space-y-3.5 text-xs text-[#F2F1ED] leading-relaxed">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Recuperação Empática:</strong> A Trajetta registra &quot;17 dias construídos, 1 deslize&quot;. Sua identidade continua viva; o objetivo é retornar com serenidade na manhã seguinte.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Apenas Seu Próximo Movimento:</strong> A visão de Hoje elimina a ansiedade e destaca apenas a ação inegociável do momento atual.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8FF00] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong>Memória Longitudinal:</strong> Daqui a 2 anos, a Trajetta te mostrará a linha do tempo exata e os marcos que construíram a pessoa que você se tornou.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 5. OS 4 PILARES DA VIDA ADULTA                              */}
-      {/* ------------------------------------------------------------- */}
-      <section id="pilares" className="py-16 sm:py-24 max-w-6xl mx-auto px-4 sm:px-8 space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">Equilíbrio Estratégico</span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
-            Quatro áreas. Nenhum sacrifício cego.
-          </h2>
-          <p className="text-xs sm:text-sm text-[#8E9499]">
-            Construir carreira destruindo o corpo ou enriquecer sem tempo para a família não é evolução. A Trajetta equilibra seu foco.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Corpo */}
-          <div className="p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-3 hover:border-[#58D6A7]/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-[#58D6A7]/15 border border-[#58D6A7]/30 flex items-center justify-center text-[#58D6A7]">
-              <Activity size={20} />
-            </div>
-            <h3 className="text-base font-bold text-[#F2F1ED]">Corpo</h3>
-            <p className="text-xs text-[#8E9499] leading-relaxed">
-              Energia física, corrida, treino de força e sono. Sem saúde biológica, nenhuma meta de longo prazo se sustenta.
-            </p>
-            <span className="text-[11px] font-semibold text-[#58D6A7] block pt-2">Ex: Meia Maratona de 21 km</span>
-          </div>
-
-          {/* Dinheiro */}
-          <div className="p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-3 hover:border-[#F08A76]/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-[#F08A76]/15 border border-[#F08A76]/30 flex items-center justify-center text-[#F08A76]">
-              <Landmark size={20} />
-            </div>
-            <h3 className="text-base font-bold text-[#F2F1ED]">Dinheiro</h3>
-            <p className="text-xs text-[#8E9499] leading-relaxed">
-              Aporte semanal pontual, reserva de tranquilidade e expansão de patrimônio com disciplina recorrente.
-            </p>
-            <span className="text-[11px] font-semibold text-[#F08A76] block pt-2">Ex: R$ 50k em reserva líquida</span>
-          </div>
-
-          {/* Carreira */}
-          <div className="p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-3 hover:border-[#A98CF7]/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-[#A98CF7]/15 border border-[#A98CF7]/30 flex items-center justify-center text-[#A98CF7]">
-              <Briefcase size={20} />
-            </div>
-            <h3 className="text-base font-bold text-[#F2F1ED]">Carreira</h3>
-            <p className="text-xs text-[#8E9499] leading-relaxed">
-              Blocos inegociáveis de trabalho profundo sem notificações para entregar impacto de alto nível e transição de cargo.
-            </p>
-            <span className="text-[11px] font-semibold text-[#A98CF7] block pt-2">Ex: Head de Produto / Diretoria</span>
-          </div>
-
-          {/* Vida */}
-          <div className="p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-3 hover:border-[#6FAEF7]/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-[#6FAEF7]/15 border border-[#6FAEF7]/30 flex items-center justify-center text-[#6FAEF7]">
-              <HeartHandshake size={20} />
-            </div>
-            <h3 className="text-base font-bold text-[#F2F1ED]">Vida</h3>
-            <p className="text-xs text-[#8E9499] leading-relaxed">
-              Presença familiar diária, leitura noturna, silêncio mental e o cultivo daquilo que realmente importa.
-            </p>
-            <span className="text-[11px] font-semibold text-[#6FAEF7] block pt-2">Ex: Desconexão de telas às 19h30</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 6. O RITUAL DOMINICAL (WEEKLY REVIEW COM MOCKUP 4K)          */}
-      {/* ------------------------------------------------------------- */}
-      <section id="ritual" className="py-16 sm:py-24 border-t border-white/8 bg-[#111315]/60 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6 space-y-6">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">O Fechamento Semanal</span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-[#F2F1ED] leading-tight">
-              O ritual de 15 minutos que muda seu ano todo.
-            </h2>
-            <p className="text-sm text-[#8E9499] leading-relaxed">
-              Todo domingo à noite, a Trajetta te conduz por 4 perguntas estratégicas para encerrar o ciclo, registrar as vitórias e permitir que a IA analise seus padrões sem complicação.
-            </p>
-
-            <div className="space-y-3 pt-2">
-              <div className="p-3.5 rounded-xl bg-[#171A1D] border border-white/8 flex items-start gap-3">
-                <span className="text-xs font-bold text-[#B8FF00] bg-[#B8FF00]/10 px-2 py-0.5 rounded-md mt-0.5">1</span>
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">O que avançou?</h4>
-                  <p className="text-[11px] text-[#8E9499]">Reconheça as vitórias discretas antes de passar para a próxima cobrança.</p>
-                </div>
+            <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-6 font-mono text-xs">
+              <div>
+                <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">PRODUTO</h4>
+                <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
+                  <li><a className="hover:text-white transition-colors" href="#overview">Visão Geral</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#use-cases">4 Dimensões</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#how-it-works">Como Funciona</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#pricing">Preços</a></li>
+                  <li><Link className="hover:text-white transition-colors" href="/app">Entrar no App</Link></li>
+                </ul>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#171A1D] border border-white/8 flex items-start gap-3">
-                <span className="text-xs font-bold text-[#B8FF00] bg-[#B8FF00]/10 px-2 py-0.5 rounded-md mt-0.5">2</span>
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">O que me distraiu?</h4>
-                  <p className="text-[11px] text-[#8E9499]">Identifique os pontos de atrito sem autocrítica destrutiva.</p>
-                </div>
+              <div>
+                <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">DIMENSÕES</h4>
+                <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
+                  <li><a className="hover:text-white transition-colors" href="#use-cases">Corpo & Treinos</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#use-cases">Dinheiro & Aportes</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#use-cases">Carreira & Projetos</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#use-cases">Vida & Revisões</a></li>
+                </ul>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#171A1D] border border-white/8 flex items-start gap-3">
-                <span className="text-xs font-bold text-[#B8FF00] bg-[#B8FF00]/10 px-2 py-0.5 rounded-md mt-0.5">3</span>
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">Qual o micro-ajuste para a próxima semana?</h4>
-                  <p className="text-[11px] text-[#8E9499]">Defina a prioridade de cada uma das 4 áreas para a nova semana.</p>
-                </div>
+              <div>
+                <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">CONFIANÇA</h4>
+                <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
+                  <li><span className="text-neutral-300">Sem Venda de Dados</span></li>
+                  <li><span className="text-neutral-300">Exportação Completa LGPD</span></li>
+                  <li><span className="text-neutral-300">Memória Sob Seu Controle</span></li>
+                  <li><span className="text-neutral-300">Zero Brilhos / Anti-AI Cliché</span></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-white font-semibold mb-4 tracking-wider uppercase">LEGAL</h4>
+                <ul className="space-y-2.5 text-neutral-400 font-sans text-xs">
+                  <li><a className="hover:text-white transition-colors" href="#">Privacidade</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#">Termos de Uso</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#">Segurança</a></li>
+                  <li><a className="hover:text-white transition-colors" href="#">Cookies</a></li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6">
-            <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-[#171A1D] p-2 sm:p-3 shadow-2xl overflow-hidden relative group">
-              <img
-                src="/trajetta-mockup-feature.jpg"
-                alt="Trajetta Weekly Review Mockup 4K"
-                className="w-full h-auto rounded-xl object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 7. DEPOIMENTOS DE MEMBROS BETA FUNDADORES                    */}
-      {/* ------------------------------------------------------------- */}
-      <section id="depoimentos" className="py-16 sm:py-24 border-t border-white/8 bg-[#111315]/40 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">Evidências Reais</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
-              Construído para quem vive na pressão do mundo real.
-            </h2>
-            <p className="text-xs sm:text-sm text-[#8E9499]">
-              Veja como profissionais em áreas de alta demanda mantêm a consistência com a Trajetta.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Depoimento 1 */}
-            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#58D6A7]/10 text-[#58D6A7]">
-                    18 Semanas North Star
-                  </span>
-                  <Quote size={14} className="text-[#8E9499]/40" />
-                </div>
-                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
-                  &ldquo;Minha rotina de plantões de 24h tornava impossível manter streaks diários. Todo app me chamava de fracasso na segunda-feira. A Trajetta é a primeira ferramenta que respeita o mundo real e registra meus dias sem culpa.&rdquo;
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
-                <img
-                  src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=120"
-                  alt="Dr. Renato Brandão"
-                  className="w-10 h-10 rounded-full object-cover border border-white/10"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">Dr. Renato Brandão</h4>
-                  <p className="text-[11px] text-[#8E9499]">Cirurgião Geral & Residente</p>
-                </div>
+          <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-neutral-500">
+            <div className="flex items-center flex-wrap gap-4">
+              <span>© 2026 Trajetta. Todos os direitos reservados.</span>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse"></span>
+                <span className="text-neutral-400">Todos os sistemas operacionais</span>
               </div>
             </div>
 
-            {/* Depoimento 2 */}
-            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#A98CF7]/10 text-[#A98CF7]">
-                    Equilíbrio nos 4 Pilares
-                  </span>
-                  <Quote size={14} className="text-[#8E9499]/40" />
-                </div>
-                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
-                  &ldquo;O ritual de 15 minutos de domingo mudou a dinâmica da minha rotina. Ele corta a ansiedade de começar a semana no susto. Consigo finalmente enxergar meus hábitos de saúde sem abandonar minha carreira.&rdquo;
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
-                <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=120"
-                  alt="Camila Vasconcelos"
-                  className="w-10 h-10 rounded-full object-cover border border-white/10"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">Camila Vasconcelos</h4>
-                  <p className="text-[11px] text-[#8E9499]">Head de Operações & Mãe</p>
-                </div>
-              </div>
+            <div className="text-neutral-400 text-xs font-mono">
+              Construído com calma, precisão e disciplina.
             </div>
-
-            {/* Depoimento 3 */}
-            <div className="p-6 rounded-2xl bg-[#171A1D] border border-white/8 space-y-4 hover:border-white/15 transition-all flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#B8FF00]/10 text-[#B8FF00]">
-                    Zero Sparkles • Foco Puro
-                  </span>
-                  <Quote size={14} className="text-[#8E9499]/40" />
-                </div>
-                <p className="text-xs text-[#F2F1ED] leading-relaxed italic">
-                  &ldquo;O visual escuro, sereno e sem poluição infantil parece que foi esculpido pela Linear ou Apple. Sem corujas apitando ou notificações histéricas. É foco puro e execução calma.&rdquo;
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
-                  alt="André Miranda"
-                  className="w-10 h-10 rounded-full object-cover border border-white/10"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-[#F2F1ED]">André Miranda</h4>
-                  <p className="text-[11px] text-[#8E9499]">Engenheiro de Software Sênior</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 8. FAQ ACCORDION INTERATIVO                                   */}
-      {/* ------------------------------------------------------------- */}
-      <section id="faq" className="py-16 sm:py-24 border-t border-white/8 bg-[#0D0F10] px-4 sm:px-8">
-        <div className="max-w-3xl mx-auto space-y-10">
-          <div className="text-center space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8FF00]">Transparência Total</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED]">
-              Perguntas Frequentes
-            </h2>
-            <p className="text-xs sm:text-sm text-[#8E9499]">
-              Tudo o que você precisa saber antes de reservar seu lugar na lista prioritária.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {[
-              {
-                q: 'Qual a diferença real entre a Trajetta e apps como Notion, Habitica ou Todoist?',
-                a: 'Notion e Todoist são gerenciadores de tarefas: você anota afazeres e se depara com listas infinitas que geram ansiedade. Habitica aposta em gamificação infantil que perde a relevância rapidamente. A Trajetta é um sistema pessoal de evolução: foca no próximo movimento inegociável de hoje, conduz o ritual de fechamento dominical e preserva o histórico de quem você está se tornando no longo prazo.',
-              },
-              {
-                q: 'O que acontece na prática quando eu viajo ou tenho uma semana caótica?',
-                a: 'Você não perde seu progresso. A Trajetta opera com Recuperação Empática (Compassionate Recovery). Se você acumulou 18 dias de treino e viajou por 2 dias, o sistema registra "18 dias construídos · 2 deslizes". Sua consistência continua ativa; o objetivo é retomar na manhã seguinte sem a sensação de recomeçar do zero.',
-              },
-              {
-                q: 'Por que vocês chamam a inteligência de "Zero Sparkles"?',
-                a: 'Porque a maioria dos produtos de IA atuais apenas joga emojis brilhantes e frases motivacionais vazias. A Trajetta IA (alimentada por NVIDIA Nemotron e DeepSeek) atua como um conselheiro silencioso. Ela analisa seus dados reais aos domingos, detecta padrões de sobrecarga e faz provocações estratégicas de alto valor.',
-              },
-              {
-                q: 'Como funciona a segurança e privacidade das minhas reflexões e dados?',
-                a: 'Suas anotações, metas e histórico são protegidos por criptografia de ponta e sessões autenticadas JWT. Seus dados nunca são comercializados nem utilizados para treinar modelos públicos de terceiros.',
-              },
-              {
-                q: 'O que os membros da Lista VIP recebem no lançamento?',
-                a: 'Membros da Lista VIP garantem ativação antecipada, acesso prioritário aos modelos de IA em alta velocidade e condição vitalícia garantida no plano fundador.',
-              },
-            ].map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div
-                  key={idx}
-                  className="rounded-xl border border-white/8 bg-[#171A1D] overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    aria-expanded={isOpen}
-                    className="w-full p-4 sm:p-5 flex items-center justify-between text-left gap-4 hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B8FF00]"
-                  >
-                    <span className="text-xs sm:text-sm font-bold text-[#F2F1ED] leading-snug">
-                      {faq.q}
-                    </span>
-                    <ChevronDown
-                      size={16}
-                      className={`text-[#8E9499] transition-transform duration-200 flex-shrink-0 ${
-                        isOpen ? 'rotate-180 text-[#B8FF00]' : ''
-                      }`}
-                    />
-                  </button>
-                  {isOpen && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs text-[#8E9499] leading-relaxed border-t border-white/5 pt-3">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 9. CTA FINAL DE LISTA DE ESPERA                              */}
-      {/* ------------------------------------------------------------- */}
-      <section className="py-20 sm:py-28 px-4 sm:px-8 max-w-4xl mx-auto text-center space-y-8">
-        <div className="w-12 h-12 rounded-2xl bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center mx-auto text-[#B8FF00]">
-          <Compass size={24} />
-        </div>
-
-        <div className="space-y-3">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[#F2F1ED]">
-            Sua trajetória não começa amanhã.<br />
-            Ela começa no seu próximo movimento.
-          </h2>
-          <p className="text-sm text-[#8E9499] max-w-xl mx-auto">
-            Garanta seu lugar prioritário na Lista VIP da Trajetta. As primeiras vagas terão acesso vitalício antecipado aos novos modelos de IA.
-          </p>
-        </div>
-
-        <div className="max-w-md mx-auto">
-          {!submitted ? (
-            <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-              <div className="flex flex-col sm:flex-row gap-2.5">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Seu e-mail principal"
-                  className="flex-1 h-12 bg-[#171A1D] border border-white/12 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-6 py-3 min-h-[48px] rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-sm transition-all active:scale-[0.96] shadow-[0_0_25px_rgba(184,255,0,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 whitespace-nowrap"
-                >
-                  <span>Reservar Vaga</span>
-                  <ArrowRight size={15} strokeWidth={2.5} />
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="p-4 rounded-xl bg-[#171A1D] border border-[#B8FF00]/40 text-sm font-semibold text-[#B8FF00]">
-              ✓ Vaga reservada na posição #{userPosition}.
-            </div>
-          )}
-        </div>
-
-        <div className="pt-2">
-          <Link
-            href="/app"
-            className="text-xs sm:text-sm text-[#8E9499] hover:text-[#B8FF00] underline underline-offset-4 transition-colors"
-          >
-            Prefere experimentar o sistema imediatamente? Clique aqui para acessar o App Demo →
-          </Link>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 10. FOOTER                                                    */}
-      {/* ------------------------------------------------------------- */}
-      <footer className="border-t border-white/8 py-10 px-4 sm:px-8 bg-[#0D0F10] text-xs text-[#8E9499]">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-[#F2F1ED]">trajetta</span>
-            <span>•</span>
-            <span>Sistema Pessoal de Evolução</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <Link href="/app" className="hover:text-[#F2F1ED] transition-colors">Acessar App</Link>
-            <a href="#problema" className="hover:text-[#F2F1ED] transition-colors">Manifesto</a>
-            <a href="#pilares" className="hover:text-[#F2F1ED] transition-colors">Pilares</a>
-            <a href="#depoimentos" className="hover:text-[#F2F1ED] transition-colors">Depoimentos</a>
-            <a href="#faq" className="hover:text-[#F2F1ED] transition-colors">FAQ</a>
-          </div>
-
-          <div className="flex items-center gap-2 text-[11px] text-[#8E9499]">
-            <span className="w-2 h-2 rounded-full bg-[#58D6A7] animate-pulse" />
-            <span>São Paulo (gru1) • 100% Operacional</span>
           </div>
         </div>
       </footer>
+      {/* END: Footer */}
     </div>
   );
 }

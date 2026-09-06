@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
+import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 import { ActiveView } from '@/types';
 import {
   Calendar,
@@ -57,10 +58,7 @@ export function Sidebar({
         {/* Brand Lockup */}
         <div className="flex items-center justify-between pb-5 border-b border-white/8">
           <div className="flex items-center gap-2.5">
-            {/* Official Trajetta Logo */}
-            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(184,255,0,0.2)]">
-              <img src="/trajetta-logo.png" alt="Trajetta Logo" className="w-full h-full object-contain p-0.5" />
-            </div>
+            <TrajettaLogo size={30} />
             <div className="flex flex-col">
               <span className="font-extrabold tracking-tight text-base text-[#F2F1ED] leading-none">
                 trajetta

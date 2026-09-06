@@ -21,6 +21,8 @@ model User {
   journeys      Journey[]
   weeklyReviews WeeklyReview[]
   dailyLogs     DailyLog[]
+  memories      UserMemory[]
+  contextSummary UserContextSummary?
 }
 
 model Habit {
@@ -96,3 +98,34 @@ model Waitlist {
   source    String   @default("landing_page")
   createdAt DateTime @default(now())
 }
+
+model UserMemory {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memoryType     String   // preference, goal, behavior_pattern, difficulty, achievement, life_context, decision, relationship, routine, motivation, constraint
+  content        String
+  embedding      String?  // JSON float array vector representation
+  importance     Float    @default(0.5) // 0.0 to 1.0
+  confidence     Float    @default(0.8) // 0.0 to 1.0
+  source         String?  // weekly_review, habit_log, conversation, user_input
+  sourceId       String?
+  lastAccessedAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId, memoryType])
+}
+
+model UserContextSummary {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  summary         String
+  focusAreas      String   @default("[]")
+  keyDifficulties String   @default("[]")
+  keyWins         String   @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+

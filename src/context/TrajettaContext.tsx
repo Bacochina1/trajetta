@@ -40,6 +40,10 @@ type TrajettaContextType = {
   isOnboardingOpen: boolean;
   isNewGoalModalOpen: boolean;
   isAuthModalOpen: boolean;
+  isAuthenticated: boolean;
+  authLoading: boolean;
+  login: (userData?: any) => void;
+  logout: () => Promise<void>;
   setActiveView: (view: ActiveView) => void;
   toggleHabitToday: (habitId: string) => void;
   toggleGoalMilestone: (goalId: string, milestoneId: string) => void;
@@ -79,6 +83,8 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isNewGoalModalOpen, setIsNewGoalModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   // Check backend session on mount
   useEffect(() => {
@@ -86,16 +92,49 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       .then((res) => res.json())
       .then((data) => {
         if (data?.ok && data.user) {
+          setIsAuthenticated(true);
           setUser((prev) => ({
             ...prev,
             name: data.user.name,
             title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
             avatar: data.user.avatar || prev.avatar,
           }));
+        } else {
+          const localAuth = localStorage.getItem('trajetta_auth_session');
+          setIsAuthenticated(localAuth === 'true');
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        const localAuth = localStorage.getItem('trajetta_auth_session');
+        setIsAuthenticated(localAuth === 'true');
+      })
+      .finally(() => {
+        setAuthLoading(false);
+      });
   }, []);
+
+  const login = (userData?: any) => {
+    if (userData) {
+      setUser((prev) => ({
+        ...prev,
+        name: userData.name || prev.name,
+        title: userData.role === 'ADMIN' ? 'Membro Fundador (Admin)' : prev.title,
+        avatar: userData.avatar || prev.avatar,
+      }));
+    }
+    localStorage.setItem('trajetta_auth_session', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {
+      // ignore
+    }
+    localStorage.removeItem('trajetta_auth_session');
+    setIsAuthenticated(false);
+  };
 
   // Load from LocalStorage on mount
   useEffect(() => {
@@ -417,6 +456,10 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setIsOnboardingOpen,
       setIsNewGoalModalOpen,
       setIsAuthModalOpen,
+      isAuthenticated,
+      authLoading,
+      login,
+      logout,
       resetToDemoData,
     }),
     [
@@ -433,6 +476,8 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       isOnboardingOpen,
       isNewGoalModalOpen,
       isAuthModalOpen,
+      isAuthenticated,
+      authLoading,
     ]
   );
 
