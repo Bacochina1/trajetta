@@ -3,11 +3,19 @@ import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
+const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
+const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
+const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'meta/llama-3.2-11b-vision-instruct';
+const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || 'meta/llama-3.2-11b-vision-instruct';
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência da Trajetta — um sistema pessoal de evolução para adultos lúcidos e ambiciosos.
 Sua identidade é Calm Power: tranquilidade com direção.
+
+0. IDIOMA OBRIGATÓRIO
+- Responda SEMPRE em português do Brasil com perfeita naturalidade. Nunca responda em inglês.
 
 1. TOM E CONTEÚDO
 - Responda de forma humana, direta, sóbria e prática.
@@ -119,7 +127,57 @@ ${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   // -------------------------------------------------------------
-  // 1. GOOGLE GEMINI ENGINE CALL (When valid key is present)
+  // 1. PRIMARY ENGINE: NVIDIA NIM (Llama 3.2 11B / Nemotron 3.5 Lightning)
+  // -------------------------------------------------------------
+  if (NVIDIA_API_KEY) {
+    const preferredModel = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
+    const nvidiaModels = [
+      preferredModel,
+      'meta/llama-3.2-11b-vision-instruct',
+      'nvidia/nemotron-3.5-lightning-30b-a3b'
+    ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
+
+    const fullMessages: ChatMessage[] = [
+      { role: 'system', content: systemContent },
+      ...messages.filter(m => m.role !== 'system')
+    ];
+
+    for (const model of nvidiaModels) {
+      try {
+        const res = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${NVIDIA_API_KEY}`
+          },
+          body: JSON.stringify({
+            model,
+            messages: fullMessages,
+            temperature: 0.35,
+            max_tokens: maxTokens
+          }),
+          signal: AbortSignal.timeout(15000)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const rawContent = data.choices?.[0]?.message?.content || '';
+          const cleaned = cleanAiOutput(rawContent);
+          if (cleaned && cleaned.length > 5) {
+            return cleaned;
+          }
+        } else {
+          const errText = await res.text();
+          console.warn(`[NVIDIA AI] Model ${model} failed (${res.status}): ${errText.slice(0, 100)}`);
+        }
+      } catch (err: any) {
+        console.warn(`[NVIDIA AI] Model ${model} error or timeout:`, err?.message || err);
+      }
+    }
+  }
+
+  // -------------------------------------------------------------
+  // 2. FAILOVER ENGINE: Google Gemini (When valid key is present)
   // -------------------------------------------------------------
   if (GEMINI_API_KEY && !GEMINI_API_KEY.includes('AQ.Ab8RN6L9Q8vKEKohsMMkBKiZurPlKq')) {
     const googleModels = [
@@ -174,7 +232,7 @@ ${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
   }
 
   // -------------------------------------------------------------
-  // 2. CALM POWER DYNAMIC STRATEGIC ENGINE
+  // 3. TERTIARY SAFETY NET: CALM POWER DYNAMIC STRATEGIC ENGINE
   // Respects conversation history, proportionality and Trajetta principles
   // -------------------------------------------------------------
   return getDynamicStrategicResponse(messages, options?.contextPack, options?.ragContext);
