@@ -13,8 +13,8 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-200">
-      <div className="bg-[#060709]/85 backdrop-blur-xl border-b border-white/[0.08]">
+    <header className="absolute top-0 left-0 right-0 z-50 w-full transition-all duration-200 pointer-events-auto">
+      <div className="w-full bg-transparent">
         <div className="max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 h-16 sm:h-20 flex items-center justify-between">
           {/* Official White Trajetta Logo */}
           <Link

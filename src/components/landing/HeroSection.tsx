@@ -30,9 +30,9 @@ export function HeroSection() {
         {/* Left Dark Gradient Overlay for Maximum Text Contrast and Readability on Mobile and Desktop */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#060709] via-[#060709]/80 to-transparent w-full md:w-[65%]" />
 
-        {/* Top and Bottom Fades to seamlessly blend with Navbar and SubHeaderSection */}
+        {/* Top and Bottom Fades to seamlessly blend */}
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#060709] via-[#060709]/80 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#060709]/90 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Hero Content Body — Symmetrical & Responsive across 320px to 4K */}
