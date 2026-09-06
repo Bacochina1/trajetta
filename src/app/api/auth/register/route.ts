@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma, ensureDbReady } from '@/lib/db';
 import { hashPassword, createSessionToken, AUTH_COOKIE_NAME } from '@/lib/auth/auth';
+import { syncLeadToManyChat } from '@/lib/crm/manychatService';
 
 export async function POST(req: Request) {
   try {
@@ -42,6 +43,18 @@ export async function POST(req: Request) {
         role: 'USER',
       },
     });
+
+    // Sync to ManyChat CRM as registered user
+    syncLeadToManyChat({
+      email: cleanEmail,
+      name: user.name,
+      source: 'app_registration',
+      status: 'registered',
+      tags: ['trajetta_lead', 'trajetta_registered'],
+      customFields: {
+        trajetta_status: 'active_user',
+      },
+    }).catch((crmErr) => console.warn('ManyChat sync error on register:', crmErr));
 
     const token = await createSessionToken({
       userId: user.id,

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma, ensureDbReady } from '@/lib/db';
 import { sendEmail, renderWelcomeEmail } from '@/lib/email/emailService';
+import { syncLeadToManyChat } from '@/lib/crm/manychatService';
 
 const BASE_WAITLIST_COUNT = 1480;
 
@@ -21,7 +22,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await ensureDbReady();
-    const { email, name } = await req.json();
+    const { email, name, phone } = await req.json();
 
     if (!email || !email.includes('@')) {
       return NextResponse.json(
@@ -42,6 +43,18 @@ export async function POST(req: Request) {
 
     if (existing) {
       const welcomeHtml = renderWelcomeEmail(existing.name || cleanName, currentPosition);
+
+      // Async sync to ManyChat
+      syncLeadToManyChat({
+        email: cleanEmail,
+        name: existing.name || cleanName,
+        phone: phone ? String(phone).trim() : undefined,
+        source: 'landing_page_waitlist',
+        status: 'waitlist',
+        position: currentPosition,
+        tags: ['trajetta_lead', 'trajetta_waitlist_vip'],
+      }).catch((crmErr) => console.warn('ManyChat sync error (existing):', crmErr));
+
       return NextResponse.json({
         ok: true,
         alreadyRegistered: true,
@@ -75,6 +88,17 @@ export async function POST(req: Request) {
     } catch (e) {
       console.warn('Failed to dispatch waitlist email:', e);
     }
+
+    // Sync lead to ManyChat CRM in background
+    syncLeadToManyChat({
+      email: cleanEmail,
+      name: cleanName,
+      phone: phone ? String(phone).trim() : undefined,
+      source: 'landing_page_waitlist',
+      status: 'waitlist',
+      position: newPosition,
+      tags: ['trajetta_lead', 'trajetta_waitlist_vip'],
+    }).catch((crmErr) => console.warn('ManyChat sync error (new):', crmErr));
 
     return NextResponse.json({
       ok: true,
