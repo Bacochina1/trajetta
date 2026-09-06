@@ -259,16 +259,16 @@ export default function LandingPage() {
               </div>
             ) : (
               <div className="flex items-center space-x-1.5 sm:space-x-2">
-                <a
-                  href="#how-it-works"
+                <Link
+                  href="/register"
                   className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[11px] sm:text-[12px] font-bold tracking-wide uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1 sm:space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
                 >
                   <span>Começar</span>
                   <ArrowRight size={13} className="mt-[-1px]" />
-                </a>
+                </Link>
 
                 <Link
-                  href="/app"
+                  href="/login"
                   className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200"
                 >
                   LOGIN

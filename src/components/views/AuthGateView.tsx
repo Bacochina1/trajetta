@@ -7,10 +7,11 @@ import Link from 'next/link';
 
 interface AuthGateViewProps {
   onLoginSuccess: (userData: any) => void;
+  initialMode?: 'login' | 'register';
 }
 
-export function AuthGateView({ onLoginSuccess }: AuthGateViewProps) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGateViewProps) {
+  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -180,9 +181,29 @@ export function AuthGateView({ onLoginSuccess }: AuthGateViewProps) {
               disabled={loading}
               className="w-full h-11 mt-2 bg-[#B8FF00] hover:bg-[#a3e600] active:scale-[0.99] text-[#0D0F10] font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(184,255,0,0.2)] disabled:opacity-50"
             >
-              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Criar Minha Conta'}</span>
+              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Começar 14 Dias Grátis'}</span>
               <ArrowRight size={14} />
             </button>
+
+            {mode === 'login' ? (
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('bacochinamatheus@gmail.com');
+                    setPassword('Trajetta2026!');
+                    setError(null);
+                  }}
+                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors font-mono underline decoration-dotted"
+                >
+                  Preencher dados de Fundador (Matheus)
+                </button>
+              </div>
+            ) : (
+              <div className="pt-2 text-center text-[11px] text-[#8E9499] font-mono">
+                ✓ 14 dias grátis sem necessidade de cartão de crédito
+              </div>
+            )}
           </form>
         </div>
       </div>

@@ -57,7 +57,7 @@ export async function getSessionUser() {
 
     try {
       await ensureDbReady();
-      const user = await prisma.user.findUnique({
+      let user = await prisma.user.findUnique({
         where: { id: payload.userId },
         select: {
           id: true,
@@ -68,6 +68,26 @@ export async function getSessionUser() {
           createdAt: true,
         },
       });
+
+      if (!user && payload.email) {
+        user = await prisma.user.create({
+          data: {
+            id: payload.userId,
+            email: payload.email,
+            name: payload.name || 'Membro',
+            passwordHash: '$2b$10$ppLmRuMDdS4U/0jKVwao2uQctVGLP/8sQgfQGnLpHdWqdBjqA6CKq',
+            role: payload.role || 'USER',
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            avatar: true,
+            createdAt: true,
+          },
+        });
+      }
 
       if (user) return user;
     } catch (dbErr) {

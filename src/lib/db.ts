@@ -144,23 +144,83 @@ export async function ensureDbReady(): Promise<void> {
       );
     `);
 
-    // Ensure Admin Jim exists
-    const admin = await prisma.user.findUnique({
-      where: { email: 'admin@trajetta.app' },
-    });
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "UserMemory" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "userId" TEXT NOT NULL,
+        "memoryType" TEXT NOT NULL,
+        "content" TEXT NOT NULL,
+        "embedding" TEXT,
+        "importance" REAL NOT NULL DEFAULT 0.5,
+        "confidence" REAL NOT NULL DEFAULT 0.8,
+        "source" TEXT,
+        "sourceId" TEXT,
+        "lastAccessedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" DATETIME NOT NULL,
+        CONSTRAINT "UserMemory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+      );
+    `);
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "UserMemory_userId_memoryType_idx" ON "UserMemory"("userId", "memoryType");`);
 
-    if (!admin) {
-      await prisma.user.create({
-        data: {
-          id: 'cmtp970550000cd7k2oor3pck',
-          email: 'admin@trajetta.app',
-          name: 'Jim (Membro Fundador)',
-          passwordHash: '$2b$10$ppLmRuMDdS4U/0jKVwao2uQctVGLP/8sQgfQGnLpHdWqdBjqA6CKq',
-          role: 'ADMIN',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
-          updatedAt: new Date(),
-        },
-      });
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "UserContextSummary" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "userId" TEXT NOT NULL,
+        "summary" TEXT NOT NULL,
+        "focusAreas" TEXT NOT NULL DEFAULT '[]',
+        "keyDifficulties" TEXT NOT NULL DEFAULT '[]',
+        "keyWins" TEXT NOT NULL DEFAULT '[]',
+        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" DATETIME NOT NULL,
+        CONSTRAINT "UserContextSummary_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+      );
+    `);
+    await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "UserContextSummary_userId_key" ON "UserContextSummary"("userId");`);
+
+    // Ensure Default Core & Admin Users exist in every runtime container
+    const defaultUsers = [
+      {
+        id: 'cmtp970550000cd7k2oor3pck',
+        email: 'admin@trajetta.app',
+        name: 'Jim (Membro Fundador)',
+        passwordHash: '$2b$10$ppLmRuMDdS4U/0jKVwao2uQctVGLP/8sQgfQGnLpHdWqdBjqA6CKq', // TrajettaAdmin2026!
+        role: 'ADMIN',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
+      },
+      {
+        id: 'cmtp970550001cd7k2oor3pma',
+        email: 'bacochinamatheus@gmail.com',
+        name: 'Matheus Bacochina',
+        passwordHash: '$2b$10$aRcuFXP02ED9N.yQAPsxRuGcQleItzLVpvz7rA7jhcrd99UsVcIx.', // Trajetta2026!
+        role: 'ADMIN',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=256',
+      },
+      {
+        id: 'cmtp970550002cd7k2oor3pco',
+        email: 'companytrajetta@gmail.com',
+        name: 'Matheus Trajetta',
+        passwordHash: '$2b$10$aRcuFXP02ED9N.yQAPsxRuGcQleItzLVpvz7rA7jhcrd99UsVcIx.', // Trajetta2026!
+        role: 'ADMIN',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=256',
+      }
+    ];
+
+    for (const u of defaultUsers) {
+      const exists = await prisma.user.findUnique({ where: { email: u.email } });
+      if (!exists) {
+        await prisma.user.create({
+          data: {
+            id: u.id,
+            email: u.email,
+            name: u.name,
+            passwordHash: u.passwordHash,
+            role: u.role,
+            avatar: u.avatar,
+            updatedAt: new Date(),
+          },
+        });
+      }
     }
 
     globalForPrisma.dbInitialized = true;
