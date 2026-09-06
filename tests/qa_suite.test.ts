@@ -134,9 +134,9 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       const html = renderWelcomeEmail('Jim');
 
       expect(html).toContain('Jim');
-      expect(html).toContain('#0D0F10'); // Dark background
+      expect(html).toContain('#0D1015'); // Dark card background
       expect(html).toContain('#B8FF00'); // Trajetta accent
-      expect(html).toContain('Sua trajetória começa agora');
+      expect(html).toContain('Sua vaga está garantida');
       expect(html).toContain('trajetta');
     });
 
