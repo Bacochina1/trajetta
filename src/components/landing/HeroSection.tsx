@@ -11,28 +11,28 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative w-full min-h-[920px] sm:min-h-[980px] lg:min-h-[1050px] flex flex-col justify-between overflow-hidden"
+      className="relative w-full min-h-[90dvh] flex flex-col justify-between overflow-hidden"
       data-purpose="hero-section"
       id="visao"
     >
-      {/* 1. Cinematic 4K Backdrop with Doorway on RIGHT and Estrela-Guia Constellations */}
+      {/* 1. Cinematic 4K Calm Power Backdrop with Modern Architectural Doorway & Estrela-Guia Trajectories */}
       <div className="absolute inset-0 pointer-events-none select-none" data-purpose="cinematic-backdrop">
         {/* Real 4K Background Image */}
         <img
           src="/trajetta-hero-bg-4k.jpg"
           alt="Trajetta Universo de Evolução"
-          className="w-full h-full object-cover object-center scale-105"
+          className="w-full h-full object-cover object-right-bottom sm:object-center"
         />
 
         {/* Soft atmospheric gradients for contrast and readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#060709]/95 via-[#060709]/75 to-transparent sm:via-[#060709]/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-[#060709]/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#060709]/95 via-[#060709]/60 to-transparent sm:via-[#060709]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-[#060709]/60" />
         <div className="absolute inset-0 hero-bottom-fade" />
       </div>
 
-      {/* 2. Hero Content Body — Full Grand Typography from cee0f13 */}
+      {/* 2. Hero Content Body — Proportioned for 90dvh */}
       <div
-        className="relative z-30 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-32 sm:pt-40 pb-16 sm:pb-20 mt-auto"
+        className="relative z-30 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 mt-auto"
         data-purpose="hero-content"
       >
         <div className="max-w-3xl">
