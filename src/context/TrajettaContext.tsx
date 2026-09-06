@@ -26,6 +26,8 @@ import {
 
 type TrajettaContextType = {
   user: UserProfile;
+  userProfile: UserProfile;
+  setUserProfile: (profile: Partial<UserProfile>) => void;
   goals: Goal[];
   habits: Habit[];
   journeys: Journey[];
@@ -37,6 +39,7 @@ type TrajettaContextType = {
   isReviewModalOpen: boolean;
   isOnboardingOpen: boolean;
   isNewGoalModalOpen: boolean;
+  isAuthModalOpen: boolean;
   setActiveView: (view: ActiveView) => void;
   toggleHabitToday: (habitId: string) => void;
   toggleGoalMilestone: (goalId: string, milestoneId: string) => void;
@@ -54,6 +57,7 @@ type TrajettaContextType = {
   setIsReviewModalOpen: (open: boolean) => void;
   setIsOnboardingOpen: (open: boolean) => void;
   setIsNewGoalModalOpen: (open: boolean) => void;
+  setIsAuthModalOpen: (open: boolean) => void;
   resetToDemoData: () => void;
 };
 
@@ -74,6 +78,24 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isNewGoalModalOpen, setIsNewGoalModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Check backend session on mount
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.ok && data.user) {
+          setUser((prev) => ({
+            ...prev,
+            name: data.user.name,
+            title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
+            avatar: data.user.avatar || prev.avatar,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Load from LocalStorage on mount
   useEffect(() => {
@@ -374,6 +396,9 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       isReviewModalOpen,
       isOnboardingOpen,
       isNewGoalModalOpen,
+      isAuthModalOpen,
+      userProfile: user,
+      setUserProfile: (patch: Partial<UserProfile>) => setUser((prev) => ({ ...prev, ...patch })),
       setActiveView,
       toggleHabitToday,
       toggleGoalMilestone,
@@ -391,6 +416,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setIsReviewModalOpen,
       setIsOnboardingOpen,
       setIsNewGoalModalOpen,
+      setIsAuthModalOpen,
       resetToDemoData,
     }),
     [
@@ -406,6 +432,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       isReviewModalOpen,
       isOnboardingOpen,
       isNewGoalModalOpen,
+      isAuthModalOpen,
     ]
   );
 

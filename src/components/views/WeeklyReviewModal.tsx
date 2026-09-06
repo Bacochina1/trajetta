@@ -5,7 +5,7 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { AreaBadge } from '@/components/ui/AreaBadge';
-import { CheckCircle2, ChevronRight, Share2, Sparkles, Check, ArrowRight, Brain } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Share2, Check, ArrowRight, Brain, Mail, Send } from 'lucide-react';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
 
@@ -18,6 +18,8 @@ export function WeeklyReviewModal() {
   const [proudOf, setProudOf] = useState('');
   const [nextWeekAdjustment, setNextWeekAdjustment] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [aiText, setAiText] = useState<string>('');
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
 
   // Auto-computed metrics
   const totalHabitLogs = habits.reduce((acc, h) => acc + h.daysCompletedThisWeek.length, 0);
@@ -27,7 +29,31 @@ export function WeeklyReviewModal() {
   const topArea: LifeArea = 'corpo';
   const neglectedArea: LifeArea = 'dinheiro';
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    let reflection = `Você avançou consistentemente esta semana com foco destacado em ${LIFE_AREAS[topArea].label}. O ponto de atenção é ${LIFE_AREAS[neglectedArea].label}, onde o compromisso semanal pede prioridade matinal.`;
+    setAiText(reflection);
+    setIsCompleted(true);
+
+    try {
+      const res = await fetch('/api/ai/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wins: whatAdvanced,
+          challenges: whatDistracted,
+          completedRatio: habitRate + '%',
+          streakWeeks: user.completedWeeksCount || 14,
+        }),
+      });
+      const data = await res.json();
+      if (data.ok && data.reflection) {
+        reflection = data.reflection;
+        setAiText(reflection);
+      }
+    } catch {
+      // Keep default reflection
+    }
+
     submitWeeklyReview({
       advancedGoalsCount: 3,
       habitsRate: habitRate,
@@ -37,9 +63,22 @@ export function WeeklyReviewModal() {
       reflectionWhatDistracted: whatDistracted,
       reflectionProudOf: proudOf,
       reflectionNextWeekAdjustment: nextWeekAdjustment,
-      aiReflection: `Você avançou em 3 metas importantes esta semana com foco destacado em ${LIFE_AREAS[topArea].label}. O ponto de atenção é ${LIFE_AREAS[neglectedArea].label}, onde você postergou o aporte financeiro. Para a próxima semana, resolva esse compromisso na segunda-feira pela manhã.`,
+      aiReflection: reflection,
     });
-    setIsCompleted(true);
+  };
+
+  const handleSendEmail = async () => {
+    setEmailStatus('sending');
+    try {
+      await fetch('/api/email/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'admin@trajetta.app', name: user.name }),
+      });
+      setEmailStatus('sent');
+    } catch {
+      setEmailStatus('idle');
+    }
   };
 
   const handleClose = () => {
@@ -296,7 +335,7 @@ export function WeeklyReviewModal() {
                 <span className="text-xs font-bold text-[#F2F1ED]">Reflexão da Trajetta IA</span>
               </div>
               <p className="text-xs text-[#8E9499] leading-relaxed italic">
-                &ldquo;Você avançou consistentemente na corrida e no volume de treinos. O dinheiro precisa de um ajuste simples: automatize ou execute o aporte logo na segunda-feira, antes que a rotina consuma sua atenção.&rdquo;
+                &ldquo;{aiText || 'Você avançou consistentemente esta semana. Consistência é o seu maior diferencial.'}&rdquo;
               </p>
             </div>
 
@@ -306,23 +345,46 @@ export function WeeklyReviewModal() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={() => alert('Card pronto para compartilhamento!')}
-              className="text-xs"
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <button
+              type="button"
+              onClick={handleSendEmail}
+              disabled={emailStatus !== 'idle'}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-xs font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
             >
-              <Share2 size={14} /> Compartilhar Progresso
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={handleClose}
-              className="text-xs"
-            >
-              <Check size={14} /> Fechar e Iniciar Nova Semana
-            </Button>
+              {emailStatus === 'sending' ? (
+                <span>Enviando resumo...</span>
+              ) : emailStatus === 'sent' ? (
+                <>
+                  <Check size={14} className="text-[#B8FF00]" />
+                  <span className="text-[#B8FF00]">E-mail Enviado com Sucesso!</span>
+                </>
+              ) : (
+                <>
+                  <Mail size={14} className="text-[#8E9499]" />
+                  <span>Enviar Resumo para Meu E-mail</span>
+                </>
+              )}
+            </button>
+
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => alert('Card pronto para compartilhamento!')}
+                className="text-xs flex-1 sm:flex-none"
+              >
+                <Share2 size={14} /> Compartilhar
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleClose}
+                className="text-xs flex-1 sm:flex-none"
+              >
+                <Check size={14} /> Fechar Semana
+              </Button>
+            </div>
           </div>
         </div>
       )}

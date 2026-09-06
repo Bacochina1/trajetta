@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { Button } from '@/components/ui/Button';
-import { Brain, Send, Compass, Sparkles, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Brain, Send, Compass, User, ArrowRight, ShieldCheck } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -33,7 +33,7 @@ export function AiCoachView() {
     'Qual área da minha vida mais precisa de atenção hoje?',
   ];
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const query = textToSend || input;
     if (!query.trim()) return;
 
@@ -44,39 +44,64 @@ export function AiCoachView() {
       timestamp: 'Agora',
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     if (!textToSend) setInput('');
     setIsTyping(true);
 
-    // Contextual responses based on Trajetta's memory logic
-    setTimeout(() => {
-      let reply = '';
-      const lower = query.toLowerCase();
+    try {
+      const history = messages.slice(-5).map((m) => ({
+        role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+        content: m.text,
+      }));
+      history.push({ role: 'user', content: query });
 
-      if (lower.includes('reduzir') || lower.includes('parar') || lower.includes('treino')) {
-        reply =
-          'Eu entendo a sobrecarga de trabalho. Analisando seu histórico, você já acumulou 43 treinos nos últimos 4 meses e sua meta é a Meia Maratona de 21 km. Em vez de abandonar o hábito, que tal reduzirmos temporariamente de 4 para 2 treinos curtos de 30 minutos na semana? Assim você não quebra a identidade que já construiu e mantém o ritmo sem desgaste.';
-      } else if (lower.includes('consistência') || lower.includes('semanas')) {
-        reply =
-          `Você já concluiu ${user.completedWeeksCount} semanas consecutivas de planejamento na Trajetta! Sua consistência média em treinos está em 84% e sua taxa de blocos de foco profundo atingiu 88%. O ponto que oscilou foram os descansos desconectados à noite no meio da semana.`;
-      } else if (lower.includes('atenção') || lower.includes('área')) {
-        reply =
-          'Pelo seu Life Score atual, a área de Dinheiro e Vida pedem atenção. Você tem sido exemplar em Corpo e Carreira, mas o tempo com quem você ama à noite encolheu nos últimos 10 dias. Uma noite inteira livre de telas nesta semana trará um retorno enorme para seu equilíbrio.';
-      } else {
-        reply =
-          `Entendido, ${user.name}. Com base no seu compromisso de longo prazo ("${user.target12Months}"), o segredo não é acelerar na marra, mas escolher uma única ação realizável para o dia de hoje e sustentá-la.`;
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      const data = await res.json();
+      const replyText = data?.reply;
+
+      if (!replyText) {
+        throw new Error('Empty reply');
       }
 
       const iaMsg: Message = {
         id: 'ia-' + Date.now(),
         sender: 'ia',
-        text: reply,
+        text: replyText,
         timestamp: 'Agora',
       };
 
-      setMessages(prev => [...prev, iaMsg]);
+      setMessages((prev) => [...prev, iaMsg]);
+    } catch {
+      let fallback = '';
+      const lower = query.toLowerCase();
+      if (lower.includes('reduzir') || lower.includes('parar') || lower.includes('treino')) {
+        fallback =
+          'Eu entendo a sobrecarga de trabalho. Analisando seu histórico, você já acumulou consistência notável nos últimos meses. Em vez de abandonar o hábito, que tal reduzirmos temporariamente a duração ou frequência? Assim você não quebra a identidade construída e mantém o ritmo sem desgaste.';
+      } else if (lower.includes('consistência') || lower.includes('semanas')) {
+        fallback = `Você já concluiu ${user.completedWeeksCount} semanas consecutivas de planejamento na Trajetta! Mantenha a atenção aos momentos de descanso no meio da semana para sustentar essa consistência.`;
+      } else if (lower.includes('atenção') || lower.includes('área')) {
+        fallback =
+          'Pelo seu Life Score atual, a área de Dinheiro e Vida pedem atenção equilibrada. Você tem sido exemplar em Corpo e Carreira, mas o tempo com quem você ama à noite encolheu nos últimos 10 dias. Uma noite inteira livre de telas nesta semana trará um retorno enorme para seu equilíbrio.';
+      } else {
+        fallback = `Entendido, ${user.name}. Com base no seu compromisso de longo prazo ("${user.target12Months}"), o segredo não é acelerar na marra, mas escolher uma única ação realizável para o dia de hoje e sustentá-la com calma.`;
+      }
+
+      const iaMsg: Message = {
+        id: 'ia-' + Date.now(),
+        sender: 'ia',
+        text: fallback,
+        timestamp: 'Agora',
+      };
+
+      setMessages((prev) => [...prev, iaMsg]);
+    } finally {
       setIsTyping(false);
-    }, 700);
+    }
   };
 
   return (

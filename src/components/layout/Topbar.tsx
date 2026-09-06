@@ -4,10 +4,10 @@ import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { Menu, Plus, CheckCircle2, RotateCcw } from 'lucide-react';
+import { Menu, Plus, CheckCircle2, RotateCcw, User } from 'lucide-react';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
-  const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData } = useTrajetta();
+  const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen } = useTrajetta();
   const dateFormatted = getCurrentDateFormatted();
 
   return (
@@ -33,6 +33,18 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Account / Login Trigger */}
+        <button
+          onClick={() => setIsAuthModalOpen(true)}
+          title="Conta & Autenticação"
+          className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center gap-1.5 text-xs"
+        >
+          <User size={13} className="text-[#B8FF00]" />
+          <span className="hidden sm:inline font-medium">
+            {user.role?.includes('Admin') ? 'Jim (Admin)' : user.name}
+          </span>
+        </button>
+
         {/* Reset Demo Data button (Discreet) */}
         <button
           onClick={resetToDemoData}

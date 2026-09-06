@@ -1,0 +1,90 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  passwordHash  String
+  role          String         @default("USER")
+  avatar        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  habits        Habit[]
+  goals         Goal[]
+  journeys      Journey[]
+  weeklyReviews WeeklyReview[]
+  dailyLogs     DailyLog[]
+}
+
+model Habit {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  area          String
+  frequency     String
+  targetValue   String
+  streakWeeks   Int      @default(0)
+  completedDays String   @default("[]")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Goal {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                 String
+  area                  String
+  whyItMatters          String
+  targetMetric          String
+  milestones            String
+  currentMilestoneIndex Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Journey {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  area        String
+  description String
+  totalDays   Int      @default(30)
+  currentDay  Int      @default(1)
+  slipDays    Int      @default(0)
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WeeklyReview {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekNumber     Int
+  year           Int
+  wins           String
+  challenges     String
+  aiReflection   String
+  northStarWeeks Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+
+model DailyLog {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date             String
+  quickNote        String
+  consistencyScore Int      @default(0)
+  createdAt        DateTime @default(now())
+}

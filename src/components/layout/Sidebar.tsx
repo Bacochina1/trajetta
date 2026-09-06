@@ -24,7 +24,7 @@ export function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { activeView, setActiveView, user, setIsReviewModalOpen, setIsOnboardingOpen } = useTrajetta();
+  const { activeView, setActiveView, user, setIsReviewModalOpen, setIsOnboardingOpen, setIsAuthModalOpen } = useTrajetta();
 
   const navItems: { id: ActiveView; label: string; icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }> }[] = [
     { id: 'hoje', label: 'Hoje', icon: Calendar },
@@ -157,12 +157,16 @@ export function Sidebar({
 
           {/* User Profile Chip */}
           <button
-            onClick={() => setIsOnboardingOpen(true)}
-            title="Clique para ver o Onboarding ou ajustar foco"
+            onClick={() => setIsAuthModalOpen(true)}
+            title="Conta & Login (Admin/Social)"
             className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-white/5 transition-colors duration-150 tactile-btn group"
           >
-            <div className="w-8 h-8 rounded-full bg-[#252A2E] border border-white/10 flex items-center justify-center text-xs font-bold text-[#F2F1ED]">
-              {user.avatarText}
+            <div className="w-8 h-8 rounded-full bg-[#252A2E] border border-white/10 flex items-center justify-center text-xs font-bold text-[#F2F1ED] overflow-hidden">
+              {user.avatar ? (
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                user.avatarText || user.name.charAt(0)
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <span className="text-xs font-bold text-[#F2F1ED] block truncate group-hover:text-[#B8FF00] transition-colors">

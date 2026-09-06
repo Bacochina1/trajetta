@@ -126,8 +126,10 @@ export type LifeScoreData = Record<LifeArea, LifeScoreArea>;
 export type UserProfile = {
   name: string;
   email?: string;
+  avatar?: string;
   avatarText: string;
   role: string;
+  title?: string;
   isOnboarded: boolean;
   target12Months: string;
   primaryFocusArea: LifeArea;

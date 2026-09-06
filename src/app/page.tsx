@@ -18,9 +18,10 @@ import { AiCoachView } from '@/components/views/AiCoachView';
 import { WeeklyReviewModal } from '@/components/views/WeeklyReviewModal';
 import { OnboardingModal } from '@/components/views/OnboardingModal';
 import { NewGoalModal } from '@/components/views/NewGoalModal';
+import { AuthModal } from '@/components/views/AuthModal';
 
 export default function Home() {
-  const { activeView } = useTrajetta();
+  const { activeView, isAuthModalOpen, setIsAuthModalOpen } = useTrajetta();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -56,6 +57,7 @@ export default function Home() {
       <WeeklyReviewModal />
       <OnboardingModal />
       <NewGoalModal />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 }
