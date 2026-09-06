@@ -1,10 +1,13 @@
+import { prisma } from '../db';
+
 interface SendEmailOptions {
   to: string;
   subject: string;
   html: string;
+  userId?: string;
 }
 
-export async function sendEmail({ to, subject, html }: SendEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+export async function sendEmail({ to, subject, html, userId }: SendEmailOptions): Promise<{ success: boolean; id?: string; error?: string; sandboxForwarded?: boolean }> {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (apiKey) {
@@ -26,23 +29,96 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions): Promis
 
       if (!res.ok) {
         const err = await res.text();
-        console.warn(`[Resend Email Warning]: ${err}`);
+        console.warn(`[Resend Email Warning for ${to}]: ${err}`);
 
-        // In Resend sandbox mode, only verified emails (e.g. account owner) can receive actual delivery
-        // If unverified recipient in sandbox, log cleanly and return simulated delivery so flows don't crash
+        // In Resend sandbox mode, if the recipient is external, Resend rejects with "only send testing emails".
+        // Forward the actual email to the verified owner (companytrajetta@gmail.com) so the founder receives the real email!
         if (err.includes('only send testing emails') || err.includes('validation_error')) {
-          console.log(`ℹ️ [Resend Sandbox Notice]: E-mail direcionado em modo teste para ${to}. ID simulado gerado.`);
-          return { success: true, id: `resend_sandbox_${Date.now()}` };
+          const ownerEmail = 'companytrajetta@gmail.com';
+          const sandboxSubject = `[SANDBOX PARA: ${to}] ${subject}`;
+          const sandboxHtml = `
+            <div style="background-color: #B8FF00; color: #0D0F10; padding: 12px 16px; font-family: monospace; font-size: 11px; font-weight: bold; border-radius: 8px; margin-bottom: 20px;">
+              ⚡ AVISO RESEND SANDBOX: Este e-mail foi entregue à conta titular (${ownerEmail}) porque o domínio oficial ainda está aguardando verificação de DNS no Resend. Destinatário original: ${to}
+            </div>
+            ${html}
+          `;
+
+          const forwardRes = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: [ownerEmail],
+              subject: sandboxSubject,
+              html: sandboxHtml,
+            }),
+          });
+
+          if (forwardRes.ok) {
+            const fData = await forwardRes.json();
+            console.log(`[Resend Sandbox Forwarded]: ID ${fData.id} delivered to owner ${ownerEmail} on behalf of ${to}`);
+            try {
+              await prisma.emailLog.create({
+                data: {
+                  userId: userId || null,
+                  to,
+                  subject,
+                  status: 'sandbox_forwarded',
+                  providerId: fData.id,
+                  error: 'Sandbox mode: encaminhado para titular',
+                }
+              });
+            } catch {}
+            return { success: true, id: fData.id, sandboxForwarded: true };
+          }
         }
+
+        try {
+          await prisma.emailLog.create({
+            data: {
+              userId: userId || null,
+              to,
+              subject,
+              status: 'failed',
+              error: err,
+            }
+          });
+        } catch {}
 
         return { success: false, error: err };
       }
 
       const data = await res.json();
-      console.log(`[Resend Email Sent]: ID ${data.id} to ${to}`);
+      console.log(`[Resend Email Delivered]: ID ${data.id} to ${to}`);
+      try {
+        await prisma.emailLog.create({
+          data: {
+            userId: userId || null,
+            to,
+            subject,
+            status: 'delivered',
+            providerId: data.id,
+          }
+        });
+      } catch {}
+
       return { success: true, id: data.id };
     } catch (e) {
       console.error('[Email Dispatch Error]:', e);
+      try {
+        await prisma.emailLog.create({
+          data: {
+            userId: userId || null,
+            to,
+            subject,
+            status: 'failed',
+            error: String(e),
+          }
+        });
+      } catch {}
       return { success: false, error: String(e) };
     }
   }

@@ -24,6 +24,7 @@ export type GoalMilestone = {
 export type GoalAction = {
   id: string;
   title: string;
+  isControllable?: boolean;
   dayOfWeek?: number;
   completedToday?: boolean;
 };
@@ -38,6 +39,7 @@ export type Goal = {
   targetDate: string;
   progress: number;
   whyItMatters: string;
+  priority?: 'principal' | 'secundaria' | 'manutencao';
   milestones: GoalMilestone[];
   actions: GoalAction[];
 };
@@ -50,6 +52,7 @@ export type Habit = {
   daysCompletedThisWeek: number[]; // 0 = Domingo, 1 = Segunda, ... 6 = Sabado
   targetDescription: string;
   streakWeeks: number;
+  totalCompletedAllTime?: number;
   iconName: string;
 };
 

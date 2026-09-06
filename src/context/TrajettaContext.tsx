@@ -47,6 +47,13 @@ type TrajettaContextType = {
   isNewGoalModalOpen: boolean;
   isAuthModalOpen: boolean;
   isAiPopupOpen: boolean;
+  isRecoveryModalOpen: boolean;
+  isQuickCaptureOpen: boolean;
+  capacityPlanning: {
+    historicalAverageActions: number;
+    recommendedActionMax: number;
+    pastWeeksAnalyzed: number;
+  };
   isAuthenticated: boolean;
   authLoading: boolean;
   login: (userData?: any) => void;
@@ -56,19 +63,19 @@ type TrajettaContextType = {
   toggleGoalMilestone: (goalId: string, milestoneId: string) => void;
   toggleGoalActionToday: (goalId: string, actionId: string) => void;
   updateGoalProgress: (goalId: string, newProgress: number) => void;
-  createGoal: (goalData: Partial<Goal>) => void;
+  createGoal: (goalData: Partial<Goal>) => Promise<void>;
   updateGoal: (goalId: string, patch: Partial<Goal>) => void;
-  deleteGoal: (goalId: string) => void;
-  createHabit: (habitData: Partial<Habit>) => void;
+  deleteGoal: (goalId: string) => Promise<void>;
+  createHabit: (habitData: Partial<Habit>) => Promise<void>;
   updateHabit: (habitId: string, patch: Partial<Habit>) => void;
-  deleteHabit: (habitId: string) => void;
+  deleteHabit: (habitId: string) => Promise<void>;
   createJourney: (journeyData: Partial<Journey>) => void;
   incrementJourneyDay: (journeyId: string) => void;
   recordJourneySlip: (journeyId: string) => void;
   updateWeeklyPriority: (area: LifeArea, text: string) => void;
   completeCurrentWeek: () => void;
-  submitWeeklyReview: (reviewData: Partial<WeeklyReview>) => void;
-  addTimelineEvent: (eventData: Partial<TimelineEvent>) => void;
+  submitWeeklyReview: (reviewData: Partial<WeeklyReview>) => Promise<void>;
+  addTimelineEvent: (eventData: Partial<TimelineEvent>) => Promise<void>;
   completeOnboarding: (data: {
     name: string;
     target12Months: string;
@@ -84,8 +91,11 @@ type TrajettaContextType = {
   setIsNewGoalModalOpen: (open: boolean) => void;
   setIsAuthModalOpen: (open: boolean) => void;
   setIsAiPopupOpen: (open: boolean) => void;
+  setIsRecoveryModalOpen: (open: boolean) => void;
+  setIsQuickCaptureOpen: (open: boolean) => void;
   resetToDemoData: () => void;
   resetToZero: () => void;
+  refreshData: () => Promise<void>;
 };
 
 const TrajettaContext = createContext<TrajettaContextType | undefined>(undefined);
@@ -107,12 +117,107 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   const [isNewGoalModalOpen, setIsNewGoalModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAiPopupOpen, setIsAiPopupOpen] = useState(false);
+  const [isRecoveryModalOpen, setIsRecoveryModalOpen] = useState(false);
+  const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
+  const [capacityPlanning, setCapacityPlanning] = useState({
+    historicalAverageActions: 8,
+    recommendedActionMax: 10,
+    pastWeeksAnalyzed: 0,
+  });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+
+  const loadBackendData = async () => {
+    try {
+      const [goalsRes, habitsRes, weekRes, timelineRes] = await Promise.all([
+        fetch('/api/goals').then((r) => r.json()).catch(() => null),
+        fetch('/api/habits').then((r) => r.json()).catch(() => null),
+        fetch('/api/week').then((r) => r.json()).catch(() => null),
+        fetch('/api/timeline').then((r) => r.json()).catch(() => null),
+      ]);
+
+      if (goalsRes?.ok && Array.isArray(goalsRes.goals) && goalsRes.goals.length > 0) {
+        setGoals(goalsRes.goals.map((g: any) => ({
+          id: g.id,
+          title: g.title,
+          description: g.whyItMatters || '',
+          lifeArea: g.area,
+          status: g.status,
+          startDate: g.createdAt ? g.createdAt.split('T')[0] : '2026-01-01',
+          targetDate: g.targetDate || '2026-12-31',
+          progress: g.progress || 0,
+          whyItMatters: g.whyItMatters || '',
+          priority: g.priority || 'principal',
+          milestones: (g.milestones || []).map((m: any) => ({
+            id: m.id,
+            title: m.title,
+            targetValue: m.targetValue,
+            completed: Boolean(m.completed),
+            order: m.order || 0,
+          })),
+          actions: (g.actions || []).map((a: any) => ({
+            id: a.id,
+            title: a.title,
+            isControllable: a.isControllable !== false,
+            dayOfWeek: a.dayOfWeek,
+            completedToday: Boolean(a.completedToday),
+          })),
+        })));
+      }
+
+      if (habitsRes?.ok && Array.isArray(habitsRes.habits) && habitsRes.habits.length > 0) {
+        setHabits(habitsRes.habits.map((h: any) => ({
+          id: h.id,
+          title: h.name || h.title,
+          lifeArea: h.area || h.lifeArea,
+          frequencyPerWeek: h.frequencyPerWeek || 4,
+          daysCompletedThisWeek: h.daysCompletedThisWeek || [],
+          targetDescription: h.targetDescription || h.targetValue || `${h.frequencyPerWeek || 4}x por semana`,
+          streakWeeks: h.streakWeeks || 0,
+          totalCompletedAllTime: h.totalCompletedAllTime || 0,
+          iconName: h.iconName || 'Repeat',
+        })));
+      }
+
+      if (weekRes?.ok && weekRes.plan) {
+        setWeeklyPlan((prev) => ({
+          ...prev,
+          weekNumber: weekRes.plan.weekNumber,
+          year: weekRes.plan.year,
+          northStarGoal: weekRes.plan.northStarGoal || prev.northStarGoal,
+          areaPriorities: weekRes.plan.areaPriorities || prev.areaPriorities,
+          isCompleted: Boolean(weekRes.plan.isCompleted),
+          perceivedCapacity: weekRes.plan.perceivedCapacity || 'normal',
+          weekIntention: weekRes.plan.weekIntention || prev.weekIntention,
+        }));
+        if (weekRes.capacityPlanning) {
+          setCapacityPlanning(weekRes.capacityPlanning);
+        }
+      }
+
+      if (timelineRes?.ok && Array.isArray(timelineRes.timeline) && timelineRes.timeline.length > 0) {
+        setTimeline(timelineRes.timeline);
+      }
+    } catch (e) {
+      console.warn('Backend sync notice:', e);
+    }
+  };
 
   // Check backend session on mount
   useEffect(() => {
     let isMounted = true;
+
+    // Check last visit for Recovery Mode (10+ days of absence)
+    const lastVisit = localStorage.getItem('trajetta_last_visit');
+    const nowStr = new Date().toISOString().split('T')[0];
+    if (lastVisit) {
+      const diffDays = Math.round((new Date(nowStr).getTime() - new Date(lastVisit).getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays >= 10) {
+        setIsRecoveryModalOpen(true);
+      }
+    }
+    localStorage.setItem('trajetta_last_visit', nowStr);
+
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
@@ -128,6 +233,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
             avatar: data.user.avatar || prev.avatar,
             role: data.user.role || prev.role || 'USER',
           }));
+          loadBackendData();
         } else {
           // Backend expressly rejected or has no active session: strictly lock out!
           localStorage.removeItem('trajetta_auth_session');
@@ -265,62 +371,119 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   const todayIndex = new Date().getDay();
 
   const toggleHabitToday = (habitId: string) => {
+    let isNowCompleted = false;
     setHabits(prev =>
       prev.map(h => {
         if (h.id !== habitId) return h;
         const exists = h.daysCompletedThisWeek.includes(todayIndex);
+        isNowCompleted = !exists;
         const newDays = exists
           ? h.daysCompletedThisWeek.filter(d => d !== todayIndex)
           : [...h.daysCompletedThisWeek, todayIndex];
         return {
           ...h,
           daysCompletedThisWeek: newDays,
+          totalCompletedAllTime: (h.totalCompletedAllTime || 0) + (exists ? -1 : 1)
         };
       })
     );
+
+    // Sync with backend API (creates HabitLog & ActivityEvent)
+    fetch('/api/habits/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        habitId,
+        date: new Date().toISOString().split('T')[0],
+        completed: isNowCompleted
+      })
+    }).catch(() => {});
   };
 
   const toggleGoalMilestone = (goalId: string, milestoneId: string) => {
+    let isNowCompleted = false;
+    let computedProgress = 0;
+
     setGoals(prev =>
       prev.map(g => {
         if (g.id !== goalId) return g;
-        const updatedMilestones = g.milestones.map(m =>
-          m.id === milestoneId ? { ...m, completed: !m.completed } : m
-        );
+        const updatedMilestones = g.milestones.map(m => {
+          if (m.id === milestoneId) {
+            isNowCompleted = !m.completed;
+            return { ...m, completed: isNowCompleted };
+          }
+          return m;
+        });
         const total = updatedMilestones.length;
         const done = updatedMilestones.filter(m => m.completed).length;
-        const newProgress = total > 0 ? Math.round((done / total) * 100) : g.progress;
+        computedProgress = total > 0 ? Math.round((done / total) * 100) : g.progress;
         return {
           ...g,
           milestones: updatedMilestones,
-          progress: newProgress,
-          status: newProgress === 100 ? 'completed' : 'active',
+          progress: computedProgress,
+          status: computedProgress === 100 ? 'completed' : 'active',
         };
       })
     );
+
+    // Sync with backend API
+    fetch('/api/goals', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        goalId,
+        milestoneId,
+        completed: isNowCompleted,
+        progress: computedProgress
+      })
+    }).catch(() => {});
   };
 
   const toggleGoalActionToday = (goalId: string, actionId: string) => {
+    let isNowCompleted = false;
+
     setGoals(prev =>
       prev.map(g => {
         if (g.id !== goalId) return g;
         return {
           ...g,
-          actions: g.actions.map(a =>
-            a.id === actionId ? { ...a, completedToday: !a.completedToday } : a
-          ),
+          actions: g.actions.map(a => {
+            if (a.id === actionId) {
+              isNowCompleted = !a.completedToday;
+              return { ...a, completedToday: isNowCompleted };
+            }
+            return a;
+          }),
         };
       })
     );
+
+    // Sync with backend API
+    fetch('/api/goals', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        goalId,
+        actionId,
+        completed: isNowCompleted
+      })
+    }).catch(() => {});
   };
 
   const updateGoalProgress = (goalId: string, newProgress: number) => {
+    const clamped = Math.min(100, Math.max(0, newProgress));
     setGoals(prev =>
-      prev.map(g => (g.id === goalId ? { ...g, progress: Math.min(100, Math.max(0, newProgress)) } : g))
+      prev.map(g => (g.id === goalId ? { ...g, progress: clamped } : g))
     );
+
+    fetch('/api/goals', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ goalId, progress: clamped })
+    }).catch(() => {});
   };
 
-  const createGoal = (goalData: Partial<Goal>) => {
+  const createGoal = async (goalData: Partial<Goal>) => {
     const newId = 'goal-' + Date.now();
     const newGoal: Goal = {
       id: newId,
@@ -332,35 +495,63 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       targetDate: goalData.targetDate || '2026-12-31',
       progress: 0,
       whyItMatters: goalData.whyItMatters || 'Porque faz parte da trajetória que quero construir.',
+      priority: goalData.priority || 'principal',
       milestones: goalData.milestones || [
         { id: newId + '-m1', title: 'Primeiro marco de avanço', completed: false, order: 1 },
         { id: newId + '-m2', title: 'Segundo marco de consolidação', completed: false, order: 2 },
       ],
       actions: goalData.actions || [
-        { id: newId + '-a1', title: 'Primeira ação de consistência', completedToday: false },
+        { id: newId + '-a1', title: 'Primeira ação de consistência', isControllable: true, completedToday: false },
       ],
     };
     setGoals(prev => [newGoal, ...prev]);
 
-    // Log timeline event
-    addTimelineEvent({
-      title: `Nova meta definida: ${newGoal.title}`,
-      description: newGoal.whyItMatters,
-      type: 'goal_created',
-      lifeArea: newGoal.lifeArea,
-      tag: 'Meta Criada',
-    });
+    // Sync with backend
+    try {
+      const res = await fetch('/api/goals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newGoal.title,
+          area: newGoal.lifeArea,
+          whyItMatters: newGoal.whyItMatters,
+          priority: newGoal.priority,
+          targetDate: newGoal.targetDate,
+          milestones: newGoal.milestones,
+          actions: newGoal.actions
+        })
+      });
+      const data = await res.json();
+      if (data.ok && data.goal) {
+        setGoals(prev => prev.map(g => g.id === newId ? {
+          ...g,
+          id: data.goal.id,
+          milestones: data.goal.milestones || g.milestones,
+          actions: data.goal.actions || g.actions
+        } : g));
+      }
+    } catch (e) {
+      console.warn('Backend goal creation notice:', e);
+    }
   };
 
   const updateGoal = (goalId: string, patch: Partial<Goal>) => {
     setGoals(prev => prev.map(g => (g.id === goalId ? { ...g, ...patch } : g)));
+    fetch('/api/goals', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ goalId, ...patch })
+    }).catch(() => {});
   };
 
-  const deleteGoal = (goalId: string) => {
+  const deleteGoal = async (goalId: string) => {
     setGoals(prev => prev.filter(g => g.id !== goalId));
+    try {
+      await fetch(`/api/goals?id=${encodeURIComponent(goalId)}`, { method: 'DELETE' });
+    } catch {}
   };
 
-  const createHabit = (habitData: Partial<Habit>) => {
+  const createHabit = async (habitData: Partial<Habit>) => {
     const newId = 'habit-' + Date.now();
     const newHabit: Habit = {
       id: newId,
@@ -370,17 +561,40 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       daysCompletedThisWeek: [],
       targetDescription: habitData.targetDescription || `${habitData.frequencyPerWeek || 4}x por semana`,
       streakWeeks: 0,
+      totalCompletedAllTime: 0,
       iconName: habitData.iconName || 'CheckCircle',
     };
     setHabits(prev => [...prev, newHabit]);
+
+    try {
+      const res = await fetch('/api/habits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newHabit)
+      });
+      const data = await res.json();
+      if (data.ok && data.habit) {
+        setHabits(prev => prev.map(h => h.id === newId ? data.habit : h));
+      }
+    } catch (e) {
+      console.warn('Backend habit creation notice:', e);
+    }
   };
 
   const updateHabit = (habitId: string, patch: Partial<Habit>) => {
     setHabits(prev => prev.map(h => (h.id === habitId ? { ...h, ...patch } : h)));
+    fetch('/api/habits', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: habitId, ...patch })
+    }).catch(() => {});
   };
 
-  const deleteHabit = (habitId: string) => {
+  const deleteHabit = async (habitId: string) => {
     setHabits(prev => prev.filter(h => h.id !== habitId));
+    try {
+      await fetch(`/api/habits?id=${encodeURIComponent(habitId)}`, { method: 'DELETE' });
+    } catch {}
   };
 
   const createJourney = (journeyData: Partial<Journey>) => {
@@ -427,13 +641,25 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateWeeklyPriority = (area: LifeArea, text: string) => {
+    const newPriorities = {
+      ...weeklyPlan.areaPriorities,
+      [area]: text,
+    };
     setWeeklyPlan(prev => ({
       ...prev,
-      areaPriorities: {
-        ...prev.areaPriorities,
-        [area]: text,
-      },
+      areaPriorities: newPriorities,
     }));
+
+    fetch('/api/week', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        areaPriorities: newPriorities,
+        northStarGoal: weeklyPlan.northStarGoal,
+        weekIntention: weeklyPlan.weekIntention,
+        perceivedCapacity: weeklyPlan.perceivedCapacity
+      })
+    }).catch(() => {});
   };
 
   const completeCurrentWeek = () => {
@@ -465,7 +691,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const submitWeeklyReview = (reviewData: Partial<WeeklyReview>) => {
+  const submitWeeklyReview = async (reviewData: Partial<WeeklyReview>) => {
     const newReview: WeeklyReview = {
       id: 'rev-' + Date.now(),
       weekNumber: weeklyPlan.weekNumber,
@@ -485,9 +711,32 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     };
     setWeeklyReviews(prev => [newReview, ...prev]);
     completeCurrentWeek();
+
+    // Persist in backend with immutable WeeklySnapshot & ActivityEvent
+    try {
+      await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          weekNumber: weeklyPlan.weekNumber,
+          year: weeklyPlan.year,
+          wins: reviewData.reflectionWhatAdvanced,
+          challenges: reviewData.reflectionWhatDistracted,
+          aiReflection: reviewData.aiReflection,
+          actionsPlanned: 10,
+          actionsCompleted: reviewData.advancedGoalsCount || 7,
+          habitsRate: reviewData.habitsRate,
+          topArea: reviewData.topArea,
+          neglectedArea: reviewData.neglectedArea,
+          reflectionNextWeekAdjustment: reviewData.reflectionNextWeekAdjustment
+        })
+      });
+    } catch (e) {
+      console.warn('Backend review persistence notice:', e);
+    }
   };
 
-  const addTimelineEvent = (eventData: Partial<TimelineEvent>) => {
+  const addTimelineEvent = async (eventData: Partial<TimelineEvent>) => {
     const now = new Date();
     const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     const newEvent: TimelineEvent = {
@@ -502,6 +751,19 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       tag: eventData.tag || 'Registro',
     };
     setTimeline(prev => [newEvent, ...prev]);
+
+    try {
+      await fetch('/api/timeline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newEvent.title,
+          description: newEvent.description,
+          lifeArea: newEvent.lifeArea,
+          date: newEvent.date
+        })
+      });
+    } catch {}
   };
 
   const completeOnboarding = (data: {
@@ -703,12 +965,18 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setIsAuthModalOpen,
       isAiPopupOpen,
       setIsAiPopupOpen,
+      isRecoveryModalOpen,
+      setIsRecoveryModalOpen,
+      isQuickCaptureOpen,
+      setIsQuickCaptureOpen,
+      capacityPlanning,
       isAuthenticated,
       authLoading,
       login,
       logout,
       resetToDemoData,
       resetToZero,
+      refreshData: loadBackendData,
     }),
     [
       user,
@@ -725,6 +993,9 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       isNewGoalModalOpen,
       isAuthModalOpen,
       isAiPopupOpen,
+      isRecoveryModalOpen,
+      isQuickCaptureOpen,
+      capacityPlanning,
       isAuthenticated,
       authLoading,
     ]

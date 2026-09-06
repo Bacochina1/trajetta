@@ -53,9 +53,12 @@ function calculateFreshness(date: Date): number {
 }
 
 export const memoryService = {
-  async getMemories(userId: string, category?: MemoryCategory) {
+  async getMemories(userId: string, category?: MemoryCategory, includeAllStates = false) {
     try {
       const where: Record<string, unknown> = { userId };
+      if (!includeAllStates) {
+        where.state = 'active';
+      }
       if (category) where.memoryType = category;
 
       return await prisma.userMemory.findMany({
@@ -80,6 +83,24 @@ export const memoryService = {
     }
   ) {
     try {
+      // Check if there is an existing memory that should be superseded
+      const existing = await prisma.userMemory.findMany({
+        where: { userId, memoryType: data.memoryType, state: 'active' }
+      });
+
+      let supersededId: string | null = null;
+      for (const ex of existing) {
+        const similarity = calculateTextSimilarity(data.content, ex.content);
+        if (similarity > 0.6) {
+          await prisma.userMemory.update({
+            where: { id: ex.id },
+            data: { state: 'superseded' }
+          });
+          supersededId = ex.id;
+          break;
+        }
+      }
+
       return await prisma.userMemory.create({
         data: {
           userId,
@@ -89,6 +110,8 @@ export const memoryService = {
           confidence: data.confidence ?? 0.8,
           source: data.source ?? 'user_input',
           sourceId: data.sourceId,
+          state: 'active',
+          supersededById: supersededId,
         },
       });
     } catch (e) {
@@ -201,6 +224,7 @@ export const memoryService = {
     const [goals, habits, lastReview] = await Promise.all([
       prisma.goal.findMany({
         where: { userId },
+        include: { milestones: true },
         take: 5,
         orderBy: { updatedAt: 'desc' },
       }).catch(() => []),
@@ -216,15 +240,10 @@ export const memoryService = {
     ]);
 
     const structuredGoals = goals.map(g => {
-      let progress = 50;
-      try {
-        const milestones = JSON.parse(g.milestones || '[]');
-        if (milestones.length > 0) {
-          const completed = milestones.filter((m: { completed?: boolean }) => m.completed).length;
-          progress = Math.round((completed / milestones.length) * 100);
-        }
-      } catch {
-        // ignore
+      let progress = g.progress ?? 0;
+      if (g.milestones && g.milestones.length > 0) {
+        const completed = g.milestones.filter((m) => m.completed).length;
+        progress = Math.round((completed / g.milestones.length) * 100);
       }
       return {
         title: g.title,

@@ -8,12 +8,12 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS, NORTH_STAR_DESCRIPTION } from '@/lib/constants';
 import { LifeArea } from '@/types';
 import { DAY_NAMES, DAY_INITIALS } from '@/lib/utils';
-import { CalendarCheck, CheckCircle2, TrendingUp, Edit3, Check, Share2 } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, TrendingUp, Edit3, Check, Share2, Scale, Feather } from 'lucide-react';
 import { ShareCardModal } from '@/components/ui/ShareCardModal';
 import { ShareCardData } from '@/lib/shareCardGenerator';
 
 export function WeekView() {
-  const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits, lifeScore } = useTrajetta();
+  const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits, goals, lifeScore, capacityPlanning } = useTrajetta();
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [editingArea, setEditingArea] = useState<LifeArea | null>(null);
   const [editText, setEditText] = useState('');
@@ -50,6 +50,18 @@ export function WeekView() {
   };
 
   const areas: LifeArea[] = ['corpo', 'dinheiro', 'carreira', 'vida'];
+
+  const totalActionsFromGoals = goals.reduce((acc, g) => acc + (g.actions?.length || 0), 0);
+  const totalHabitsTarget = habits.reduce((acc, h) => acc + (h.frequencyPerWeek || 4), 0);
+  const totalPlannedActions = totalActionsFromGoals + totalHabitsTarget;
+  const recommendedMax = capacityPlanning?.recommendedActionMax || 14;
+  const isOverloaded = totalPlannedActions > recommendedMax;
+
+  const handleSimplifyWeek = () => {
+    updateWeeklyPriority('corpo', 'Foco no essencial');
+    updateWeeklyPriority('vida', 'Descanso e recuperação');
+    setCapacity('leve');
+  };
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto pb-16">
@@ -93,6 +105,33 @@ export function WeekView() {
           </Button>
         </div>
       </div>
+
+      {/* Capacity Planning Warning */}
+      {isOverloaded && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#1E1715] to-[#171A1D] border border-[#F08A76]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#F08A76]/15 border border-[#F08A76]/30 flex items-center justify-center text-[#F08A76] flex-shrink-0 mt-0.5">
+              <Scale size={18} />
+            </div>
+            <div className="space-y-0.5">
+              <h4 className="text-sm font-bold text-[#F2F1ED] flex items-center gap-2">
+                <span>Capacity Planning: Semana Acima do Ritmo</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F08A76]/20 text-[#F08A76] font-bold uppercase">Carga Elevada</span>
+              </h4>
+              <p className="text-xs text-[#8E9499] leading-relaxed">
+                Você planejou <strong className="text-white">{totalPlannedActions} ações</strong> esta semana, enquanto seu ritmo sustentável é de <strong className="text-[#B8FF00]">{capacityPlanning?.historicalAverageActions || 8} ações</strong>. Que tal focar apenas no essencial?
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={handleSimplifyWeek}
+            className="px-3.5 py-2 rounded-xl bg-[#B8FF00]/10 hover:bg-[#B8FF00]/20 border border-[#B8FF00]/40 text-[#B8FF00] font-bold text-xs whitespace-nowrap transition-all flex items-center gap-1.5 self-end sm:self-center"
+          >
+            <Feather size={14} />
+            <span>Simplificar minha semana</span>
+          </button>
+        </div>
+      )}
 
       {/* North Star Metric Hero Card */}
       <div className="trajetta-card p-4 sm:p-8 bg-gradient-to-br from-[#171A1D] via-[#14171A] to-[#0E1012] border-[#B8FF00]/30 relative overflow-hidden">
