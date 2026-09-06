@@ -340,7 +340,7 @@ export function WeekView() {
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
         data={{
-          userName: user.name || 'Matheus Bacochina',
+          userName: user.name || 'Explorador',
           overallScore: Math.round(
             (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
           ),

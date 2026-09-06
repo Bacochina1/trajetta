@@ -177,7 +177,12 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   // Load from LocalStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('trajetta_store_v1');
+      // Purge legacy storage key if present
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('trajetta_store_v1');
+      }
+
+      const saved = localStorage.getItem('trajetta_store_v2');
       if (saved) {
         const parsed = JSON.parse(saved);
 
@@ -216,7 +221,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
           if (parsed.lifeScore) setLifeScore(parsed.lifeScore);
         }
       } else {
-        // No saved state in this browser: trigger fresh onboarding with empty data!
+        // No v2 saved state in this browser: trigger fresh onboarding with empty data!
         setGoals([]);
         setHabits([]);
         setJourneys([]);
@@ -248,7 +253,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         timeline,
         lifeScore,
       };
-      localStorage.setItem('trajetta_store_v1', JSON.stringify(dataToSave));
+      localStorage.setItem('trajetta_store_v2', JSON.stringify(dataToSave));
     } catch (e) {
       console.warn('Could not save to localStorage', e);
     }
@@ -474,7 +479,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       reflectionNextWeekAdjustment: reviewData.reflectionNextWeekAdjustment || '',
       aiReflection:
         reviewData.aiReflection ||
-        'Seu ritmo nesta semana mostrou forte consistência no corpo. Você compensou os dias pesados de trabalho mantendo os treinos curtos. Para a próxima semana, priorize reservar o aporte financeiro logo na segunda-feira para não deixar para o final do mês.',
+        `Sua reflexão da semana ${weeklyPlan.weekNumber} foi consolidada com sucesso. O ponto central é sustentar os hábitos fundamentais com calma e proteger os momentos de recuperação.`,
     };
     setWeeklyReviews(prev => [newReview, ...prev]);
     completeCurrentWeek();
@@ -615,7 +620,10 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetToZero = () => {
-    localStorage.removeItem('trajetta_store_v1');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('trajetta_store_v2');
+      localStorage.removeItem('trajetta_store_v1');
+    }
     const freshUser: UserProfile = {
       name: '',
       avatarText: 'T',
@@ -645,7 +653,10 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     setWeeklyReviews([]);
     setTimeline(DEMO_TIMELINE);
     setLifeScore(INITIAL_LIFE_SCORE);
-    localStorage.removeItem('trajetta_store_v1');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('trajetta_store_v2');
+      localStorage.removeItem('trajetta_store_v1');
+    }
   };
 
   const value = useMemo(

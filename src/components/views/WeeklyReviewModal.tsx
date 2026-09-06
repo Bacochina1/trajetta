@@ -26,8 +26,16 @@ export function WeeklyReviewModal() {
   const totalHabitTargets = habits.reduce((acc, h) => acc + h.frequencyPerWeek, 0);
   const habitRate = totalHabitTargets > 0 ? Math.min(100, Math.round((totalHabitLogs / totalHabitTargets) * 100)) : 85;
 
-  const topArea: LifeArea = 'corpo';
-  const neglectedArea: LifeArea = 'dinheiro';
+  const areaLogs: Record<LifeArea, number> = { corpo: 0, dinheiro: 0, carreira: 0, vida: 0 };
+  habits.forEach(h => {
+    areaLogs[h.lifeArea] = (areaLogs[h.lifeArea] || 0) + h.daysCompletedThisWeek.length;
+  });
+
+  const sortedAreas = (['corpo', 'dinheiro', 'carreira', 'vida'] as LifeArea[]).sort(
+    (a, b) => (areaLogs[b] || 0) - (areaLogs[a] || 0)
+  );
+  const topArea: LifeArea = sortedAreas[0] || (user.primaryFocusArea as LifeArea) || 'corpo';
+  const neglectedArea: LifeArea = sortedAreas[sortedAreas.length - 1] || 'vida';
 
   const handleFinish = async () => {
     let reflection = `Você avançou consistentemente esta semana com foco destacado em ${LIFE_AREAS[topArea].label}. O ponto de atenção é ${LIFE_AREAS[neglectedArea].label}, onde o compromisso semanal pede prioridade matinal.`;

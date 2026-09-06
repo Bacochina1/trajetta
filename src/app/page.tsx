@@ -125,12 +125,12 @@ export default function LandingPage() {
     {
       title: 'Corpo & Saúde',
       area: 'corpo',
-      headline: 'Sustente constância física sem queimar largada ou viver no tudo-ou-nada.',
-      description: 'Defina metas claras como correr sua primeira prova, bater volume de treino semanal ou regular o sono. Registre o ritmo real da sua rotina.',
+      headline: 'Sustente constância física e vitalidade sem viver no tudo-ou-nada.',
+      description: 'Defina metas claras como construir uma rotina sustentável de treinos, regular o sono e fortalecer sua energia diária. Registre o ritmo real da sua rotina.',
       accent: '#58D6A7',
-      mockupLabel: 'Meta Ativa: Meia Maratona (21 km)',
-      mockupStatus: '48% concluído • 3 treinos esta semana',
-      actionTitle: 'Treino de rodagem leve (6 km)',
+      mockupLabel: 'Meta Ativa: Rotina de Treinos 4x',
+      mockupStatus: '65% concluído • 4 dias consistentes na semana',
+      actionTitle: 'Treino de força e mobilidade',
     },
     {
       title: 'Dinheiro & Finanças',
@@ -448,7 +448,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-2 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/20 text-[#F2F1ED] text-[10.5px]">
                     <span className="text-[9px] font-mono text-[#B8FF00] block mb-0.5">Trajetta Coach:</span>
-                    "Decisão madura, Matheus. Na sua meta de meia maratona, manter 2 a 3 treinos leves preserva 85% do seu condicionamento sem quebrar seu foco na transição para Head de Produto."
+                    "Decisão madura, Matheus. Na sua rotina de saúde física, manter 2 treinos curtos preserva 85% da sua vitalidade sem quebrar seu foco na transição para Head de Produto."
                   </div>
                 </div>
 
@@ -458,7 +458,7 @@ export default function LandingPage() {
                     <button className="hover:text-white" title="Copiar"><Copy size={12} /></button>
                     <button className="hover:text-white" title="Salvar"><Bookmark size={12} /></button>
                   </div>
-                  <span className="text-[9px] font-mono text-[#B8FF00]">RAG Pessoal Ativo</span>
+                  <span className="text-[9px] font-mono text-[#B8FF00]">Memória Ativa</span>
                 </div>
               </div>
             </div>
@@ -487,7 +487,7 @@ export default function LandingPage() {
                 <div className="bg-[#14181f]/95 border border-white/15 px-3 py-2 rounded-xl flex items-center justify-between text-[11px] shadow-lg backdrop-blur-sm">
                   <div className="flex items-center space-x-2 text-neutral-200 truncate mr-2">
                     <Activity size={14} className="text-[#58D6A7] flex-shrink-0" />
-                    <span className="truncate font-mono">Meia Maratona (21k)</span>
+                    <span className="truncate font-mono">Rotina de Treinos 4x</span>
                   </div>
                   <span className="bg-[#58D6A7]/20 text-[#58D6A7] font-semibold text-[10px] px-2.5 py-0.5 rounded-md flex-shrink-0">
                     48%
@@ -814,7 +814,7 @@ export default function LandingPage() {
                 <span className="text-xs font-normal text-neutral-500 font-mono">/mês</span>
               </div>
               <p className="text-xs text-neutral-400 leading-relaxed min-h-[36px] mb-6">
-                A experiência completa com IA que lembra da sua vida, RAG pessoal e capacidade ilimitada.
+                A experiência completa com IA que lembra da sua vida, contexto pessoal integrado e capacidade ilimitada.
               </p>
               <a
                 href="#how-it-works"
@@ -829,7 +829,7 @@ export default function LandingPage() {
               <ul className="space-y-3.5 text-xs text-neutral-300 font-sans">
                 <li className="flex items-center gap-2.5">
                   <Check size={14} className="text-[#B8FF00]" />
-                  <span>IA com Memória Viva & RAG Pessoal</span>
+                  <span>IA com Memória Viva & Contexto Pessoal</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Check size={14} className="text-[#B8FF00]" />

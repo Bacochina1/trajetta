@@ -28,7 +28,7 @@ export function LifeScoreView() {
       : 'Atenção Necessária';
 
   const shareData: ShareCardData = {
-    userName: user?.name || 'Matheus Bacochina',
+    userName: user?.name || 'Explorador',
     overallScore,
     scoreStatus: overallStatus,
     streakDays: 14,

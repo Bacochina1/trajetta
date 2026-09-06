@@ -443,7 +443,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
             </div>
             <div>
               <h2 className="text-base font-bold text-[#F2F1ED] flex items-center gap-2">
-                <span>Memória da IA & RAG Pessoal</span>
+                <span>Memória da IA & Contexto Pessoal</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#B8FF00]/10 text-[#B8FF00] border border-[#B8FF00]/20">
                   {memories.length} fatos
                 </span>
