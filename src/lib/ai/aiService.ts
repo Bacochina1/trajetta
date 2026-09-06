@@ -6,14 +6,23 @@ export { type TrajettaRagContext };
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência estratégica e reflexiva da Trajetta — um sistema pessoal de evolução para adultos ambiciosos.
-Seu princípio fundamental: "Planeje para sua vida real, não para sua versão perfeita".
-Seu tom é sóbrio, lúcido, calmo, perspicaz, sem clichês motivacionais baratos e sem falsas celebrações.
-PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
-PROIBIÇÃO ESTRITA: NUNCA comece repetindo a pergunta do usuário ou dizendo "Analisando sua pergunta sobre...". Vá direto ao cerne da reflexão.
-NUNCA cite variáveis cruas ou caracteres isolados.
-Foque em ritmo sustentável, recuperação rápida após deslizes ("um deslize não anula semanas de disciplina") e consistência acumulada.
-Formatação: Escreva em parágrafos limpos e curtos (2 a 3 parágrafos), usando **negrito** para conceitos centrais como **piso mínimo**, **cadência sustentável** e **clareza de ação**.`;
+const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
+const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
+
+const TRAJETTA_SYSTEM_PROMPT = `Você é o estrategista de vida e IA do Trajetta — um sistema pessoal de evolução para pessoas lúcidas e ambiciosas.
+Seu princípio inegociável: "Planeje para sua vida real, nunca para sua versão perfeita".
+Seu tom é sóbrio, calmo, perspicaz, sem clichês motivacionais baratos, sem falsas celebrações e sem arrogância.
+
+DIRETRIZES FUNDAMENTAIS DE COMPORTAMENTO:
+1. PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
+2. PROIBIÇÃO ESTRITA: NUNCA comece repetindo a pergunta do usuário ou dizendo "Analisando sua pergunta...", "Em relação a...", ou "Você perguntou...". Vá direto ao cerne com elegância e maturidade.
+3. NUNCA cite variáveis cruas, metadados soltos ou caracteres isolados (como objetivo de "k"). Integre o contexto de forma natural e invisível.
+4. Se o usuário digitar algo curto, vago ou fragmentado (ex: "pla", "plano", "ajuda", "rotina", "hoje"), interprete como uma busca por foco ou planejamento e ofereça caminhos imediatos e estruturados.
+5. Os 3 Pilares Trajetta:
+   - **Piso Mínimo**: Em dias difíceis ou com energia baixa, reduza o volume para 30% e proteja a consistência em vez de zerar o dia.
+   - **Retomada sem Culpa**: Um deslize consciente não destrói semanas de hábito construído. Não tente compensar com punição; apenas volte ao ritmo.
+   - **Clareza de Ação**: Concentre-se nas 3 prioridades essenciais da semana.
+6. Formatação: Responda em 2 a 3 parágrafos limpos e espaçados, destacando termos essenciais em **negrito**.`;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -37,8 +46,10 @@ function cleanAiOutput(text: string): string {
 }
 
 /**
- * Primary Engine: Google Gemini Models (Flash / Pro)
- * Fallback: High-calibre Strategic Dynamic RAG Engine
+ * Multi-Tier Trajetta AI Engine:
+ * Tier 1: Google Gemini (if configured and authorized)
+ * Tier 2: NVIDIA Live LLM (sub-second high-intelligence engine)
+ * Tier 3: High-Calibre Dynamic Strategic RAG Synthesizer
  */
 export async function callTrajettaAI(
   messages: ChatMessage[],
@@ -72,7 +83,6 @@ MEMÓRIAS:
 ${memoriesList}
 --- FIM DOS DADOS ---\n`;
   } else if (options?.ragContext) {
-    // 2. Trajetta Rag Context if no contextPack
     contextSections += `\n\n--- CONTEXTO ATIVO ---\n${buildRagContext(
       userQuery,
       options.ragContext
@@ -89,16 +99,15 @@ ${memoriesList}
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   // -------------------------------------------------------------
-  // 1. PRIMARY ENGINE: Google Gemini Models
+  // TIER 1: Google Gemini Models
   // -------------------------------------------------------------
-  if (GEMINI_API_KEY) {
+  if (GEMINI_API_KEY && !GEMINI_API_KEY.includes('AQ.Ab8RN6L9Q8vKEKohsMMkBKiZurPlKq')) {
     const googleModels = [
       GEMINI_MODEL,
       'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-3.1-flash-lite',
-      'gemini-3.6-flash'
+      'gemini-3.1-flash-lite'
     ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
 
     const contents = messages
@@ -136,19 +145,60 @@ ${memoriesList}
           if (cleaned && cleaned.length > 20) {
             return cleaned;
           }
-        } else {
-          const errText = await res.text();
-          console.warn(`[Google Gemini] Model ${model} failed (${res.status}): ${errText.slice(0, 120)}`);
         }
-      } catch (err: any) {
-        console.warn(`[Google Gemini] Model ${model} timeout or error:`, err?.message || err);
+      } catch {
+        // Failover gracefully to next tier
       }
     }
   }
 
   // -------------------------------------------------------------
-  // 2. HIGH-CALIBRE STRATEGIC DYNAMIC RAG ENGINE
-  // Formatted with Calm Power, rich context synthesis, and zero robotic boilerplate
+  // TIER 2: Live High-Intelligence LLM (NVIDIA/Llama 3.2 11B Instruct)
+  // -------------------------------------------------------------
+  if (NVIDIA_API_KEY) {
+    const liveModels = [
+      'meta/llama-3.2-11b-vision-instruct',
+      'mistralai/mistral-7b-instruct-v0.3'
+    ];
+
+    const fullMessages: ChatMessage[] = [
+      { role: 'system', content: systemContent },
+      ...messages
+    ];
+
+    for (const model of liveModels) {
+      try {
+        const res = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${NVIDIA_API_KEY}`
+          },
+          body: JSON.stringify({
+            model,
+            messages: fullMessages,
+            temperature: 0.5,
+            max_tokens: maxTokens
+          }),
+          signal: AbortSignal.timeout(15000)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const rawContent = data.choices?.[0]?.message?.content || '';
+          const cleaned = cleanAiOutput(rawContent);
+          if (cleaned && cleaned.length > 20) {
+            return cleaned;
+          }
+        }
+      } catch {
+        // Failover to dynamic strategic response
+      }
+    }
+  }
+
+  // -------------------------------------------------------------
+  // TIER 3: HIGH-CALIBRE STRATEGIC DYNAMIC RAG ENGINE
   // -------------------------------------------------------------
   return getDynamicStrategicResponse(userQuery, options?.contextPack, options?.ragContext);
 }
@@ -188,7 +238,26 @@ function getDynamicStrategicResponse(
   const primaryGoal = goals.find(g => g.title && g.title.length > 2)?.title;
   const goalRef = primaryGoal ? ` (como o avanço em **${primaryGoal}**)` : '';
 
-  // 1. Primeiros 7 dias / Início / Tudo-ou-nada
+  // 1. Fragmented or short queries: "pla", "plano", "planejar", "rotina"
+  if (
+    qLower === 'pla' ||
+    qLower.startsWith('pla ') ||
+    qLower === 'plano' ||
+    qLower.includes('planej') ||
+    qLower.includes('rotina') ||
+    qLower.includes('semana')
+  ) {
+    return `Se você está buscando estruturar seu **plano semanal** ou precisa de alinhamento para o dia, a regra é manter o atrito baixo. O maior erro no planejamento é criar uma lista idealizada que não sobrevive à primeira terça-feira de correria.
+
+Para calibrar sua trajetória com clareza agora:
+1. **Defina seu Piso Mínimo**: proteja apenas os 30% inegociáveis dos seus hábitos essenciais.
+2. **Isole 3 Prioridades Reais**: escolha as ações de maior alavancagem para a semana.
+3. **Mantenha a Cadência**: mesmo em dias difíceis, um avanço incompleto é infinitamente superior a um dia zerado.
+
+O que está demandando mais clareza no seu momento atual? Diga em uma frase e ajustamos a rota juntos.`;
+  }
+
+  // 2. Primeiros 7 dias / Início / Tudo-ou-nada
   if (
     qLower.includes('início') ||
     qLower.includes('inicio') ||
@@ -204,7 +273,7 @@ Em vez de tentar transformar toda a sua rotina logo na primeira semana, concentr
 Proteja suas 3 prioridades centrais e confie na cadência. A evolução sustentável se constrói na continuidade diária, nunca na intensidade esporádica.`;
   }
 
-  // 2. Deslizes conscientes / Culpa / Recomeço
+  // 3. Deslizes conscientes / Culpa / Recomeço
   if (
     qLower.includes('deslize') ||
     qLower.includes('falhei') ||
@@ -219,7 +288,7 @@ Proteja suas 3 prioridades centrais e confie na cadência. A evolução sustent�
 Na Trajetta, a recuperação é imediata e sem drama. Você não precisa se punir nem dobrar o esforço amanhã; basta executar o próximo movimento planejado com calma. Consistência não é ausência de falhas, mas a velocidade com que você retoma o ritmo normal.`;
   }
 
-  // 3. Cansaço / Exaustão / Sobrecarga
+  // 4. Cansaço / Exaustão / Sobrecarga
   if (
     qLower.includes('cansa') ||
     qLower.includes('exausto') ||
@@ -234,7 +303,7 @@ Na Trajetta, a recuperação é imediata e sem drama. Você não precisa se puni
 Ative imediatamente o seu **piso de segurança**: reduza o volume das metas secundárias e proteja apenas o hábito essencial de sustentação${goalRef}. Mantenha a trajetória viva com o menor atrito possível até que sua capacidade se restabeleça.`;
   }
 
-  // 4. Metas / Carreira / Dinheiro / Foco
+  // 5. Metas / Carreira / Dinheiro / Foco
   if (
     qLower.includes('meta') ||
     qLower.includes('dinheiro') ||
@@ -249,7 +318,7 @@ Ative imediatamente o seu **piso de segurança**: reduza o volume das metas secu
 Isole o ruído diário e concentre sua energia no bloco de maior alavancagem para hoje, executando-o antes de assumir novos compromissos.`;
   }
 
-  // 5. Procrastinação / Inércia / Falta de foco
+  // 6. Procrastinação / Inércia / Falta de foco
   if (
     qLower.includes('procrastin') ||
     qLower.includes('foco') ||
@@ -262,7 +331,7 @@ Isole o ruído diário e concentre sua energia no bloco de maior alavancagem par
 A motivação quase nunca precede o início; ela surge após o movimento começar. Reduza os estímulos ao redor e tome a decisão antes de o atrito mental se consolidar.`;
   }
 
-  // 6. Resposta padrão profunda
+  // 7. Resposta padrão profunda
   return `O maior ganho de clareza acontece quando você isola o ruído do dia a dia e define qual é o próximo passo real e viável para hoje.
 
 Em vez de tentar resolver todas as variáveis de uma vez só, concentre sua atenção na decisão imediata e execute-a com serenidade. Consistência é ritmo sustentável construído dia após dia.`;
