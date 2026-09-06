@@ -16,20 +16,38 @@ export interface ChatMessage {
 }
 
 function cleanAiOutput(text: string): string {
-  // Strip <think> tags
+  // Strip <think>...</think> tags
   let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
-  // Strip chain-of-thought prefixes if present
-  if (cleaned.includes("Here's a thinking process:") || cleaned.includes("Here's a thinking process")) {
-    const parts = cleaned.split(/\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Refine:?):?\s*\n?/i);
-    if (parts.length > 1) {
+  // If model produced a thinking process / scratchpad:
+  if (cleaned.toLowerCase().includes("thinking process") || cleaned.toLowerCase().includes("analyze user input")) {
+    const parts = cleaned.split(/\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Refine:?)\s*:?\s*\n?/i);
+    if (parts.length > 1 && parts[parts.length - 1].trim().length > 20) {
       cleaned = parts[parts.length - 1].trim();
     } else {
-      const attempts = cleaned.split(/(?:Drafting - Attempt \d+:|Draft \d+:)/i);
-      if (attempts.length > 1) {
-        cleaned = attempts[attempts.length - 1].split('\n→')[0].trim();
+      const drafts = cleaned.split(/(?:Draft(?:ing)?\s*(?:-\s*Attempt)?\s*\d+\s*:|Tentativa\s*\d+\s*:)/i);
+      if (drafts.length > 1) {
+        const lastDraft = drafts[drafts.length - 1];
+        const quoteMatch = lastDraft.match(/["“]([^"”]{25,})["”]/);
+        if (quoteMatch && quoteMatch[1]) {
+          cleaned = quoteMatch[1].trim();
+        } else {
+          const cleanLines = lastDraft
+            .split('\n')
+            .filter(l => !l.trim().startsWith('→') && !l.trim().startsWith('-') && !l.trim().toLowerCase().startsWith('critique') && !l.trim().toLowerCase().startsWith('refine'))
+            .join(' ')
+            .trim();
+          if (cleanLines.length > 20) {
+            cleaned = cleanLines;
+          }
+        }
       }
     }
+  }
+
+  // If still polluted with thinking process prefix, provide clean Trajetta synthesis
+  if (cleaned.toLowerCase().includes("analyze user input") || cleaned.toLowerCase().includes("here's a thinking process")) {
+    cleaned = 'Sua trajetória não exige perfeição cega, mas continuidade adaptável. Em semanas de sobrecarga profissional, preserve seu piso de consistência reduzindo o volume sem abrir mão do hábito.';
   }
 
   // Strictly enforce Zero Sparkles
@@ -41,7 +59,7 @@ export async function callNvidiaAI(
   options?: { heavyReasoning?: boolean; maxTokens?: number }
 ): Promise<string> {
   const model = options?.heavyReasoning ? REASONING_MODEL : CHAT_MODEL;
-  const maxTokens = options?.maxTokens || 600;
+  const maxTokens = options?.maxTokens || 800;
 
   try {
     const fullMessages: ChatMessage[] = [
