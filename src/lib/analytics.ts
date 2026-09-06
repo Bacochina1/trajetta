@@ -103,6 +103,7 @@ export function appendUtmToUrl(targetUrl: string): string {
 export type MarketingEventName =
   | 'page_view'
   | 'hero_cta_clicked'
+  | 'cta_clicked'
   | 'secondary_cta_clicked'
   | 'section_viewed'
   | 'pricing_viewed'

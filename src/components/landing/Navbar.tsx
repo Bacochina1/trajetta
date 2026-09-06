@@ -6,122 +6,102 @@ import { Menu, X, ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const handleCtaClick = (ctaName: string) => {
-    trackMarketingEvent('hero_cta_clicked', { location: 'navbar', cta_name: ctaName });
-  };
+  const track = (name: string) =>
+    trackMarketingEvent('cta_clicked', { location: 'navbar', cta_name: name });
+
+  const close = () => setOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-200">
-      {/* Container with backdrop blur */}
-      <div className="bg-[#060709]/85 backdrop-blur-xl border-b border-white/[0.08]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-14 h-16 sm:h-20 flex items-center justify-between">
-          {/* Official White SVG Logo */}
-          <Link 
-            href="/" 
-            className="flex items-center gap-2.5 sm:gap-3 text-white group focus:outline-none flex-shrink-0"
-            aria-label="Trajetta Home"
+    <header className="sticky top-0 z-50 w-full">
+      <div className="bg-[#060709]/90 backdrop-blur-xl border-b border-white/[0.07]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
+
+          {/* Logo lockup */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 flex-shrink-0 group focus:outline-none"
+            aria-label="Trajetta — início"
           >
-            <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center flex-shrink-0">
-              <img
-                src="/trajetta-logo.svg"
-                alt="Trajetta Logo"
-                className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-transform duration-200 group-hover:scale-105"
-              />
-            </div>
-            <span className="font-bold text-[14px] sm:text-[15px] tracking-[0.16em] uppercase text-white select-none">
+            <img
+              src="/trajetta-logo-transparent.png"
+              alt="Trajetta"
+              className="w-7 h-7 object-contain flex-shrink-0 transition-opacity duration-150 group-hover:opacity-80"
+            />
+            <span className="font-bold text-[13px] sm:text-[14px] tracking-[0.14em] uppercase text-white select-none">
               TRAJETTA
             </span>
           </Link>
 
-          {/* Center Nav Links Pill (Desktop only) */}
-          <nav className="hidden md:flex items-center bg-[#151921]/80 backdrop-blur-md rounded-full px-6 py-2.5 border border-white/10 text-[13px] font-medium text-neutral-300 space-x-7 shadow-xl">
-            <a className="hover:text-white transition-colors duration-150" href="#visao">Visão</a>
-            <a className="hover:text-white transition-colors duration-150" href="#ciclos">Ciclos</a>
-            <a className="hover:text-white transition-colors duration-150" href="#areas">4 Áreas</a>
-            <a className="hover:text-white transition-colors duration-150" href="#metodo">O Método</a>
-            <a className="hover:text-[#B8FF00] transition-colors duration-150" href="#waitlist">Lista VIP</a>
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
+            <a href="#visao" className="hover:text-white transition-colors">Visão</a>
+            <a href="#ciclos" className="hover:text-white transition-colors">Ciclos</a>
+            <a href="#areas" className="hover:text-white transition-colors">4 Áreas</a>
+            <a href="#metodo" className="hover:text-white transition-colors">Método</a>
           </nav>
 
-          {/* Right Action: Waitlist CTA & Mobile Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            {/* Waitlist Signup CTA Button */}
+          {/* Right actions */}
+          <div className="flex items-center gap-2 flex-shrink-0">
             <a
               href="#waitlist"
-              onClick={() => handleCtaClick('navbar_waitlist')}
-              className="bg-white hover:bg-neutral-100 active:scale-95 text-black text-[11px] sm:text-xs font-bold tracking-wider uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-150 flex items-center gap-1.5 shadow-md shadow-white/5 flex-shrink-0"
+              onClick={() => track('navbar_waitlist')}
+              className="bg-white hover:bg-neutral-100 active:scale-95 text-black text-[11px] sm:text-[12px] font-bold tracking-[0.1em] uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-150 flex items-center gap-1.5"
             >
-              <span>LISTA VIP</span>
-              <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <span>Lista VIP</span>
+              <ArrowRight className="w-3 h-3" aria-hidden />
             </a>
 
-            {/* Mobile Menu Toggle Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-[#151921] border border-white/10 text-neutral-300 hover:text-white focus:outline-none flex-shrink-0 active:scale-95 transition-transform"
-              aria-label={mobileMenuOpen ? 'Fechar Menu' : 'Abrir Menu'}
+              onClick={() => setOpen(!open)}
+              className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-neutral-300 hover:text-white focus:outline-none active:scale-95 transition-all"
+              aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+              aria-expanded={open}
             >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown Modal */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bg-[#090c10]/98 border-b border-white/10 px-5 py-6 shadow-2xl backdrop-blur-2xl flex flex-col space-y-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-          <a
-            href="#visao"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
-          >
-            <span>Visão de Longo Prazo</span>
-            <span className="text-xs font-mono text-neutral-500">01</span>
-          </a>
-          <a
-            href="#ciclos"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
-          >
-            <span>Ciclos Semanais</span>
-            <span className="text-xs font-mono text-neutral-500">02</span>
-          </a>
-          <a
-            href="#areas"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
-          >
-            <span>As 4 Áreas da Vida</span>
-            <span className="text-xs font-mono text-neutral-500">03</span>
-          </a>
-          <a
-            href="#metodo"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
-          >
-            <span>O Método Sem Punição</span>
-            <span className="text-xs font-mono text-neutral-500">04</span>
-          </a>
-          <a
-            href="#faq"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 flex items-center justify-between"
-          >
-            <span>Perguntas Frequentes</span>
-            <span className="text-xs font-mono text-neutral-500">05</span>
-          </a>
+      {/* Mobile drawer */}
+      {open && (
+        <div
+          className="md:hidden fixed inset-x-0 top-14 z-40 bg-[#07090c]/98 backdrop-blur-2xl border-b border-white/10"
+          role="dialog"
+          aria-label="Menu de navegação"
+        >
+          <nav className="flex flex-col px-5 pt-5 pb-6 gap-0">
+            {[
+              { href: '#visao',    label: 'Visão de Longo Prazo',   n: '01' },
+              { href: '#ciclos',   label: 'Ciclos Semanais',        n: '02' },
+              { href: '#areas',    label: 'As 4 Áreas da Vida',     n: '03' },
+              { href: '#metodo',   label: 'O Método Sem Punição',   n: '04' },
+              { href: '#faq',      label: 'Perguntas Frequentes',   n: '05' },
+            ].map(({ href, label, n }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={close}
+                className="flex items-center justify-between py-3.5 border-b border-white/[0.06] text-sm font-medium text-neutral-300 hover:text-white transition-colors"
+              >
+                <span>{label}</span>
+                <span className="text-[11px] font-mono text-neutral-600">{n}</span>
+              </a>
+            ))}
 
-          <div className="pt-3">
-            <a
-              href="#waitlist"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center bg-white hover:bg-neutral-100 text-black font-bold text-xs uppercase py-3.5 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-white/5 active:scale-95 transition-all"
-            >
-              <span>GARANTIR VAGA NA LISTA VIP</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-          </div>
+            <div className="pt-4">
+              <a
+                href="#waitlist"
+                onClick={() => { track('mobile_nav_waitlist'); close(); }}
+                className="flex items-center justify-center gap-2 w-full bg-white hover:bg-neutral-100 active:scale-95 text-black font-bold text-[12px] tracking-[0.1em] uppercase py-3.5 rounded-full transition-all shadow-lg"
+              >
+                <span>GARANTIR VAGA NA LISTA VIP</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden />
+              </a>
+            </div>
+          </nav>
         </div>
       )}
     </header>

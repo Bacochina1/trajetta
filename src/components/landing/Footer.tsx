@@ -31,9 +31,9 @@ export function Footer() {
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center flex-shrink-0">
                 <img
-                  src="/trajetta-logo.svg"
+                  src="/trajetta-logo-transparent.png"
                   alt="Trajetta Logo"
-                  className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.25)]"
+                  className="w-full h-full object-contain opacity-90"
                 />
               </div>
               <span className="font-bold text-sm tracking-[0.18em] uppercase text-white">TRAJETTA</span>
