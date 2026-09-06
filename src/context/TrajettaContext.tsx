@@ -40,6 +40,7 @@ type TrajettaContextType = {
   isOnboardingOpen: boolean;
   isNewGoalModalOpen: boolean;
   isAuthModalOpen: boolean;
+  isAiPopupOpen: boolean;
   isAuthenticated: boolean;
   authLoading: boolean;
   login: (userData?: any) => void;
@@ -75,6 +76,7 @@ type TrajettaContextType = {
   setIsOnboardingOpen: (open: boolean) => void;
   setIsNewGoalModalOpen: (open: boolean) => void;
   setIsAuthModalOpen: (open: boolean) => void;
+  setIsAiPopupOpen: (open: boolean) => void;
   resetToDemoData: () => void;
   resetToZero: () => void;
 };
@@ -97,6 +99,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isNewGoalModalOpen, setIsNewGoalModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAiPopupOpen, setIsAiPopupOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -610,6 +613,8 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setIsOnboardingOpen,
       setIsNewGoalModalOpen,
       setIsAuthModalOpen,
+      isAiPopupOpen,
+      setIsAiPopupOpen,
       isAuthenticated,
       authLoading,
       login,
@@ -631,6 +636,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       isOnboardingOpen,
       isNewGoalModalOpen,
       isAuthModalOpen,
+      isAiPopupOpen,
       isAuthenticated,
       authLoading,
     ]
