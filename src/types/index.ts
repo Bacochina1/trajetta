@@ -68,6 +68,9 @@ export type Journey = {
   slipDays: number;
   status: JourneyStatus;
   badgeText: string;
+  lastCompletedDate?: string;
+  completedDates?: string[];
+  lastSlipDate?: string;
 };
 
 export type WeeklyPlan = {

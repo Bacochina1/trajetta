@@ -112,4 +112,123 @@ describe('Agent 7: Jornadas / Journeys View, Increments & Compassionate Recovery
     const percent = Math.round((journey.currentDay / journey.totalDays) * 100);
     expect(percent).toBe(50);
   });
+
+  it('should enforce 1 day increment per calendar date and prevent infinite clicking', () => {
+    const today = '2026-09-06';
+    let journey: Journey = {
+      id: 'j-4',
+      title: '21 Dias de Foco & Construção',
+      description: 'Consistência sustentável',
+      lifeArea: 'carreira',
+      totalDays: 21,
+      currentDay: 9,
+      slipDays: 0,
+      status: 'active',
+      badgeText: 'Dia 9 de 21',
+      completedDates: [],
+      lastCompletedDate: undefined,
+    };
+
+    const incrementWithDateCheck = (j: Journey, dateStr: string): Journey => {
+      if (j.lastCompletedDate === dateStr || (j.completedDates || []).includes(dateStr)) {
+        return j; // Blocked: already completed today
+      }
+      const nextDay = Math.min(j.totalDays, j.currentDay + 1);
+      return {
+        ...j,
+        currentDay: nextDay,
+        lastCompletedDate: dateStr,
+        completedDates: [...(j.completedDates || []), dateStr],
+        status: nextDay >= j.totalDays ? 'completed' : 'active',
+      };
+    };
+
+    // First click today -> advances from 9 to 10
+    journey = incrementWithDateCheck(journey, today);
+    expect(journey.currentDay).toBe(10);
+    expect(journey.lastCompletedDate).toBe(today);
+
+    // Spam clicking on the same day -> does NOT advance, remains at 10
+    journey = incrementWithDateCheck(journey, today);
+    journey = incrementWithDateCheck(journey, today);
+    journey = incrementWithDateCheck(journey, today);
+    expect(journey.currentDay).toBe(10);
+  });
+
+  it('should allow undoing today\'s check-in cleanly', () => {
+    const today = '2026-09-06';
+    let journey: Journey = {
+      id: 'j-5',
+      title: '21 Dias de Foco & Construção',
+      description: 'Consistência sustentável',
+      lifeArea: 'carreira',
+      totalDays: 21,
+      currentDay: 10,
+      slipDays: 0,
+      status: 'active',
+      badgeText: 'Dia 10 de 21',
+      completedDates: [today],
+      lastCompletedDate: today,
+    };
+
+    const undoCheckIn = (j: Journey, dateStr: string): Journey => {
+      if (j.lastCompletedDate !== dateStr && !(j.completedDates || []).includes(dateStr)) {
+        return j;
+      }
+      const updatedDates = (j.completedDates || []).filter(d => d !== dateStr);
+      return {
+        ...j,
+        currentDay: Math.max(0, j.currentDay - 1),
+        lastCompletedDate: updatedDates.length > 0 ? updatedDates[updatedDates.length - 1] : undefined,
+        completedDates: updatedDates,
+        status: 'active',
+      };
+    };
+
+    // Undo today's completion
+    journey = undoCheckIn(journey, today);
+    expect(journey.currentDay).toBe(9);
+    expect(journey.lastCompletedDate).toBeUndefined();
+    expect(journey.completedDates).toEqual([]);
+  });
+
+  it('should toggle slip on same calendar day without accumulating infinite slips', () => {
+    const today = '2026-09-06';
+    let journey: Journey = {
+      id: 'j-6',
+      title: '21 Dias de Foco & Construção',
+      description: 'Consistência sustentável',
+      lifeArea: 'carreira',
+      totalDays: 21,
+      currentDay: 9,
+      slipDays: 0,
+      status: 'active',
+      badgeText: 'Dia 9 de 21',
+    };
+
+    const toggleSlip = (j: Journey, dateStr: string): Journey => {
+      if (j.lastSlipDate === dateStr) {
+        return {
+          ...j,
+          slipDays: Math.max(0, j.slipDays - 1),
+          lastSlipDate: undefined,
+        };
+      }
+      return {
+        ...j,
+        slipDays: j.slipDays + 1,
+        lastSlipDate: dateStr,
+      };
+    };
+
+    // First click: records 1 slip
+    journey = toggleSlip(journey, today);
+    expect(journey.slipDays).toBe(1);
+    expect(journey.lastSlipDate).toBe(today);
+
+    // Second click on same day: undoes the slip back to 0
+    journey = toggleSlip(journey, today);
+    expect(journey.slipDays).toBe(0);
+    expect(journey.lastSlipDate).toBeUndefined();
+  });
 });

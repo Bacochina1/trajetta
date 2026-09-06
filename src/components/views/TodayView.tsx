@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2 } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2, RotateCcw } from 'lucide-react';
 import { ShareCardModal } from '@/components/ui/ShareCardModal';
 import { LIFE_AREAS } from '@/lib/constants';
 
@@ -18,6 +18,7 @@ export function TodayView() {
     toggleGoalActionToday,
     journeys,
     incrementJourneyDay,
+    undoJourneyDay,
     setActiveView,
     setIsNewGoalModalOpen,
     lifeScore,
@@ -42,8 +43,15 @@ export function TodayView() {
   const completedMovements = todayHabitsDone + goalActionsDone;
   const movementPercentage = totalMovements > 0 ? Math.round((completedMovements / totalMovements) * 100) : 0;
 
-  // Active primary journey
-  const activeJourney = journeys[0];
+  // Active primary journey (prefer active over completed)
+  const activeJourney = journeys.find(j => j.status === 'active') || journeys[0];
+  const todayStr = new Date().toISOString().split('T')[0];
+  const isJourneyCompletedToday = activeJourney
+    ? activeJourney.lastCompletedDate === todayStr || (activeJourney.completedDates || []).includes(todayStr)
+    : false;
+  const isJourneyFinished = activeJourney
+    ? activeJourney.status === 'completed' || activeJourney.currentDay >= activeJourney.totalDays
+    : false;
 
   const handleSaveNote = () => {
     if (!dailyNote.trim()) return;
@@ -283,22 +291,67 @@ export function TodayView() {
               {/* Compassionate Recovery Note */}
               <div className="mt-3.5 p-2.5 rounded-xl bg-white/5 border border-white/8 text-[11px] text-[#8E9499] flex items-center justify-between">
                 <span>
-                  {activeJourney.currentDay} dias construídos · {activeJourney.slipDays} deslize
+                  {activeJourney.currentDay} dias construídos · {activeJourney.slipDays} {activeJourney.slipDays === 1 ? 'deslize' : 'deslizes'}
                 </span>
                 <span className="text-[#B8FF00] font-semibold text-[10px]">
-                  Trajetória continua viva
+                  {isJourneyFinished
+                    ? '🏆 Desafio Concluído'
+                    : isJourneyCompletedToday
+                    ? '✓ Check-in de hoje feito'
+                    : 'Trajetória continua viva'}
                 </span>
               </div>
 
-              <div className="mt-4 flex gap-2">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => incrementJourneyDay(activeJourney.id)}
-                  className="w-full text-xs"
-                >
-                  <Check size={13} /> Marcar Dia Concluído
-                </Button>
+              <div className="mt-4">
+                {isJourneyFinished ? (
+                  <div className="space-y-1.5">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled
+                      className="w-full text-xs bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] font-medium cursor-default flex items-center justify-center gap-1.5"
+                    >
+                      🏆 100% dos Dias Concluídos
+                    </Button>
+                    <p className="text-[10px] text-center text-[#8E9499]">
+                      Você finalizou todos os {activeJourney.totalDays} dias desta jornada com consistência.
+                    </p>
+                  </div>
+                ) : isJourneyCompletedToday ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled
+                        className="flex-1 text-xs bg-white/5 border border-white/10 text-[#F2F1ED]/70 cursor-default flex items-center justify-center gap-1.5"
+                      >
+                        <Check size={13} className="text-[#B8FF00]" /> Concluído por hoje
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => undoJourneyDay(activeJourney.id)}
+                        className="text-[11px] text-[#8E9499] hover:text-[#F08A76] hover:bg-white/5 px-2.5 flex items-center gap-1"
+                        title="Desfazer check-in de hoje"
+                      >
+                        <RotateCcw size={12} /> Desfazer
+                      </Button>
+                    </div>
+                    <p className="text-[10px] text-center text-[#8E9499]">
+                      Próximo dia liberado amanhã · Um passo por dia com calma
+                    </p>
+                  </div>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => incrementJourneyDay(activeJourney.id)}
+                    className="w-full text-xs flex items-center justify-center gap-1.5"
+                  >
+                    <Check size={13} /> Marcar Dia Concluído
+                  </Button>
+                )}
               </div>
             </div>
           ) : (

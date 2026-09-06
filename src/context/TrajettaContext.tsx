@@ -71,6 +71,8 @@ type TrajettaContextType = {
   deleteHabit: (habitId: string) => Promise<void>;
   createJourney: (journeyData: Partial<Journey>) => void;
   incrementJourneyDay: (journeyId: string) => void;
+  undoJourneyDay: (journeyId: string) => void;
+  toggleJourneyDay: (journeyId: string) => void;
   recordJourneySlip: (journeyId: string) => void;
   updateWeeklyPriority: (area: LifeArea, text: string) => void;
   completeCurrentWeek: () => void;
@@ -614,27 +616,104 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   };
 
   const incrementJourneyDay = (journeyId: string) => {
+    const todayStr = new Date().toISOString().split('T')[0];
     setJourneys(prev =>
       prev.map(j => {
         if (j.id !== journeyId) return j;
+        // If already completed today, prevent advancing again on the same calendar day
+        if (j.lastCompletedDate === todayStr || (j.completedDates || []).includes(todayStr)) {
+          return j;
+        }
+        // If already completed the full journey, do not advance beyond totalDays
+        if (j.currentDay >= j.totalDays) {
+          return {
+            ...j,
+            status: 'completed',
+            badgeText: `Jornada Concluída (${j.totalDays}/${j.totalDays} dias)`,
+          };
+        }
+
         const nextDay = Math.min(j.totalDays, j.currentDay + 1);
         const isComplete = nextDay >= j.totalDays;
+        const updatedCompletedDates = Array.from(new Set([...(j.completedDates || []), todayStr]));
+
+        if (isComplete) {
+          try {
+            confetti({
+              particleCount: 80,
+              spread: 60,
+              origin: { y: 0.6 },
+            });
+          } catch {}
+        }
+
         return {
           ...j,
           currentDay: nextDay,
+          lastCompletedDate: todayStr,
+          completedDates: updatedCompletedDates,
           status: isComplete ? 'completed' : 'active',
+          badgeText: isComplete
+            ? `Jornada Concluída (${nextDay}/${j.totalDays} dias)`
+            : `Dia ${nextDay} de ${j.totalDays} · Em andamento`,
         };
       })
     );
   };
 
-  const recordJourneySlip = (journeyId: string) => {
+  const undoJourneyDay = (journeyId: string) => {
+    const todayStr = new Date().toISOString().split('T')[0];
     setJourneys(prev =>
       prev.map(j => {
         if (j.id !== journeyId) return j;
+        const currentCompletedDates = j.completedDates || [];
+        // Only undo if today was marked as completed
+        if (j.lastCompletedDate !== todayStr && !currentCompletedDates.includes(todayStr)) {
+          return j;
+        }
+        const updatedCompletedDates = currentCompletedDates.filter(d => d !== todayStr);
+        const prevCompletedDate = updatedCompletedDates.length > 0 ? updatedCompletedDates[updatedCompletedDates.length - 1] : undefined;
+        const prevDay = Math.max(0, j.currentDay - 1);
+        return {
+          ...j,
+          currentDay: prevDay,
+          lastCompletedDate: prevCompletedDate,
+          completedDates: updatedCompletedDates,
+          status: 'active',
+          badgeText: `Dia ${prevDay} de ${j.totalDays} · Em andamento`,
+        };
+      })
+    );
+  };
+
+  const toggleJourneyDay = (journeyId: string) => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const target = journeys.find(j => j.id === journeyId);
+    if (!target) return;
+    if (target.lastCompletedDate === todayStr || (target.completedDates || []).includes(todayStr)) {
+      undoJourneyDay(journeyId);
+    } else {
+      incrementJourneyDay(journeyId);
+    }
+  };
+
+  const recordJourneySlip = (journeyId: string) => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    setJourneys(prev =>
+      prev.map(j => {
+        if (j.id !== journeyId) return j;
+        // If already recorded a slip today, clicking again un-records / toggles it off
+        if (j.lastSlipDate === todayStr) {
+          return {
+            ...j,
+            slipDays: Math.max(0, j.slipDays - 1),
+            lastSlipDate: undefined,
+          };
+        }
         return {
           ...j,
           slipDays: j.slipDays + 1,
+          lastSlipDate: todayStr,
         };
       })
     );
@@ -953,6 +1032,8 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       deleteHabit,
       createJourney,
       incrementJourneyDay,
+      undoJourneyDay,
+      toggleJourneyDay,
       recordJourneySlip,
       updateWeeklyPriority,
       completeCurrentWeek,

@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS } from '@/lib/constants';
-import { Compass, Check, Plus, Footprints, ShieldAlert, Sparkles } from 'lucide-react';
+import { Compass, Check, Plus, Footprints, ShieldAlert, Sparkles, RotateCcw } from 'lucide-react';
 
 const STARTER_JOURNEYS = [
   {
@@ -36,7 +36,7 @@ const STARTER_JOURNEYS = [
 ];
 
 export function JourneysView() {
-  const { journeys, incrementJourneyDay, recordJourneySlip, createJourney } = useTrajetta();
+  const { journeys, incrementJourneyDay, undoJourneyDay, recordJourneySlip, createJourney } = useTrajetta();
   const [showCatalog, setShowCatalog] = useState(false);
 
   return (
@@ -100,7 +100,11 @@ export function JourneysView() {
           </div>
         ) : (
           journeys.map(journey => {
-            const percent = Math.round((journey.currentDay / journey.totalDays) * 100);
+            const percent = Math.min(100, Math.round((journey.currentDay / journey.totalDays) * 100));
+            const todayStr = new Date().toISOString().split('T')[0];
+            const isCompletedToday = journey.lastCompletedDate === todayStr || (journey.completedDates || []).includes(todayStr);
+            const isFinished = journey.status === 'completed' || journey.currentDay >= journey.totalDays;
+            const isSlipToday = journey.lastSlipDate === todayStr;
 
             return (
               <div
@@ -152,42 +156,95 @@ export function JourneysView() {
                 {/* Compassionate Slip Status */}
                 <div className="p-3 sm:p-3.5 rounded-xl bg-[#111315] border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
                   <div className="flex items-center gap-2.5 flex-wrap">
-                    <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse flex-shrink-0" />
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isFinished ? 'bg-[#B8FF00]' : 'bg-[#B8FF00] animate-pulse'}`} />
                     <span className="text-[#F2F1ED]">
                       <strong>{journey.currentDay} dias construídos</strong>
                       {journey.slipDays > 0 ? (
-                        <span className="text-[#8E9499]"> · {journey.slipDays} deslize registrado</span>
+                        <span className="text-[#8E9499]"> · {journey.slipDays} {journey.slipDays === 1 ? 'deslize registrado' : 'deslizes registrados'}</span>
                       ) : (
                         <span className="text-[#B8FF00]"> · zero deslizes</span>
                       )}
                     </span>
                   </div>
 
-                  <span className="text-[10px] sm:text-[11px] text-[#8E9499] italic">
-                    Continue sua jornada com leveza.
-                  </span>
+                  {isFinished ? (
+                    <span className="text-[10px] sm:text-[11px] text-[#B8FF00] font-bold">
+                      🏆 Ciclo 100% finalizado com sucesso!
+                    </span>
+                  ) : isCompletedToday ? (
+                    <span className="text-[10px] sm:text-[11px] text-[#B8FF00] font-medium">
+                      ✓ Check-in de hoje feito · Próximo dia amanhã
+                    </span>
+                  ) : (
+                    <span className="text-[10px] sm:text-[11px] text-[#8E9499] italic">
+                      Continue sua jornada com leveza e constância.
+                    </span>
+                  )}
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 pt-2 border-t border-white/8">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => incrementJourneyDay(journey.id)}
-                    disabled={journey.currentDay >= journey.totalDays}
-                    className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs"
-                  >
-                    <Check size={14} /> Registrar Dia Concluído
-                  </Button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 pt-2 border-t border-white/8">
+                  {isFinished ? (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled
+                      className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] font-medium cursor-default"
+                    >
+                      🏆 Desafio Concluído ({journey.totalDays}/{journey.totalDays})
+                    </Button>
+                  ) : isCompletedToday ? (
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled
+                        className="flex-1 sm:flex-none min-h-[40px] flex items-center justify-center gap-1.5 text-xs bg-white/5 border border-white/10 text-[#F2F1ED]/70 cursor-default"
+                      >
+                        <Check size={14} className="text-[#B8FF00]" /> Concluído por hoje
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => undoJourneyDay(journey.id)}
+                        className="min-h-[40px] text-xs text-[#8E9499] hover:text-[#F08A76] hover:bg-white/5 px-3 flex items-center gap-1.5"
+                        title="Desfazer check-in de hoje"
+                      >
+                        <RotateCcw size={13} /> Desfazer
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => incrementJourneyDay(journey.id)}
+                      className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs"
+                    >
+                      <Check size={14} /> Registrar Dia Concluído
+                    </Button>
+                  )}
 
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => recordJourneySlip(journey.id)}
-                    className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs"
-                  >
-                    <ShieldAlert size={14} className="text-[#F08A76]" /> Registrar Deslize Consciente
-                  </Button>
+                  {!isFinished && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => recordJourneySlip(journey.id)}
+                      className={`w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs ${
+                        isSlipToday ? 'border-[#F08A76]/40 bg-[#F08A76]/10 text-[#F08A76]' : ''
+                      }`}
+                      title={isSlipToday ? 'Clique para desfazer o deslize registrado hoje' : 'Registrar deslize consciente'}
+                    >
+                      {isSlipToday ? (
+                        <>
+                          <RotateCcw size={13} className="text-[#F08A76]" /> Deslize Registrado Hoje (Desfazer)
+                        </>
+                      ) : (
+                        <>
+                          <ShieldAlert size={14} className="text-[#F08A76]" /> Registrar Deslize Consciente
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </div>
               </div>
             );
