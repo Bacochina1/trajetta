@@ -363,7 +363,7 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
         </div>
 
         {/* Input Bar */}
-        <div className="p-3 sm:p-3.5 bg-[#0A0D12] border-t border-white/10 flex-shrink-0">
+        <div className="p-3 sm:p-3.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-[#0A0D12] border-t border-white/10 flex-shrink-0">
           <form
             onSubmit={(e) => {
               e.preventDefault();

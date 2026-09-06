@@ -105,24 +105,24 @@ export function JourneysView() {
             return (
               <div
                 key={journey.id}
-                className="trajetta-card p-6 sm:p-7 border border-white/8 space-y-5 bg-[#171A1D]/90"
+                className="trajetta-card p-4 sm:p-7 border border-white/8 space-y-4 sm:space-y-5 bg-[#171A1D]/90"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <AreaBadge area={journey.lifeArea} size="sm" />
                       <span className="text-xs text-[#8E9499]">
                         Desafio de {journey.totalDays} dias
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#F2F1ED] mt-1 break-words">
                       {journey.title}
                     </h3>
                     <p className="text-xs text-[#8E9499]">{journey.description}</p>
                   </div>
 
-                  <div className="text-right">
-                    <div className="text-2xl font-black text-[#B8FF00] tabular-numbers">
+                  <div className="text-left sm:text-right flex items-baseline sm:flex-col justify-between sm:justify-start gap-2 border-t border-white/5 sm:border-0 pt-2 sm:pt-0">
+                    <div className="text-xl sm:text-2xl font-black text-[#B8FF00] tabular-numbers">
                       Dia {journey.currentDay}{' '}
                       <span className="text-sm font-normal text-[#8E9499]">
                         / {journey.totalDays}
@@ -143,16 +143,16 @@ export function JourneysView() {
 
                   {/* Nodes on path */}
                   <div className="flex justify-between text-[10px] text-[#8E9499] pt-1">
-                    <span>Dia 1 (Início)</span>
-                    <span>Metade ({Math.round(journey.totalDays / 2)} dias)</span>
-                    <span className="text-[#F2F1ED] font-bold">Dia {journey.totalDays} (Conquista)</span>
+                    <span>Início (Dia 1)</span>
+                    <span className="hidden xs:inline">Metade ({Math.round(journey.totalDays / 2)}d)</span>
+                    <span className="text-[#F2F1ED] font-bold">Dia {journey.totalDays} (Fim)</span>
                   </div>
                 </div>
 
                 {/* Compassionate Slip Status */}
-                <div className="p-3.5 rounded-xl bg-[#111315] border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
+                <div className="p-3 sm:p-3.5 rounded-xl bg-[#111315] border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse flex-shrink-0" />
                     <span className="text-[#F2F1ED]">
                       <strong>{journey.currentDay} dias construídos</strong>
                       {journey.slipDays > 0 ? (
@@ -163,18 +163,19 @@ export function JourneysView() {
                     </span>
                   </div>
 
-                  <span className="text-[11px] text-[#8E9499] italic">
+                  <span className="text-[10px] sm:text-[11px] text-[#8E9499] italic">
                     Continue sua jornada com leveza.
                   </span>
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-2.5 pt-2 border-t border-white/8">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 pt-2 border-t border-white/8">
                   <Button
                     variant="primary"
                     size="sm"
                     onClick={() => incrementJourneyDay(journey.id)}
                     disabled={journey.currentDay >= journey.totalDays}
+                    className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs"
                   >
                     <Check size={14} /> Registrar Dia Concluído
                   </Button>
@@ -183,6 +184,7 @@ export function JourneysView() {
                     variant="secondary"
                     size="sm"
                     onClick={() => recordJourneySlip(journey.id)}
+                    className="w-full sm:w-auto min-h-[40px] flex items-center justify-center gap-1.5 text-xs"
                   >
                     <ShieldAlert size={14} className="text-[#F08A76]" /> Registrar Deslize Consciente
                   </Button>

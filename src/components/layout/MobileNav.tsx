@@ -18,7 +18,7 @@ export function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#111315]/95 backdrop-blur-xl border-t border-white/8 px-3 py-2 flex items-center justify-between safe-area-bottom">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#111315]/95 backdrop-blur-xl border-t border-white/8 px-1.5 sm:px-3 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] flex items-center justify-between safe-area-bottom">
       {items.map(item => {
         const Icon = item.icon;
         const isActive = activeView === item.id;
@@ -27,17 +27,17 @@ export function MobileNav() {
             key={item.id}
             onClick={() => setActiveView(item.id)}
             className={cn(
-              'flex-1 min-h-[48px] flex flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium transition-all duration-150 tactile-btn relative',
+              'flex-1 min-h-[44px] sm:min-h-[48px] py-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1 rounded-xl text-[10px] sm:text-[11px] font-medium transition-all duration-150 tactile-btn relative select-none',
               isActive
                 ? 'text-[#B8FF00] font-bold'
                 : 'text-[#8E9499] hover:text-[#F2F1ED]'
             )}
           >
             {isActive && (
-              <span className="absolute top-0 w-8 h-0.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_rgba(184,255,0,0.6)]" />
+              <span className="absolute top-0 w-6 sm:w-8 h-0.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_rgba(184,255,0,0.6)]" />
             )}
-            <Icon size={18} strokeWidth={isActive ? 2.3 : 1.8} />
-            <span>{item.label}</span>
+            <Icon size={17} strokeWidth={isActive ? 2.3 : 1.8} />
+            <span className="truncate max-w-[56px] text-center">{item.label}</span>
           </button>
         );
       })}

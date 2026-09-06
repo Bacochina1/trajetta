@@ -95,9 +95,9 @@ export function TimelineView() {
       </div>
 
       {/* Longitudinal Vertical Timeline */}
-      <div className="relative pl-6 sm:pl-8 border-l border-white/10 space-y-8 mt-6">
+      <div className="relative pl-4 sm:pl-8 border-l border-white/10 space-y-6 sm:space-y-8 mt-6">
         {filteredEvents.length === 0 ? (
-          <div className="trajetta-card p-8 text-center space-y-3 border border-white/8">
+          <div className="trajetta-card p-6 sm:p-8 text-center space-y-3 border border-white/8">
             <div className="w-10 h-10 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/25 flex items-center justify-center mx-auto text-[#B8FF00]">
               <History size={20} />
             </div>
@@ -119,7 +119,7 @@ export function TimelineView() {
               <div key={event.id} className="relative group">
                 {/* Timeline Node Point */}
                 <div
-                  className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-[#0D0F10] transition-transform duration-200 group-hover:scale-125"
+                  className="absolute -left-[23px] sm:-left-[39px] top-2 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-[#0D0F10] transition-transform duration-200 group-hover:scale-125"
                   style={{
                     backgroundColor: areaConfig ? areaConfig.color : '#B8FF00',
                     boxShadow: `0 0 10px ${areaConfig ? areaConfig.color : '#B8FF00'}40`,
@@ -127,14 +127,14 @@ export function TimelineView() {
                 />
 
                 {/* Event Card */}
-                <div className="trajetta-card p-5 border border-white/8 space-y-2.5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                <div className="trajetta-card p-3.5 sm:p-5 border border-white/8 space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <span className="text-xs font-bold text-[#B8FF00] tabular-numbers">
                         {event.month} {event.year}
                       </span>
                       <span className="text-white/20">·</span>
-                      <span className="text-[11px] text-[#8E9499]">{event.date}</span>
+                      <span className="text-[10px] sm:text-[11px] text-[#8E9499]">{event.date}</span>
                     </div>
 
                     <div className="flex items-center gap-2">

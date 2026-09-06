@@ -139,36 +139,42 @@ export function TodayView() {
                   <div
                     key={habit.id}
                     onClick={() => toggleHabitToday(habit.id)}
-                    className="trajetta-card p-4 flex items-center gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none group"
+                    className="trajetta-card p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none group min-w-0"
                   >
-                    <CheckCircle
-                      checked={isDone}
-                      onClick={() => toggleHabitToday(habit.id)}
-                      color={areaConfig.color}
-                    />
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-sm font-semibold transition-colors ${
-                            isDone ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
-                          }`}
-                        >
-                          {habit.title}
-                        </span>
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                      <div className="flex-shrink-0">
+                        <CheckCircle
+                          checked={isDone}
+                          onClick={() => toggleHabitToday(habit.id)}
+                          color={areaConfig.color}
+                        />
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[11px] text-[#8E9499]">
-                          {habit.targetDescription}
-                        </span>
-                        <span className="text-white/20">·</span>
-                        <span className="text-[11px] font-medium text-[#B8FF00] flex items-center gap-1">
-                          <Flame size={12} /> {habit.streakWeeks} sem. seguidas
-                        </span>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-xs sm:text-sm font-semibold transition-colors break-words line-clamp-2 ${
+                              isDone ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
+                            }`}
+                          >
+                            {habit.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1 flex-wrap">
+                          <span className="text-[10px] sm:text-[11px] text-[#8E9499]">
+                            {habit.targetDescription}
+                          </span>
+                          <span className="text-white/20">·</span>
+                          <span className="text-[10px] sm:text-[11px] font-medium text-[#B8FF00] flex items-center gap-1 flex-shrink-0">
+                            <Flame size={11} /> {habit.streakWeeks} sem.
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    <AreaBadge area={habit.lifeArea} size="sm" showIcon={false} />
+                    <div className="flex-shrink-0">
+                      <AreaBadge area={habit.lifeArea} size="sm" showIcon={false} />
+                    </div>
                   </div>
                 );
               })
@@ -203,25 +209,31 @@ export function TodayView() {
                   <div
                     key={action.id}
                     onClick={() => toggleGoalActionToday(action.goalId, action.id)}
-                    className="trajetta-card p-3.5 flex items-center gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none"
+                    className="trajetta-card p-3 sm:p-3.5 flex items-center justify-between gap-2.5 sm:gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none min-w-0"
                   >
-                    <CheckCircle
-                      checked={!!action.completedToday}
-                      onClick={() => toggleGoalActionToday(action.goalId, action.id)}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <span
-                        className={`text-sm font-medium ${
-                          action.completedToday ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
-                        }`}
-                      >
-                        {action.title}
-                      </span>
-                      <span className="block text-[11px] text-[#8E9499] mt-0.5 truncate">
-                        Meta: {action.goalTitle}
-                      </span>
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                      <div className="flex-shrink-0">
+                        <CheckCircle
+                          checked={!!action.completedToday}
+                          onClick={() => toggleGoalActionToday(action.goalId, action.id)}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span
+                          className={`text-xs sm:text-sm font-medium break-words line-clamp-2 ${
+                            action.completedToday ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
+                          }`}
+                        >
+                          {action.title}
+                        </span>
+                        <span className="block text-[10px] sm:text-[11px] text-[#8E9499] mt-0.5 truncate">
+                          Meta: {action.goalTitle}
+                        </span>
+                      </div>
                     </div>
-                    <AreaBadge area={action.lifeArea} size="sm" />
+                    <div className="flex-shrink-0">
+                      <AreaBadge area={action.lifeArea} size="sm" />
+                    </div>
                   </div>
                 ))
               )}
@@ -233,12 +245,14 @@ export function TodayView() {
         <div className="lg:col-span-5 space-y-5">
           {/* Active Journey Card */}
           {activeJourney ? (
-            <div className="trajetta-card p-5 border border-[#B8FF00]/20 bg-gradient-to-br from-[#171A1D] to-[#121416] relative overflow-hidden">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold tracking-widest text-[#B8FF00] uppercase flex items-center gap-1.5">
-                  <Compass size={13} /> Jornada em Andamento
+            <div className="trajetta-card p-4 sm:p-5 border border-[#B8FF00]/20 bg-gradient-to-br from-[#171A1D] to-[#121416] relative overflow-hidden">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[10px] font-bold tracking-widest text-[#B8FF00] uppercase flex items-center gap-1.5 truncate">
+                  <Compass size={13} className="flex-shrink-0" /> Jornada em Andamento
                 </span>
-                <AreaBadge area={activeJourney.lifeArea} size="sm" />
+                <div className="flex-shrink-0">
+                  <AreaBadge area={activeJourney.lifeArea} size="sm" />
+                </div>
               </div>
 
               <h3 className="text-lg font-bold text-[#F2F1ED] mt-3">

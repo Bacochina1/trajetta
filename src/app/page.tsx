@@ -223,14 +223,14 @@ export default function LandingPage() {
         </div>
 
         {/* BEGIN: MainHeader */}
-        <header className="relative z-50 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-8 flex items-center justify-between" data-purpose="site-header">
+        <header className="relative z-50 max-w-[1440px] w-full mx-auto px-3.5 sm:px-10 lg:px-14 pt-4 sm:pt-8 flex items-center justify-between" data-purpose="site-header">
           {/* Brand Logo without black container */}
-          <Link href="/" className="flex items-center space-x-3 text-white tracking-wider group">
-            <TrajettaLogo size={32} showWordmark wordmarkClassName="font-extrabold text-lg tracking-tight text-white" />
+          <Link href="/" className="flex items-center space-x-2 sm:space-x-3 text-white tracking-wider group min-w-0">
+            <TrajettaLogo size={28} showWordmark wordmarkClassName="font-extrabold text-base sm:text-lg tracking-tight text-white truncate" />
           </Link>
 
           {/* Navigation Pill & Actions */}
-          <div className="flex items-center space-x-2.5">
+          <div className="flex items-center space-x-1.5 sm:space-x-2.5 flex-shrink-0">
             <nav className="hidden md:flex items-center bg-[#14181f]/85 backdrop-blur-md rounded-full px-5 py-2 border border-white/10 text-[13px] font-medium text-neutral-300 space-x-6 shadow-xl">
               <a className="hover:text-white transition-colors duration-200" href="#overview">Visão Geral</a>
               <a className="hover:text-white transition-colors duration-200" href="#use-cases">4 Áreas</a>
@@ -239,37 +239,37 @@ export default function LandingPage() {
             </nav>
 
             {isAuthenticated ? (
-              <div className="flex items-center space-x-2.5">
+              <div className="flex items-center space-x-1.5 sm:space-x-2.5">
                 <Link
                   href="/app"
-                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-4 sm:px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
+                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[11px] sm:text-[12px] font-bold tracking-wide uppercase px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1 sm:space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
                 >
                   <User size={13} className="text-[#0D0F10]" />
                   <span>Dashboard</span>
-                  <ArrowRight size={14} className="mt-[-1px]" />
+                  <ArrowRight size={13} className="mt-[-1px]" />
                 </Link>
 
                 <button
                   onClick={logout}
                   title="Sair da conta"
-                  className="bg-[#14181f]/90 hover:bg-[#1a212b] hover:text-red-400 text-neutral-400 text-[12px] font-semibold p-2.5 rounded-full border border-white/10 transition-colors duration-200 flex items-center justify-center"
+                  className="bg-[#14181f]/90 hover:bg-[#1a212b] hover:text-red-400 text-neutral-400 text-[11px] sm:text-[12px] font-semibold p-2 sm:p-2.5 rounded-full border border-white/10 transition-colors duration-200 flex items-center justify-center"
                 >
-                  <LogOut size={14} />
+                  <LogOut size={13} />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
                 <a
                   href="#how-it-works"
-                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
+                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[11px] sm:text-[12px] font-bold tracking-wide uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1 sm:space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
                 >
                   <span>Começar</span>
-                  <ArrowRight size={14} className="mt-[-1px]" />
+                  <ArrowRight size={13} className="mt-[-1px]" />
                 </a>
 
                 <Link
                   href="/app"
-                  className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[12px] font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full border border-white/10 transition-colors duration-200"
+                  className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200"
                 >
                   LOGIN
                 </Link>
@@ -280,38 +280,38 @@ export default function LandingPage() {
         {/* END: MainHeader */}
 
         {/* BEGIN: HeroContent */}
-        <div className="relative z-30 max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-14 pt-32 pb-20 mt-auto" data-purpose="hero-content" id="overview">
+        <div className="relative z-30 max-w-[1440px] w-full mx-auto px-3.5 sm:px-10 lg:px-14 pt-20 sm:pt-32 pb-14 sm:pb-20 mt-auto" data-purpose="hero-content" id="overview">
           <div className="max-w-3xl">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14181f] border border-white/10 text-[11px] font-mono text-[#B8FF00] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
-              <span>SISTEMA DE EVOLUÇÃO PESSOAL PARA ADULTOS AMBICIOSOS</span>
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-[#14181f] border border-white/10 text-[10px] sm:text-[11px] font-mono text-[#B8FF00] mb-5 sm:mb-6 max-w-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse flex-shrink-0" />
+              <span className="truncate">SISTEMA DE EVOLUÇÃO PARA A VIDA REAL</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-[70px] leading-[1.06] font-normal tracking-[-0.03em] text-white">
+            <h1 className="text-3xl sm:text-5xl lg:text-[70px] leading-[1.08] font-normal tracking-[-0.03em] text-white">
               O Sistema Completo para<br />
               <span className="text-[#B8FF00] font-medium">Sua Evolução Pessoal.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 text-base sm:text-lg text-neutral-300/85 font-normal max-w-xl leading-relaxed tracking-tight">
+            <p className="mt-4 sm:mt-6 text-sm sm:text-lg text-neutral-300/85 font-normal max-w-xl leading-relaxed tracking-tight">
               Planeje para sua vida real, não para sua versão perfeita. Metas de longo prazo, hábitos com ritmo sustentável, revisão semanal guiada e IA com memória viva da sua trajetória.
             </p>
 
             {/* CTA Action Buttons */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {isAuthenticated ? (
                 <>
                   <Link
                     href="/app"
-                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-8 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
+                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] uppercase px-6 sm:px-8 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25 w-full sm:w-auto"
                   >
                     <span>IR PARA MEU DASHBOARD</span>
                     <ArrowRight size={15} className="ml-2" />
                   </Link>
 
-                  <span className="text-xs font-mono text-neutral-400 pl-1 flex items-center gap-2">
+                  <span className="text-xs font-mono text-neutral-400 pl-1 flex items-center gap-2 justify-center sm:justify-start">
                     <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
                     <span>Conectado como <strong className="text-white">{user.name || 'Membro'}</strong></span>
                   </span>
@@ -320,7 +320,7 @@ export default function LandingPage() {
                 <>
                   <a
                     href="#how-it-works"
-                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
+                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25 w-full sm:w-auto text-center"
                   >
                     <span>ENTRAR NA LISTA VIP</span>
                     <ArrowRight size={15} className="ml-2" />
@@ -328,7 +328,7 @@ export default function LandingPage() {
 
                   <Link
                     href="/app"
-                    className="inline-flex items-center justify-center bg-[#14181f]/80 hover:bg-[#1c232d] backdrop-blur-md text-white border border-white/20 text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition duration-150"
+                    className="inline-flex items-center justify-center bg-[#14181f]/80 hover:bg-[#1c232d] backdrop-blur-md text-white border border-white/20 text-[11px] sm:text-[12px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 rounded-full transition duration-150 w-full sm:w-auto text-center"
                   >
                     <span>ACESSAR PLATAFORMA</span>
                     <ChevronRight size={15} className="ml-1.5 text-neutral-400" />
@@ -392,7 +392,7 @@ export default function LandingPage() {
                 <div className="w-full bg-[#14181f]/95 border border-white/10 px-3 py-2 rounded-lg flex items-center justify-between text-[11px] font-mono text-neutral-200 shadow-lg">
                   <div className="flex items-center space-x-2 truncate">
                     <CheckCircle2 size={14} className="text-[#58D6A7] flex-shrink-0" />
-                    <span className="truncate">Treino de Corrida (6 km)</span>
+                    <span className="truncate">Treino de Força & Mobilidade</span>
                   </div>
                   <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#58D6A7]/15 text-[#58D6A7]">Feito</span>
                 </div>
@@ -532,17 +532,17 @@ export default function LandingPage() {
       {/* END: FeatureCardsGrid */}
 
       {/* BEGIN: UseCasesSection (4 Life Areas) */}
-      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="use-cases" id="use-cases">
+      <section className="max-w-[1440px] mx-auto px-3.5 sm:px-10 lg:px-14 py-12 sm:py-16 border-t border-white/10" data-purpose="use-cases" id="use-cases">
         <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
           <span>4 Áreas Fundamentais</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-6 sm:mb-8">
           Quatro dimensões da sua vida, <span className="text-neutral-500">em um só ecossistema.</span>
         </h2>
 
         {/* Tab Navigation List */}
-        <div className="flex flex-wrap items-center gap-6 border-b border-white/10 pb-3 mb-10 text-xs font-mono">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 border-b border-white/10 pb-3 mb-8 sm:mb-10 text-xs font-mono">
           {useCases.map((uc, i) => (
             <button
               key={uc.title}
@@ -561,9 +561,9 @@ export default function LandingPage() {
         {/* Tab Body: Split Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Side: Mockup Preview */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] p-6 flex items-center justify-center">
+          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[320px] sm:min-h-[380px] p-4 sm:p-6 flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#030507] via-[#0d121a] to-[#151c27] opacity-80"></div>
-            <div className="relative z-10 w-full max-w-md bg-[#14181f]/95 border border-white/15 rounded-2xl p-6 shadow-2xl backdrop-blur-md space-y-4">
+            <div className="relative z-10 w-full max-w-md bg-[#14181f]/95 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-white/8">
                 <span className="text-xs font-mono font-medium text-white flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: useCases[activeUseCase].accent }} />
@@ -574,22 +574,22 @@ export default function LandingPage() {
               <p className="text-xs text-neutral-300">
                 {useCases[activeUseCase].mockupStatus}
               </p>
-              <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-xs text-neutral-200">
-                  <CheckCircle2 size={16} className="text-[#B8FF00]" />
-                  <span>{useCases[activeUseCase].actionTitle}</span>
+              <div className="p-3 sm:p-3.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-2.5 text-xs text-neutral-200 truncate mr-2">
+                  <CheckCircle2 size={16} className="text-[#B8FF00] flex-shrink-0" />
+                  <span className="truncate">{useCases[activeUseCase].actionTitle}</span>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white">Hoje</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white flex-shrink-0">Hoje</span>
               </div>
             </div>
           </div>
 
           {/* Right Side: Content Details */}
           <div className="lg:col-span-5 flex flex-col items-start pl-0 lg:pl-6">
-            <span className="text-xs font-mono text-neutral-400 mb-3 tracking-wider">
+            <span className="text-xs font-mono text-neutral-400 mb-2 sm:mb-3 tracking-wider">
               {useCases[activeUseCase].title}
             </span>
-            <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-white mb-4">
+            <h3 className="text-xl sm:text-3xl font-medium leading-snug text-white mb-3 sm:mb-4">
               {useCases[activeUseCase].headline}
             </h3>
             <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
@@ -597,7 +597,7 @@ export default function LandingPage() {
             </p>
             <a
               href="#how-it-works"
-              className="bg-[#B8FF00] text-[#0D0F10] font-bold text-xs font-mono px-6 py-3 rounded-full hover:bg-[#a5e600] transition-all uppercase tracking-wider"
+              className="bg-[#B8FF00] text-[#0D0F10] font-bold text-xs font-mono px-6 py-3 rounded-full hover:bg-[#a5e600] transition-all uppercase tracking-wider w-full sm:w-auto text-center"
             >
               Começar Agora
             </a>
@@ -607,20 +607,20 @@ export default function LandingPage() {
       {/* END: UseCasesSection */}
 
       {/* BEGIN: HowItWorksSection */}
-      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="how-it-works" id="how-it-works">
+      <section className="max-w-[1440px] mx-auto px-3.5 sm:px-10 lg:px-14 py-12 sm:py-16 border-t border-white/10" data-purpose="how-it-works" id="how-it-works">
         <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
           <span>Como Funciona</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-12">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8 sm:mb-12">
           Um processo sóbrio em <span className="text-neutral-500">três passos para clareza absoluta.</span>
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Side: Waitlist / VIP Form */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] p-6 flex items-end justify-center">
+          <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[340px] sm:min-h-[380px] p-4 sm:p-6 flex items-end justify-center">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-[#0c1017] to-[#141a24] opacity-90"></div>
-            <div className="relative z-10 w-full bg-[#0e1218]/95 border border-white/15 rounded-2xl p-6 shadow-2xl mb-2">
+            <div className="relative z-10 w-full bg-[#0e1218]/95 border border-white/15 rounded-2xl p-4 sm:p-6 shadow-2xl mb-2">
               <div className="text-xs font-mono text-[#B8FF00] mb-2 tracking-wide flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]" />
                 <span>Lista VIP de Acesso Antecipado ({waitlistCount} inscritos)</span>
@@ -630,7 +630,7 @@ export default function LandingPage() {
               </p>
 
               {submitted ? (
-                <div className="p-5 rounded-xl bg-[#090C10] border border-[#B8FF00]/40 text-xs space-y-4 shadow-xl">
+                <div className="p-4 sm:p-5 rounded-xl bg-[#090C10] border border-[#B8FF00]/40 text-xs space-y-4 shadow-xl">
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/15 border border-[#B8FF00]/40 flex items-center justify-center text-[#B8FF00] flex-shrink-0 mt-0.5">
                       <Sparkles size={16} />
@@ -647,11 +647,11 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2 border-t border-white/10">
                     <button
                       type="button"
                       onClick={() => setShowVipPassModal(true)}
-                      className="px-4 py-2 rounded-lg bg-[#B8FF00] text-[#0D0F10] font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-[#a5e600] transition-colors flex items-center gap-1.5 shadow-md shadow-[#B8FF00]/20"
+                      className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-lg bg-[#B8FF00] text-[#0D0F10] font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-[#a5e600] transition-colors flex items-center gap-1.5 shadow-md shadow-[#B8FF00]/20"
                     >
                       <Shield size={13} />
                       <span>Ver Cartão VIP Founder</span>
@@ -661,7 +661,7 @@ export default function LandingPage() {
                       <button
                         type="button"
                         onClick={() => setShowEmailPreviewModal(true)}
-                        className="px-4 py-2 rounded-lg bg-[#14181f] text-neutral-200 border border-white/15 font-mono text-[11px] font-semibold hover:text-white hover:border-white/30 transition-colors flex items-center gap-1.5"
+                        className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-lg bg-[#14181f] text-neutral-200 border border-white/15 font-mono text-[11px] font-semibold hover:text-white hover:border-white/30 transition-colors flex items-center gap-1.5"
                       >
                         <Mail size={13} className="text-[#B8FF00]" />
                         <span>Visualizar E-mail Recebido</span>
@@ -678,7 +678,7 @@ export default function LandingPage() {
                     placeholder="Seu nome"
                     className="w-full h-10 px-3 bg-[#14181f] border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]"
                   />
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="email"
                       required
@@ -690,7 +690,7 @@ export default function LandingPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="h-10 px-5 bg-[#B8FF00] text-[#0D0F10] font-mono text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#a5e600] transition-all flex items-center gap-1.5 flex-shrink-0"
+                      className="h-10 px-5 bg-[#B8FF00] text-[#0D0F10] font-mono text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#a5e600] transition-all flex items-center justify-center gap-1.5 flex-shrink-0 w-full sm:w-auto"
                     >
                       <span>{loading ? '...' : 'Garantir Vaga'}</span>
                       <ArrowRight size={13} />
@@ -735,17 +735,17 @@ export default function LandingPage() {
       {/* END: HowItWorksSection */}
 
       {/* BEGIN: PricingSection */}
-      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 py-16 border-t border-white/10" data-purpose="pricing-plans" id="pricing">
+      <section className="max-w-[1440px] mx-auto px-3.5 sm:px-10 lg:px-14 py-12 sm:py-16 border-t border-white/10" data-purpose="pricing-plans" id="pricing">
         <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
           <span>Planos & Investimento</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-6 sm:mb-8">
           Escolha o plano ideal <span className="text-neutral-500">para o seu horizonte.</span>
         </h2>
 
         {/* Toggle Switch */}
-        <div className="flex items-center gap-3 text-xs font-mono mb-12">
+        <div className="flex items-center gap-3 text-xs font-mono mb-8 sm:mb-12">
           <span className={billingCycle === 'monthly' ? 'text-white font-medium' : 'text-neutral-400'}>Mensal</span>
           <div
             onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
@@ -766,7 +766,7 @@ export default function LandingPage() {
         {/* 3 Pricing Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Card 1: Starter */}
-          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-7 flex flex-col justify-between hover:border-white/25 transition-all">
+          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/25 transition-all">
             <div>
               <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium mb-3">Gratuito</h3>
               <div className="text-3xl sm:text-4xl font-semibold text-white mb-3">
@@ -803,7 +803,7 @@ export default function LandingPage() {
           </div>
 
           {/* Card 2: Pro (Highlighted) */}
-          <div className="rounded-2xl bg-[#0e131a] border border-[#B8FF00]/40 p-7 flex flex-col justify-between relative shadow-[0_0_40px_rgba(184,255,0,0.15)] hover:border-[#B8FF00]/70 transition-all">
+          <div className="rounded-2xl bg-[#0e131a] border border-[#B8FF00]/40 p-5 sm:p-7 flex flex-col justify-between relative shadow-[0_0_40px_rgba(184,255,0,0.15)] hover:border-[#B8FF00]/70 transition-all">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium">Pro</h3>
@@ -852,7 +852,7 @@ export default function LandingPage() {
           </div>
 
           {/* Card 3: Fundador / Lifetime */}
-          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-7 flex flex-col justify-between hover:border-white/25 transition-all">
+          <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/25 transition-all">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-mono text-sm tracking-wider uppercase text-white font-medium">Fundador</h3>
@@ -899,7 +899,7 @@ export default function LandingPage() {
       {/* END: PricingSection */}
 
       {/* BEGIN: Footer */}
-      <footer className="bg-[#040608] border-t border-white/10 px-6 sm:px-10 lg:px-14 pt-16 pb-12" data-purpose="page-footer" id="contact">
+      <footer className="bg-[#040608] border-t border-white/10 px-3.5 sm:px-10 lg:px-14 pt-12 sm:pt-16 pb-12" data-purpose="page-footer" id="contact">
         <div className="max-w-[1440px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16">
             <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-0 md:pr-6">
@@ -999,8 +999,8 @@ export default function LandingPage() {
 
       {/* BEGIN: VIP Founder Pass Modal */}
       {showVipPassModal && waitlistResult && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-lg bg-[#0C0F14] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-lg bg-[#0C0F14] border border-white/15 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl overflow-hidden max-h-[92dvh] overflow-y-auto">
             {/* Background neon ambient glow */}
             <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#B8FF00]/10 rounded-full blur-[90px] pointer-events-none" />
 
@@ -1028,7 +1028,7 @@ export default function LandingPage() {
             </div>
 
             {/* VIP Founder Pass Card */}
-            <div className="rounded-2xl p-6 bg-gradient-to-br from-[#141923] via-[#0E1218] to-[#0A0D12] border-2 border-[#B8FF00]/40 relative overflow-hidden shadow-2xl mb-6">
+            <div className="rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-[#141923] via-[#0E1218] to-[#0A0D12] border-2 border-[#B8FF00]/40 relative overflow-hidden shadow-2xl mb-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4 font-mono text-xs">
                 <span className="text-neutral-400 tracking-wider">TRAJETTA FOUNDER PASS</span>
                 <span className="text-[#B8FF00] font-bold px-2 py-0.5 rounded bg-[#B8FF00]/10 border border-[#B8FF00]/30">

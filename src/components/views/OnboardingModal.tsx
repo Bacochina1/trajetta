@@ -217,8 +217,8 @@ export function OnboardingModal() {
               })}
             </div>
 
-            <div className="flex justify-between pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2.5 pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(1)} className="w-full sm:w-auto">
                 <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
@@ -226,6 +226,7 @@ export function OnboardingModal() {
                 size="md"
                 onClick={() => setStep(3)}
                 disabled={selectedAreas.length === 0}
+                className="w-full sm:w-auto"
               >
                 Próximo Passo <ArrowRight size={14} />
               </Button>
@@ -318,8 +319,8 @@ export function OnboardingModal() {
               </div>
             </div>
 
-            <div className="flex justify-between pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2.5 pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(2)} className="w-full sm:w-auto">
                 <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
@@ -327,6 +328,7 @@ export function OnboardingModal() {
                 size="md"
                 onClick={() => setStep(4)}
                 disabled={selectedHabits.length === 0}
+                className="w-full sm:w-auto"
               >
                 Próximo Passo ({selectedHabits.length} selecionados) <ArrowRight size={14} />
               </Button>
@@ -363,8 +365,8 @@ export function OnboardingModal() {
               />
             </div>
 
-            <div className="flex justify-between pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setStep(3)}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2.5 pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(3)} className="w-full sm:w-auto">
                 <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
@@ -372,6 +374,7 @@ export function OnboardingModal() {
                 size="md"
                 onClick={() => setStep(5)}
                 disabled={!target12Months.trim()}
+                className="w-full sm:w-auto"
               >
                 Definir Primeira Meta <ArrowRight size={14} />
               </Button>
@@ -390,7 +393,7 @@ export function OnboardingModal() {
                 Qual sua primeira grande meta, {userName}?
               </h3>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                Um objetivo mensurável e claro para concentrar seu foco neste ciclo.
+                Defina um objetivo concreto. Quebraremos ele em passos viáveis.
               </p>
             </div>
 
@@ -453,16 +456,16 @@ export function OnboardingModal() {
               </p>
             </div>
 
-            <div className="flex justify-between pt-2">
-              <Button variant="ghost" size="sm" onClick={() => setStep(4)}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2.5 pt-2">
+              <Button variant="ghost" size="sm" onClick={() => setStep(4)} className="w-full sm:w-auto">
                 <ArrowLeft size={14} /> Voltar
               </Button>
               <Button
                 variant="primary"
-                size="lg"
+                size="md"
                 onClick={handleFinishOnboarding}
                 disabled={!firstGoalTitle.trim()}
-                className="bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_25px_rgba(184,255,0,0.3)]"
+                className="bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_25px_rgba(184,255,0,0.3)] w-full sm:w-auto"
               >
                 <CheckCircle2 size={16} strokeWidth={2.5} /> Iniciar Minha Trajetória
               </Button>

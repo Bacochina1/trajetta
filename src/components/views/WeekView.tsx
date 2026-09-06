@@ -95,13 +95,13 @@ export function WeekView() {
       </div>
 
       {/* North Star Metric Hero Card */}
-      <div className="trajetta-card p-6 sm:p-8 bg-gradient-to-br from-[#171A1D] via-[#14171A] to-[#0E1012] border-[#B8FF00]/30 relative overflow-hidden">
+      <div className="trajetta-card p-4 sm:p-8 bg-gradient-to-br from-[#171A1D] via-[#14171A] to-[#0E1012] border-[#B8FF00]/30 relative overflow-hidden">
         {/* Glow orb background */}
         <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#B8FF00]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
           <div className="md:col-span-8 space-y-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-bold text-[#B8FF00] uppercase tracking-widest flex items-center gap-1.5">
                 <TrendingUp size={14} /> Métrica North Star
               </span>
@@ -109,11 +109,11 @@ export function WeekView() {
               <span className="text-xs text-[#8E9499]">Semana {weeklyPlan.weekNumber} de 52</span>
             </div>
 
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl sm:text-6xl font-black text-[#F2F1ED] tracking-tight tabular-numbers">
+            <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
+              <span className="text-3xl sm:text-6xl font-black text-[#F2F1ED] tracking-tight tabular-numbers">
                 {user.completedWeeksCount}
               </span>
-              <div className="text-base sm:text-xl font-bold text-[#8E9499]">
+              <div className="text-sm sm:text-xl font-bold text-[#8E9499]">
                 semanas concluídas com consistência
               </div>
             </div>
@@ -124,8 +124,8 @@ export function WeekView() {
 
             {/* Annual Progress Bar */}
             <div className="pt-2">
-              <div className="flex justify-between text-[11px] text-[#8E9499] mb-1.5">
-                <span>Progresso Anual ({user.completedWeeksCount}/52 semanas)</span>
+              <div className="flex justify-between text-[10px] sm:text-[11px] text-[#8E9499] mb-1.5 flex-wrap gap-1">
+                <span>Progresso Anual ({user.completedWeeksCount}/52 sem.)</span>
                 <span className="text-[#B8FF00] font-bold">
                   {Math.round((user.completedWeeksCount / 52) * 100)}% do ano
                 </span>
@@ -140,7 +140,7 @@ export function WeekView() {
           </div>
 
           {/* 7-Day Heatmap / Pill Bar Chart */}
-          <div className="md:col-span-4 bg-[#111315] border border-white/8 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="md:col-span-4 bg-[#111315] border border-white/8 rounded-2xl p-3 sm:p-4 flex flex-col justify-between">
             <span className="text-[11px] font-bold text-[#8E9499] uppercase tracking-wider block mb-3">
               Consistência nos 7 Dias
             </span>

@@ -108,24 +108,24 @@ export function GoalsView() {
             return (
               <div
                 key={goal.id}
-                className="trajetta-card p-6 border border-white/8 space-y-4"
+                className="trajetta-card p-4 sm:p-6 border border-white/8 space-y-4"
               >
                 {/* Card Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2.5">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2.5 flex-wrap">
                       <AreaBadge area={goal.lifeArea} size="sm" />
                       <span className="text-[11px] text-[#8E9499] flex items-center gap-1">
                         <Calendar size={12} /> Prazo: {goal.targetDate}
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold text-[#F2F1ED] mt-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#F2F1ED] mt-1 break-words">
                       {goal.title}
                     </h3>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 border-t border-white/5 sm:border-0 pt-2 sm:pt-0">
+                    <div className="text-left sm:text-right">
                       <span className="text-lg font-black text-[#B8FF00] tabular-numbers">
                         {goal.progress}%
                       </span>
