@@ -81,7 +81,7 @@ export function WeeklyReviewModal() {
       await fetch('/api/email/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@trajetta.app', name: user.name }),
+        body: JSON.stringify({ email: user.email || 'bacochinamatheus@gmail.com', name: user.name }),
       });
       setEmailStatus('sent');
     } catch {
