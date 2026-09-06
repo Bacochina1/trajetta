@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { callNvidiaAI } from '@/lib/ai/aiService';
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const { messages, heavyReasoning } = await req.json();

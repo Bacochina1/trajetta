@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { generateWeeklyReviewReflection } from '@/lib/ai/aiService';
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const { wins, challenges, completedRatio, streakWeeks } = await req.json();

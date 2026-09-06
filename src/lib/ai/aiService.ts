@@ -1,17 +1,39 @@
 const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
-const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'nvidia/nemotron-3.5-lightning-30b-a3b';
+const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'deepseek-ai/deepseek-v4-pro-0813';
 const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || 'deepseek-ai/deepseek-v4-pro-0813';
 
 const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência estratégica e reflexiva da Trajetta — um sistema pessoal de evolução para adultos ambiciosos.
 Seu princípio fundamental: "Planeje para sua vida real, não para sua versão perfeita".
 Seu tom é sóbrio, calmo, perspicaz, sem clichês motivacionais e sem falsas celebrações.
 PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou emojis infantis.
+Responda diretamente em português sem expor rascunhos ou etapas de raciocínio.
 Foque em ritmo sustentável, recuperação rápida após deslizes ("um deslize não anula 17 dias de disciplina") e consistência acumulada.`;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
+}
+
+function cleanAiOutput(text: string): string {
+  // Strip <think> tags
+  let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+
+  // Strip chain-of-thought prefixes if present
+  if (cleaned.includes("Here's a thinking process:") || cleaned.includes("Here's a thinking process")) {
+    const parts = cleaned.split(/\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Refine:?):?\s*\n?/i);
+    if (parts.length > 1) {
+      cleaned = parts[parts.length - 1].trim();
+    } else {
+      const attempts = cleaned.split(/(?:Drafting - Attempt \d+:|Draft \d+:)/i);
+      if (attempts.length > 1) {
+        cleaned = attempts[attempts.length - 1].split('\n→')[0].trim();
+      }
+    }
+  }
+
+  // Strictly enforce Zero Sparkles
+  return cleaned.replace(/✨/g, '✦').trim();
 }
 
 export async function callNvidiaAI(
@@ -37,10 +59,10 @@ export async function callNvidiaAI(
         model,
         messages: fullMessages,
         max_tokens: maxTokens,
-        temperature: 0.7,
+        temperature: 0.6,
       }),
-      // 15 seconds timeout
-      signal: AbortSignal.timeout(15000),
+      // 25 seconds timeout for remote LLM inference
+      signal: AbortSignal.timeout(25000),
     });
 
     if (!res.ok) {
@@ -55,8 +77,7 @@ export async function callNvidiaAI(
       return getFallbackChatResponse(messages[messages.length - 1]?.content || '');
     }
 
-    // Strip out any accidental sparkles
-    return reply.replace(/✨/g, '✦').trim();
+    return cleanAiOutput(reply);
   } catch (err) {
     console.error('[NVIDIA AI Call Error]:', err);
     return getFallbackChatResponse(messages[messages.length - 1]?.content || '');
