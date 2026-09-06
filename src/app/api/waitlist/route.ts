@@ -41,12 +41,16 @@ export async function POST(req: Request) {
     const currentPosition = BASE_WAITLIST_COUNT + totalCount;
 
     if (existing) {
+      const welcomeHtml = renderWelcomeEmail(existing.name || cleanName, currentPosition);
       return NextResponse.json({
         ok: true,
         alreadyRegistered: true,
         message: 'Você já está garantido na nossa Lista de Espera VIP!',
+        name: existing.name || cleanName,
+        email: cleanEmail,
         position: currentPosition,
         totalCount: currentPosition,
+        emailHtml: welcomeHtml,
       });
     }
 
@@ -58,12 +62,14 @@ export async function POST(req: Request) {
       },
     });
 
+    const newPosition = currentPosition + 1;
+    const welcomeHtml = renderWelcomeEmail(cleanName, newPosition);
+
     // Send confirmation email in background
     try {
-      const welcomeHtml = renderWelcomeEmail(cleanName);
       await sendEmail({
         to: cleanEmail,
-        subject: 'Você está na Lista VIP da Trajetta — Posição Confirmada',
+        subject: `Você está na Lista VIP da Trajetta — Vaga #${newPosition} Confirmada`,
         html: welcomeHtml,
       });
     } catch (e) {
@@ -74,8 +80,11 @@ export async function POST(req: Request) {
       ok: true,
       alreadyRegistered: false,
       message: 'Sua vaga foi reservada com sucesso! Verifique seu e-mail.',
-      position: currentPosition + 1,
-      totalCount: currentPosition + 1,
+      name: cleanName,
+      email: cleanEmail,
+      position: newPosition,
+      totalCount: newPosition,
+      emailHtml: welcomeHtml,
     });
   } catch (error) {
     console.error('Waitlist registration error:', error);

@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
+import { useTrajetta } from '@/context/TrajettaContext';
+import confetti from 'canvas-confetti';
 import {
   CheckCircle2,
   ArrowRight,
@@ -22,15 +24,32 @@ import {
   ShieldCheck,
   Send,
   Sliders,
-  CheckCheck
+  CheckCheck,
+  User,
+  LogOut,
+  Mail,
+  Sparkles,
+  X,
+  Shield,
+  ExternalLink
 } from 'lucide-react';
 
 export default function LandingPage() {
+  const { isAuthenticated, user, logout } = useTrajetta();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [waitlistCount, setWaitlistCount] = useState(1482);
+  const [waitlistResult, setWaitlistResult] = useState<{
+    position: number;
+    name: string;
+    email: string;
+    emailHtml: string;
+    alreadyRegistered: boolean;
+  } | null>(null);
+  const [showVipPassModal, setShowVipPassModal] = useState(false);
+  const [showEmailPreviewModal, setShowEmailPreviewModal] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [activeUseCase, setActiveUseCase] = useState<number>(0);
   const [footerEmail, setFooterEmail] = useState('');
@@ -61,6 +80,24 @@ export default function LandingPage() {
       if (data?.ok) {
         setSubmitted(true);
         if (data.totalCount) setWaitlistCount(data.totalCount);
+        setWaitlistResult({
+          position: data.position || waitlistCount,
+          name: data.name || name || 'Membro',
+          email: data.email || email,
+          emailHtml: data.emailHtml || '',
+          alreadyRegistered: Boolean(data.alreadyRegistered),
+        });
+        setShowVipPassModal(true);
+        try {
+          confetti({
+            particleCount: 85,
+            spread: 75,
+            origin: { y: 0.6 },
+            colors: ['#B8FF00', '#58D6A7', '#FFFFFF', '#6FAEF7'],
+          });
+        } catch {
+          // ignore
+        }
       }
     } catch {
       // ignore
@@ -201,22 +238,43 @@ export default function LandingPage() {
               <a className="hover:text-white transition-colors duration-200" href="#pricing">Planos</a>
             </nav>
 
-            {/* CTA Button */}
-            <a
-              href="#how-it-works"
-              className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
-            >
-              <span>Começar</span>
-              <ArrowRight size={14} className="mt-[-1px]" />
-            </a>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2.5">
+                <Link
+                  href="/app"
+                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-4 sm:px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
+                >
+                  <User size={13} className="text-[#0D0F10]" />
+                  <span>Dashboard</span>
+                  <ArrowRight size={14} className="mt-[-1px]" />
+                </Link>
 
-            {/* Login Button (Opens Login Gate /app) */}
-            <Link
-              href="/app"
-              className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[12px] font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full border border-white/10 transition-colors duration-200"
-            >
-              LOGIN
-            </Link>
+                <button
+                  onClick={logout}
+                  title="Sair da conta"
+                  className="bg-[#14181f]/90 hover:bg-[#1a212b] hover:text-red-400 text-neutral-400 text-[12px] font-semibold p-2.5 rounded-full border border-white/10 transition-colors duration-200 flex items-center justify-center"
+                >
+                  <LogOut size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <a
+                  href="#how-it-works"
+                  className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-wide uppercase px-5 py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-[#B8FF00]/20"
+                >
+                  <span>Começar</span>
+                  <ArrowRight size={14} className="mt-[-1px]" />
+                </a>
+
+                <Link
+                  href="/app"
+                  className="bg-[#14181f]/90 hover:bg-[#1a212b] text-white text-[12px] font-semibold tracking-wider uppercase px-4 py-2.5 rounded-full border border-white/10 transition-colors duration-200"
+                >
+                  LOGIN
+                </Link>
+              </div>
+            )}
           </div>
         </header>
         {/* END: MainHeader */}
@@ -243,21 +301,40 @@ export default function LandingPage() {
 
             {/* CTA Action Buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href="#how-it-works"
-                className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
-              >
-                <span>ENTRAR NA LISTA VIP</span>
-                <ArrowRight size={15} className="ml-2" />
-              </a>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    href="/app"
+                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-8 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
+                  >
+                    <span>IR PARA MEU DASHBOARD</span>
+                    <ArrowRight size={15} className="ml-2" />
+                  </Link>
 
-              <Link
-                href="/app"
-                className="inline-flex items-center justify-center bg-[#14181f]/80 hover:bg-[#1c232d] backdrop-blur-md text-white border border-white/20 text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition duration-150"
-              >
-                <span>ACESSAR PLATAFORMA</span>
-                <ChevronRight size={15} className="ml-1.5 text-neutral-400" />
-              </Link>
+                  <span className="text-xs font-mono text-neutral-400 pl-1 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
+                    <span>Conectado como <strong className="text-white">{user.name || 'Membro'}</strong></span>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <a
+                    href="#how-it-works"
+                    className="inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#0D0F10] text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition-all duration-150 shadow-xl shadow-[#B8FF00]/25"
+                  >
+                    <span>ENTRAR NA LISTA VIP</span>
+                    <ArrowRight size={15} className="ml-2" />
+                  </a>
+
+                  <Link
+                    href="/app"
+                    className="inline-flex items-center justify-center bg-[#14181f]/80 hover:bg-[#1c232d] backdrop-blur-md text-white border border-white/20 text-[12px] font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-full transition duration-150"
+                  >
+                    <span>ACESSAR PLATAFORMA</span>
+                    <ChevronRight size={15} className="ml-1.5 text-neutral-400" />
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -553,11 +630,43 @@ export default function LandingPage() {
               </p>
 
               {submitted ? (
-                <div className="p-4 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-xs flex items-center gap-3">
-                  <CheckCircle2 size={18} className="flex-shrink-0" />
-                  <div>
-                    <span className="font-bold block">Inscrição confirmada com sucesso!</span>
-                    <span className="text-neutral-300">Você receberá um convite direto para ativar sua conta na primeira rodada.</span>
+                <div className="p-5 rounded-xl bg-[#090C10] border border-[#B8FF00]/40 text-xs space-y-4 shadow-xl">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/15 border border-[#B8FF00]/40 flex items-center justify-center text-[#B8FF00] flex-shrink-0 mt-0.5">
+                      <Sparkles size={16} />
+                    </div>
+                    <div>
+                      <span className="font-bold text-white text-sm block">
+                        Vaga #{waitlistResult?.position || waitlistCount} Confirmada com Sucesso!
+                      </span>
+                      <span className="text-neutral-400 text-xs block mt-1 leading-relaxed">
+                        {waitlistResult?.alreadyRegistered
+                          ? 'Seu e-mail já estava registrado na Lista VIP prioritária.'
+                          : 'Enviamos o e-mail oficial com seu Founder Pass e instruções de ativação.'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setShowVipPassModal(true)}
+                      className="px-4 py-2 rounded-lg bg-[#B8FF00] text-[#0D0F10] font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-[#a5e600] transition-colors flex items-center gap-1.5 shadow-md shadow-[#B8FF00]/20"
+                    >
+                      <Shield size={13} />
+                      <span>Ver Cartão VIP Founder</span>
+                    </button>
+
+                    {waitlistResult?.emailHtml && (
+                      <button
+                        type="button"
+                        onClick={() => setShowEmailPreviewModal(true)}
+                        className="px-4 py-2 rounded-lg bg-[#14181f] text-neutral-200 border border-white/15 font-mono text-[11px] font-semibold hover:text-white hover:border-white/30 transition-colors flex items-center gap-1.5"
+                      >
+                        <Mail size={13} className="text-[#B8FF00]" />
+                        <span>Visualizar E-mail Recebido</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -887,6 +996,167 @@ export default function LandingPage() {
         </div>
       </footer>
       {/* END: Footer */}
+
+      {/* BEGIN: VIP Founder Pass Modal */}
+      {showVipPassModal && waitlistResult && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-lg bg-[#0C0F14] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden">
+            {/* Background neon ambient glow */}
+            <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#B8FF00]/10 rounded-full blur-[90px] pointer-events-none" />
+
+            {/* Close button */}
+            <button
+              onClick={() => setShowVipPassModal(false)}
+              className="absolute top-5 right-5 p-2 text-neutral-400 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+            >
+              <X size={16} />
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-9 h-9 rounded-xl bg-[#B8FF00]/15 border border-[#B8FF00]/40 flex items-center justify-center text-[#B8FF00]">
+                <Shield size={18} />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono text-[#B8FF00] uppercase tracking-widest block font-bold">
+                  PASSAPORTE CONFIRMADO
+                </span>
+                <h3 className="text-xl font-bold text-white tracking-tight">
+                  Bem-vindo à Trajetta, {waitlistResult.name}
+                </h3>
+              </div>
+            </div>
+
+            {/* VIP Founder Pass Card */}
+            <div className="rounded-2xl p-6 bg-gradient-to-br from-[#141923] via-[#0E1218] to-[#0A0D12] border-2 border-[#B8FF00]/40 relative overflow-hidden shadow-2xl mb-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4 font-mono text-xs">
+                <span className="text-neutral-400 tracking-wider">TRAJETTA FOUNDER PASS</span>
+                <span className="text-[#B8FF00] font-bold px-2 py-0.5 rounded bg-[#B8FF00]/10 border border-[#B8FF00]/30">
+                  VIP #{waitlistResult.position}
+                </span>
+              </div>
+
+              <div className="py-2">
+                <div className="text-2xl font-black text-white tracking-tight">
+                  {waitlistResult.name}
+                </div>
+                <div className="text-xs font-mono text-neutral-400 mt-1">
+                  {waitlistResult.email}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-white/10 pt-4 mt-4 text-[11px] font-mono">
+                <span className="text-[#58D6A7] flex items-center gap-1 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#58D6A7] animate-pulse" />
+                  STATUS: PRIORIDADE MÁXIMA
+                </span>
+                <span className="text-neutral-500">LOTE 2026</span>
+              </div>
+            </div>
+
+            {/* Benefits Checklist */}
+            <div className="space-y-2.5 mb-6 text-xs text-neutral-300">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 size={15} className="text-[#B8FF00] flex-shrink-0" />
+                <span>Vaga garantida na primeira rodada de convites</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 size={15} className="text-[#B8FF00] flex-shrink-0" />
+                <span>Condição de Membro Fundador perpétua</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 size={15} className="text-[#B8FF00] flex-shrink-0" />
+                <span>E-mail oficial de confirmação emitido e despachado</span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {waitlistResult.emailHtml && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowVipPassModal(false);
+                    setShowEmailPreviewModal(true);
+                  }}
+                  className="w-full py-3 px-4 rounded-xl bg-[#14181f] hover:bg-[#1a212b] border border-white/15 text-white text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2"
+                >
+                  <Mail size={14} className="text-[#B8FF00]" />
+                  <span>Ver E-mail Recebido</span>
+                </button>
+              )}
+
+              <Link
+                href="/app"
+                className="w-full py-3 px-4 rounded-xl bg-[#B8FF00] hover:bg-[#a5e600] text-[#0D0F10] text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-[#B8FF00]/20"
+              >
+                <span>Acessar Plataforma</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BEGIN: Email Preview Modal */}
+      {showEmailPreviewModal && waitlistResult && waitlistResult.emailHtml && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-3xl bg-[#090C10] border border-white/20 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            {/* Header of Email Viewer */}
+            <div className="p-4 sm:p-5 border-b border-white/10 bg-[#0E1218] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center text-[#B8FF00]">
+                  <Mail size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <span>Você está na Lista VIP da Trajetta — Vaga #{waitlistResult.position} Confirmada</span>
+                    <span className="px-2 py-0.5 rounded-full bg-[#B8FF00]/15 text-[#B8FF00] text-[10px] font-mono font-bold">
+                      ENVIADO
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-neutral-400 font-mono mt-0.5">
+                    De: Trajetta &lt;suporte@trajetta.app&gt; • Para: {waitlistResult.email}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowEmailPreviewModal(false)}
+                className="p-2 text-neutral-400 hover:text-white rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Email Iframe Viewport */}
+            <div className="flex-1 overflow-auto p-2 sm:p-4 bg-[#050709] flex justify-center">
+              <div className="w-full max-w-[650px] bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                <iframe
+                  title="E-mail de Confirmação Trajetta"
+                  srcDoc={waitlistResult.emailHtml}
+                  className="w-full h-[580px] border-0"
+                />
+              </div>
+            </div>
+
+            {/* Footer Bar */}
+            <div className="p-3.5 border-t border-white/10 bg-[#0E1218] flex items-center justify-between text-xs font-mono text-neutral-400">
+              <span className="flex items-center gap-2 text-[#58D6A7]">
+                <span className="w-2 h-2 rounded-full bg-[#58D6A7]" />
+                Template Dark Luxury Oficial • Visualização Fiel
+              </span>
+
+              <button
+                onClick={() => setShowEmailPreviewModal(false)}
+                className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white font-medium transition-colors"
+              >
+                Fechar Prévia
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

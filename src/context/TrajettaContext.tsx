@@ -102,29 +102,42 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
 
   // Check backend session on mount
   useEffect(() => {
+    let isMounted = true;
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
+        if (!isMounted) return;
         if (data?.ok && data.user) {
           setIsAuthenticated(true);
+          localStorage.setItem('trajetta_auth_session', 'true');
           setUser((prev) => ({
             ...prev,
-            name: data.user.name,
+            name: data.user.name || prev.name,
             title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
             avatar: data.user.avatar || prev.avatar,
+            role: data.user.role || prev.role || 'USER',
           }));
         } else {
-          const localAuth = localStorage.getItem('trajetta_auth_session');
-          setIsAuthenticated(localAuth === 'true');
+          // Backend expressly rejected or has no active session: strictly lock out!
+          localStorage.removeItem('trajetta_auth_session');
+          setIsAuthenticated(false);
         }
       })
       .catch(() => {
+        if (!isMounted) return;
+        // In case of network error, only allow if previously verified
         const localAuth = localStorage.getItem('trajetta_auth_session');
         setIsAuthenticated(localAuth === 'true');
       })
       .finally(() => {
-        setAuthLoading(false);
+        if (isMounted) {
+          setAuthLoading(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = (userData?: any) => {
@@ -132,8 +145,9 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setUser((prev) => ({
         ...prev,
         name: userData.name || prev.name,
-        title: userData.role === 'ADMIN' ? 'Membro Fundador (Admin)' : prev.title,
+        title: userData.role === 'ADMIN' ? 'Membro Fundador (Admin)' : (prev.title || 'Explorador'),
         avatar: userData.avatar || prev.avatar,
+        role: userData.role || 'USER',
       }));
     }
     localStorage.setItem('trajetta_auth_session', 'true');

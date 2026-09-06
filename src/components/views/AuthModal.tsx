@@ -12,7 +12,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { userProfile, setUserProfile } = useTrajetta();
+  const { userProfile, setUserProfile, login } = useTrajetta();
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +36,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
       const data = await res.json();
       if (data.ok && data.user) {
+        login(data.user);
         setUserProfile({
           name: data.user.name,
           title: 'Membro Fundador (Admin)',
@@ -74,6 +75,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
       const data = await res.json();
       if (data.ok && data.user) {
+        login(data.user);
         setUserProfile({
           name: data.user.name,
           title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
@@ -98,9 +100,15 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setError(null);
     setSuccess(`Iniciando autenticação com ${provider}...`);
     setTimeout(() => {
-      setUserProfile({
+      const mockUser = {
         name: `Usuário ${provider}`,
+        role: 'USER',
         title: 'Membro Conectado',
+      };
+      login(mockUser);
+      setUserProfile({
+        name: mockUser.name,
+        title: mockUser.title,
       });
       setSuccess(`Conectado com sucesso via ${provider}!`);
       setTimeout(() => {
