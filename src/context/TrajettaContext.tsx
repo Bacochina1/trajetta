@@ -962,10 +962,15 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     setIsOnboardingOpen(false);
   };
 
-  const resetToZero = () => {
+  const resetToZero = async () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('trajetta_store_v2');
       localStorage.removeItem('trajetta_store_v1');
+    }
+    try {
+      await fetch('/api/admin/reset', { method: 'POST' });
+    } catch (e) {
+      console.warn('Backend reset notice:', e);
     }
     const freshUser: UserProfile = {
       name: '',

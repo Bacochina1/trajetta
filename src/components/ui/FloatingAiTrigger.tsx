@@ -70,6 +70,7 @@ export function FloatingAiTrigger() {
           {/* Mascot trigger button - opens floating popup */}
           <button
             onClick={() => setIsAiPopupOpen(!isAiPopupOpen)}
+            data-tour="ai-trigger"
             aria-label="Abrir Trajetta AI Coach"
             className={`relative p-0.5 sm:p-1 transition-all duration-300 active:scale-95 group focus:outline-none ${
               isAiPopupOpen ? 'scale-105' : 'hover:scale-110 hover:-translate-y-1'

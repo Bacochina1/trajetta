@@ -16,8 +16,10 @@ import {
   ChevronRight,
   TrendingUp,
   User,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { startGuidedTour } from '@/components/ui/GuidedTour';
 
 export function Sidebar({
   isOpen,
@@ -116,7 +118,7 @@ export function Sidebar({
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 space-y-1 overflow-y-auto pr-1">
+        <nav className="flex-1 space-y-1 overflow-y-auto pr-1" data-tour="sidebar-nav">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
@@ -146,12 +148,27 @@ export function Sidebar({
 
         {/* Bottom Section */}
         <div className="pt-3 border-t border-white/8 space-y-2">
+          {/* Guided Tour Trigger Button */}
+          <button
+            onClick={() => {
+              startGuidedTour();
+              onClose();
+            }}
+            title="Iniciar Tour Guiado do Sistema"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-[#B8FF00]/10 border border-white/5 hover:border-[#B8FF00]/30 text-[#8E9499] hover:text-[#B8FF00] text-xs font-semibold transition-all group tactile-btn"
+          >
+            <Sparkles size={14} className="text-[#B8FF00] group-hover:rotate-12 transition-transform" />
+            <span className="flex-1 text-left">Tour do Sistema</span>
+            <span className="text-[9px] font-mono uppercase bg-[#B8FF00]/10 text-[#B8FF00] px-1.5 py-0.5 rounded">Guia</span>
+          </button>
+
           {/* User Profile Chip */}
           <button
             onClick={() => {
               setActiveView('voce');
               onClose();
             }}
+            data-tour="user-profile"
             title="Configurações & Perfil"
             className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-white/5 transition-colors duration-150 tactile-btn group"
           >

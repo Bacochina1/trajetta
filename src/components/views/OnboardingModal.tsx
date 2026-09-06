@@ -9,6 +9,7 @@ import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
 import { Check, ArrowRight, ArrowLeft, CheckCircle2, Plus, X, Sparkles } from 'lucide-react';
+import { startGuidedTour } from '@/components/ui/GuidedTour';
 
 interface HabitChoice {
   title: string;
@@ -89,6 +90,9 @@ export function OnboardingModal() {
       firstGoalArea,
       firstGoalTargetDate,
     });
+    setTimeout(() => {
+      startGuidedTour();
+    }, 450);
   };
 
   return (

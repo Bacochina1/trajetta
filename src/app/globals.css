@@ -182,3 +182,105 @@ html, body {
 .font-mono-custom {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+/* Driver.js Spotlight Onboarding - Trajetta Calm Power Theme */
+.driver-popover {
+  background-color: #171A1D !important;
+  color: #F2F1ED !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(184, 255, 0, 0.08) !important;
+  padding: 20px !important;
+  max-width: 360px !important;
+  font-family: var(--font-manrope), sans-serif !important;
+}
+
+.driver-popover-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #F2F1ED !important;
+  letter-spacing: -0.01em !important;
+  margin-bottom: 8px !important;
+}
+
+.driver-popover-description {
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+  color: #8E9499 !important;
+  margin-bottom: 16px !important;
+}
+
+.driver-popover-progress-text {
+  font-size: 11px !important;
+  font-family: ui-monospace, SFMono-Regular, monospace !important;
+  font-weight: 700 !important;
+  color: #B8FF00 !important;
+  background: rgba(184, 255, 0, 0.1) !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(184, 255, 0, 0.25) !important;
+}
+
+.driver-popover-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  gap: 8px !important;
+}
+
+.driver-popover-btn {
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.driver-popover-prev-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #8E9499 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+.driver-popover-prev-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #F2F1ED !important;
+}
+
+.driver-popover-next-btn {
+  background: #B8FF00 !important;
+  color: #0D0F10 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 0 15px rgba(184, 255, 0, 0.25) !important;
+}
+.driver-popover-next-btn:hover {
+  background: #C6FF19 !important;
+  transform: translateY(-1px) !important;
+}
+
+.driver-popover-close-btn {
+  color: #8E9499 !important;
+  font-size: 18px !important;
+  top: 14px !important;
+  right: 14px !important;
+}
+.driver-popover-close-btn:hover {
+  color: #F2F1ED !important;
+}
+
+.driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: #171A1D !important;
+}
+.driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: #171A1D !important;
+}
+.driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: #171A1D !important;
+}
+.driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: #171A1D !important;
+}

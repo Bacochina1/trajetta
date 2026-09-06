@@ -20,7 +20,9 @@ import {
   RotateCcw,
   Brain,
   Plus,
+  Sparkles,
 } from 'lucide-react';
+import { startGuidedTour } from '@/components/ui/GuidedTour';
 
 interface ProfileViewProps {
   onOpenPaywall: () => void;
@@ -41,6 +43,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
     resetToZero,
     setIsOnboardingOpen,
     setIsAuthModalOpen,
+    setActiveView,
     logout,
   } = useTrajetta();
 
@@ -568,6 +571,16 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+          <button
+            onClick={() => {
+              setActiveView('hoje');
+              setTimeout(() => startGuidedTour(), 300);
+            }}
+            className="px-4 py-2.5 rounded-xl bg-[#B8FF00]/10 hover:bg-[#B8FF00]/20 text-[#B8FF00] text-xs font-bold border border-[#B8FF00]/30 transition-all flex items-center gap-2 select-none tactile-btn"
+          >
+            <Sparkles size={14} />
+            <span>Fazer Tour Guiado</span>
+          </button>
           <button
             onClick={() => setIsOnboardingOpen(true)}
             className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#F2F1ED] text-xs font-bold border border-white/10 transition-all flex items-center gap-2 select-none tactile-btn"

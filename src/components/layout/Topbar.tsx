@@ -4,7 +4,8 @@ import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut } from 'lucide-react';
+import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut, Sparkles } from 'lucide-react';
+import { startGuidedTour } from '@/components/ui/GuidedTour';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen, logout } = useTrajetta();
@@ -32,7 +33,17 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0" data-tour="topbar-user">
+        {/* Tour Guiado */}
+        <button
+          onClick={startGuidedTour}
+          title="Iniciar Tour Guiado do Sistema"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8E9499] hover:text-[#B8FF00] hover:bg-[#B8FF00]/10 border border-white/8 hover:border-[#B8FF00]/30 transition-all tactile-btn"
+        >
+          <Sparkles size={13} className="text-[#B8FF00]" />
+          <span>Tour Guiado</span>
+        </button>
+
         {/* Nova Meta (Hidden on tiny screens, icon on md) */}
         <Button
           variant="secondary"

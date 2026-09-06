@@ -6,8 +6,9 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2, RotateCcw } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2, RotateCcw, Sparkles } from 'lucide-react';
 import { ShareCardModal } from '@/components/ui/ShareCardModal';
+import { startGuidedTour } from '@/components/ui/GuidedTour';
 import { LIFE_AREAS } from '@/lib/constants';
 
 export function TodayView() {
@@ -62,7 +63,7 @@ export function TodayView() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto pb-16">
       {/* Editorial Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-white/8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-white/8" data-tour="today-header">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold tracking-[0.2em] text-[#8E9499] uppercase">
@@ -98,6 +99,16 @@ export function TodayView() {
           </div>
 
           <button
+            onClick={startGuidedTour}
+            title="Iniciar Tour Guiado do Sistema"
+            aria-label="Iniciar Tour Guiado"
+            className="px-3 sm:px-3.5 py-2 sm:h-[74px] min-h-[44px] rounded-2xl bg-[#171A1D] hover:bg-[#B8FF00]/10 hover:border-[#B8FF00]/40 border border-white/8 text-[#8E9499] hover:text-[#B8FF00] transition-all flex flex-col items-center justify-center gap-1 group tactile-btn flex-shrink-0"
+          >
+            <Sparkles size={16} className="text-[#B8FF00] group-hover:scale-110 transition-transform" />
+            <span className="text-[9px] font-mono uppercase font-bold tracking-wider">Tour</span>
+          </button>
+
+          <button
             onClick={() => setIsShareOpen(true)}
             title="Compartilhar no Instagram / WhatsApp"
             aria-label="Compartilhar consistência do dia"
@@ -112,7 +123,7 @@ export function TodayView() {
       {/* Hero Grid: Habits & Goal Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Col: Daily Habits (7 cols) */}
-        <div className="lg:col-span-7 space-y-4">
+        <div className="lg:col-span-7 space-y-4" data-tour="today-movements">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-bold text-[#F2F1ED]">Hábitos de Hoje</h2>
@@ -254,7 +265,7 @@ export function TodayView() {
         <div className="lg:col-span-5 space-y-5">
           {/* Active Journey Card */}
           {activeJourney ? (
-            <div className="trajetta-card p-4 sm:p-5 border border-[#B8FF00]/20 bg-gradient-to-br from-[#171A1D] to-[#121416] relative overflow-hidden">
+            <div className="trajetta-card p-4 sm:p-5 border border-[#B8FF00]/20 bg-gradient-to-br from-[#171A1D] to-[#121416] relative overflow-hidden" data-tour="active-journey">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[10px] font-bold tracking-widest text-[#B8FF00] uppercase flex items-center gap-1.5 truncate">
                   <Compass size={13} className="flex-shrink-0" /> Jornada em Andamento
