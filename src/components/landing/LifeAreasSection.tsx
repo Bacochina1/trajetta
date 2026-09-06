@@ -77,10 +77,10 @@ export function LifeAreasSection() {
       </h2>
 
       {/* Tab Navigation List */}
-      <div className="flex items-center gap-4 sm:gap-8 border-b border-white/10 pb-3 mb-10 text-xs font-mono overflow-x-auto no-scrollbar whitespace-nowrap">
+      <div className="flex items-center gap-3 sm:gap-8 border-b border-white/10 pb-3 mb-8 sm:mb-10 text-xs font-mono overflow-x-auto scrollbar-none whitespace-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab('corpo')}
-          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 ${
+          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 flex-shrink-0 ${
             activeTab === 'corpo' ? 'text-white border-b-2 border-white' : 'text-neutral-400 hover:text-neutral-200'
           }`}
         >
@@ -90,7 +90,7 @@ export function LifeAreasSection() {
 
         <button
           onClick={() => setActiveTab('dinheiro')}
-          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 ${
+          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 flex-shrink-0 ${
             activeTab === 'dinheiro' ? 'text-white border-b-2 border-white' : 'text-neutral-400 hover:text-neutral-200'
           }`}
         >
@@ -100,7 +100,7 @@ export function LifeAreasSection() {
 
         <button
           onClick={() => setActiveTab('carreira')}
-          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 ${
+          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 flex-shrink-0 ${
             activeTab === 'carreira' ? 'text-white border-b-2 border-white' : 'text-neutral-400 hover:text-neutral-200'
           }`}
         >
@@ -110,7 +110,7 @@ export function LifeAreasSection() {
 
         <button
           onClick={() => setActiveTab('mente')}
-          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 ${
+          className={`pb-3 -mb-[13px] font-medium tracking-wide transition-colors flex items-center gap-2 flex-shrink-0 ${
             activeTab === 'mente' ? 'text-white border-b-2 border-white' : 'text-neutral-400 hover:text-neutral-200'
           }`}
         >
@@ -122,7 +122,7 @@ export function LifeAreasSection() {
       {/* Tab Body: Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Atmospheric Preview with embedded dynamic modal */}
-        <div className="lg:col-span-7 rounded-2xl bg-[#0c0e12] border border-white/10 relative overflow-hidden min-h-[340px] sm:min-h-[420px] p-4 sm:p-8 flex items-center justify-center shadow-2xl">
+        <div className="lg:col-span-7 rounded-2xl bg-[#0c0e12] border border-white/10 relative overflow-hidden min-h-[320px] sm:min-h-[420px] p-3 xs:p-4 sm:p-8 flex items-center justify-center shadow-2xl">
           {/* Atmospheric landscape background matching Feature Cards */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#11161d] to-[#1c242e] opacity-85"></div>
           <svg className="absolute inset-0 w-full h-full opacity-35 object-cover pointer-events-none" preserveAspectRatio="none" viewBox="0 0 400 300">
@@ -131,24 +131,24 @@ export function LifeAreasSection() {
           </svg>
 
           {/* Modal Preview Card */}
-          <div className="relative z-10 w-full max-w-[380px] bg-[#12161e]/95 border border-white/15 rounded-xl p-5 shadow-2xl backdrop-blur-md">
+          <div className="relative z-10 w-full max-w-[380px] bg-[#12161e]/95 border border-white/15 rounded-xl p-3.5 xs:p-5 shadow-2xl backdrop-blur-md">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="text-xs font-mono text-neutral-300 font-medium">{current.mockupTitle}</span>
-              <span className="text-[10px] font-mono text-[#B8FF00] bg-[#B8FF00]/10 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-mono text-neutral-300 font-medium truncate mr-2">{current.mockupTitle}</span>
+              <span className="text-[10px] font-mono text-[#B8FF00] bg-[#B8FF00]/10 px-2 py-0.5 rounded-full flex-shrink-0">
                 {current.metricValue}
               </span>
             </div>
 
-            <div className="space-y-2.5 mt-4">
+            <div className="space-y-2 xs:space-y-2.5 mt-3.5 xs:mt-4">
               {current.mockupRows.map((row, idx) => (
-                <div key={idx} className="bg-[#181d26] border border-white/10 rounded-lg p-3 flex items-center justify-between">
-                  <div className="flex items-center space-x-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#B8FF00]" />
-                    <span className="text-xs text-neutral-200">{row.label}</span>
+                <div key={idx} className="bg-[#181d26] border border-white/10 rounded-lg p-2.5 xs:p-3 flex flex-col xs:flex-row xs:items-center justify-between gap-1.5 xs:gap-2">
+                  <div className="flex items-center space-x-2 min-w-0">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#B8FF00] flex-shrink-0" />
+                    <span className="text-[11px] sm:text-xs text-neutral-200 truncate">{row.label}</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-[10px] font-mono text-neutral-400">{row.status}</span>
-                    <span className="text-[9px] font-mono bg-white/5 border border-white/10 text-neutral-300 px-1.5 py-0.5 rounded">
+                  <div className="flex items-center justify-between xs:justify-end space-x-2 pl-5.5 xs:pl-0 flex-shrink-0">
+                    <span className="text-[9.5px] sm:text-[10px] font-mono text-neutral-400">{row.status}</span>
+                    <span className="text-[8.5px] sm:text-[9px] font-mono bg-white/5 border border-white/10 text-neutral-300 px-1.5 py-0.5 rounded">
                       {row.tag}
                     </span>
                   </div>
@@ -156,9 +156,9 @@ export function LifeAreasSection() {
               ))}
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-neutral-400">
-              <span>{current.metricLabel}</span>
-              <span className="text-white font-medium">Cadência Saudável</span>
+            <div className="mt-3.5 xs:mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] xs:text-[11px] font-mono text-neutral-400">
+              <span className="truncate mr-2">{current.metricLabel}</span>
+              <span className="text-white font-medium flex-shrink-0">Cadência Saudável</span>
             </div>
           </div>
         </div>
@@ -168,31 +168,31 @@ export function LifeAreasSection() {
           <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider mb-2">
             {current.tag}
           </span>
-          <h3 className="text-2xl sm:text-3xl font-normal tracking-tight text-white mb-4 leading-snug">
+          <h3 className="text-xl xs:text-2xl sm:text-3xl font-normal tracking-tight text-white mb-3 sm:mb-4 leading-snug">
             {current.title}
           </h3>
-          <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed mb-6">
+          <p className="text-xs xs:text-sm sm:text-base text-neutral-400 font-light leading-relaxed mb-6">
             {current.desc}
           </p>
 
-          <div className="space-y-3 mb-8 w-full font-mono text-xs text-neutral-300">
+          <div className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8 w-full font-mono text-[11px] xs:text-xs text-neutral-300">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
               <span>Visualização longitudinal de progresso</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
               <span>Pisos mínimos para períodos de crise e cansaço</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
               <span>Integração no mesmo review semanal sem silos</span>
             </div>
           </div>
 
           <a
             href="#waitlist"
-            className="inline-flex items-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5"
+            className="w-full xs:w-auto inline-flex items-center justify-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5 text-center"
           >
             <span>ENTRAR NA LISTA VIP</span>
             <ArrowRight className="w-3.5 h-3.5" />

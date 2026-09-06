@@ -22,10 +22,10 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#040608] border-t border-white/10 px-6 sm:px-10 lg:px-14 pt-16 pb-12" data-purpose="page-footer" id="contact">
+    <footer className="bg-[#040608] border-t border-white/10 px-4 xs:px-6 sm:px-10 lg:px-14 pt-12 sm:pt-16 pb-10 sm:pb-12" data-purpose="page-footer" id="contact">
       <div className="max-w-[1440px] mx-auto">
         {/* Top row: Newsletter + Links columns */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 pb-12 sm:pb-16">
           {/* Left Column: Branding and Subscription */}
           <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-0 md:pr-6">
             {/* Official White Logo */}
@@ -40,18 +40,18 @@ export function Footer() {
               <span className="font-bold text-sm tracking-[0.18em] uppercase text-white">TRAJETTA</span>
             </div>
 
-            <p className="text-xs text-neutral-400 leading-relaxed mb-6 max-w-sm">
+            <p className="text-xs text-neutral-400 leading-relaxed mb-5 sm:mb-6 max-w-sm">
               Seu sistema pessoal de evolução. Direção clara de longo prazo, ciclos semanais sem punição e acompanhamento lúcido.
             </p>
 
-            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest mb-2.5">
+            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest mb-2">
               RECEBER AVISOS DO PRÓXIMO LOTE
             </span>
 
             {/* Subscribe Form */}
             {quickSubmitted ? (
               <div className="flex items-center gap-2 text-xs font-mono text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/20 rounded-lg px-3 py-2 w-full max-w-sm">
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                 <span>E-mail cadastrado na Lista VIP!</span>
               </div>
             ) : (
@@ -62,11 +62,11 @@ export function Footer() {
                   placeholder="Seu melhor e-mail..."
                   value={quickEmail}
                   onChange={(e) => setQuickEmail(e.target.value)}
-                  className="bg-transparent border-none text-xs text-white placeholder-neutral-500 px-3 py-2 focus:outline-none flex-1"
+                  className="bg-transparent border-none text-xs text-white placeholder-neutral-500 px-3 py-2 focus:outline-none flex-1 min-w-0"
                 />
                 <button
                   type="submit"
-                  className="bg-white hover:bg-neutral-200 text-black text-[10px] font-bold tracking-wider uppercase px-3 py-2 rounded transition-colors"
+                  className="bg-white hover:bg-neutral-200 text-black text-[10px] font-bold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
                 >
                   CADASTRAR
                 </button>
@@ -75,13 +75,13 @@ export function Footer() {
           </div>
 
           {/* Right Columns: Links */}
-          <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+          <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
             {/* Column 1: Navegação */}
             <div>
-              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
                 NAVEGAÇÃO
               </span>
-              <ul className="space-y-2.5 text-xs text-neutral-400">
+              <ul className="space-y-2 text-xs text-neutral-400">
                 <li><a className="hover:text-white transition-colors" href="#visao">Visão de Longo Prazo</a></li>
                 <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos Semanais</a></li>
                 <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas da Vida</a></li>
@@ -93,27 +93,27 @@ export function Footer() {
 
             {/* Column 2: Metodologia */}
             <div>
-              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
                 METODOLOGIA
               </span>
-              <ul className="space-y-2.5 text-xs text-neutral-400">
+              <ul className="space-y-2 text-xs text-neutral-400">
                 <li><span className="text-neutral-300">Estrela-Guia</span></li>
-                <li><span className="text-neutral-300">3 Prioridades da Semana</span></li>
+                <li><span className="text-neutral-300">3 Prioridades</span></li>
                 <li><span className="text-neutral-300">Piso Mínimo</span></li>
                 <li><span className="text-neutral-300">Review de Domingo</span></li>
                 <li><span className="text-neutral-300">Retomada Sem Culpa</span></li>
-                <li><span className="text-neutral-300">Zero Streaks Punitivos</span></li>
+                <li><span className="text-neutral-300">Zero Streaks</span></li>
               </ul>
             </div>
 
             {/* Column 3: Sistema & Admin */}
-            <div>
-              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-4">
+            <div className="col-span-2 sm:col-span-1">
+              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
                 SISTEMA & CRM
               </span>
-              <ul className="space-y-2.5 text-xs text-neutral-400">
+              <ul className="space-y-2 text-xs text-neutral-400">
                 <li><span className="text-neutral-300">Trajetta Engine</span></li>
-                <li><span className="text-neutral-300">Google Gemini Flash</span></li>
+                <li><span className="text-neutral-300">Motor de IA Contextual</span></li>
                 <li><span className="text-neutral-300">Memória Longitudinal</span></li>
                 <li><span className="text-neutral-300">Mobile PWA</span></li>
                 <li className="pt-2">
@@ -131,7 +131,7 @@ export function Footer() {
         </div>
 
         {/* Bottom row: Copyright & Instagram */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+        <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-3 sm:gap-4 text-center sm:text-left">
           <div className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
             <span>Trajetta © {new Date().getFullYear()} — Todos os direitos reservados.</span>

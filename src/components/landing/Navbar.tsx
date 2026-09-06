@@ -69,11 +69,11 @@ export function Navbar() {
 
       {/* Mobile Menu Dropdown Modal */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bg-[#090c10]/98 border-b border-white/15 px-5 py-6 shadow-2xl backdrop-blur-2xl flex flex-col space-y-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="md:hidden fixed inset-x-0 top-16 bg-[#090c10]/98 border-b border-white/15 px-4 xs:px-5 py-5 shadow-2xl backdrop-blur-2xl flex flex-col space-y-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
           <a
             href="#visao"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
+            className="text-sm font-medium text-neutral-300 hover:text-white py-2 border-b border-white/5 flex items-center justify-between transition-colors"
           >
             <span>Visão de Longo Prazo</span>
             <span className="text-xs font-mono text-neutral-500">01</span>
@@ -81,7 +81,7 @@ export function Navbar() {
           <a
             href="#ciclos"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
+            className="text-sm font-medium text-neutral-300 hover:text-white py-2 border-b border-white/5 flex items-center justify-between transition-colors"
           >
             <span>Ciclos Semanais</span>
             <span className="text-xs font-mono text-neutral-500">02</span>
@@ -89,7 +89,7 @@ export function Navbar() {
           <a
             href="#areas"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
+            className="text-sm font-medium text-neutral-300 hover:text-white py-2 border-b border-white/5 flex items-center justify-between transition-colors"
           >
             <span>As 4 Áreas da Vida</span>
             <span className="text-xs font-mono text-neutral-500">03</span>
@@ -97,7 +97,7 @@ export function Navbar() {
           <a
             href="#metodo"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 border-b border-white/5 flex items-center justify-between"
+            className="text-sm font-medium text-neutral-300 hover:text-white py-2 border-b border-white/5 flex items-center justify-between transition-colors"
           >
             <span>O Método Sem Punição</span>
             <span className="text-xs font-mono text-neutral-500">04</span>
@@ -105,13 +105,13 @@ export function Navbar() {
           <a
             href="#faq"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-medium text-neutral-300 hover:text-white py-1.5 flex items-center justify-between"
+            className="text-sm font-medium text-neutral-300 hover:text-white py-2 flex items-center justify-between transition-colors"
           >
             <span>Perguntas Frequentes</span>
             <span className="text-xs font-mono text-neutral-500">05</span>
           </a>
 
-          <div className="pt-2">
+          <div className="pt-2 pb-2">
             <a
               href="#waitlist"
               onClick={() => setMobileMenuOpen(false)}
