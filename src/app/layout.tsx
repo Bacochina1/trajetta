@@ -22,15 +22,16 @@ export const metadata: Metadata = {
   description: 'Planeje para sua vida real, não para sua versão perfeita. O aplicativo que transforma metas e hábitos em evidência visível de evolução ao longo do tempo.',
   icons: {
     icon: [
+      { url: '/trajetta-logo.svg', type: 'image/svg+xml' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
-      { url: '/trajetta-logo.png', type: 'image/png' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180' },
-      { url: '/trajetta-logo.png' },
+      { url: '/icon-512.png', sizes: '512x512' },
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/trajetta-logo.svg',
   },
 };
 

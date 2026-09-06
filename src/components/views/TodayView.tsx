@@ -6,7 +6,8 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2 } from 'lucide-react';
+import { ShareCardModal } from '@/components/ui/ShareCardModal';
 import { LIFE_AREAS } from '@/lib/constants';
 
 export function TodayView() {
@@ -19,10 +20,13 @@ export function TodayView() {
     incrementJourneyDay,
     setActiveView,
     setIsNewGoalModalOpen,
+    lifeScore,
+    user,
   } = useTrajetta();
 
   const [dailyNote, setDailyNote] = useState('');
   const [noteSaved, setNoteSaved] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   // Calculate daily movements progress
   const todayIndex = new Date().getDay();
@@ -66,22 +70,33 @@ export function TodayView() {
           </p>
         </div>
 
-        {/* Daily Progress Gauge */}
-        <div className="bg-[#171A1D] border border-white/8 rounded-2xl p-4 min-w-[200px] flex items-center justify-between gap-4">
-          <div>
-            <span className="text-[11px] text-[#8E9499] uppercase tracking-wider block font-semibold">
-              Consistência do dia
-            </span>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <span className="text-2xl font-black text-[#F2F1ED] tabular-numbers">
-                {completedMovements}
+        {/* Daily Progress Gauge & Share */}
+        <div className="flex items-center gap-3">
+          <div className="bg-[#171A1D] border border-white/8 rounded-2xl p-4 min-w-[200px] flex items-center justify-between gap-4">
+            <div>
+              <span className="text-[11px] text-[#8E9499] uppercase tracking-wider block font-semibold">
+                Consistência do dia
               </span>
-              <span className="text-xs text-[#8E9499]">de {totalMovements} concluídos</span>
+              <div className="flex items-baseline gap-1.5 mt-1">
+                <span className="text-2xl font-black text-[#F2F1ED] tabular-numbers">
+                  {completedMovements}
+                </span>
+                <span className="text-xs text-[#8E9499]">de {totalMovements} concluídos</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-full border-2 border-white/10 flex items-center justify-center font-bold text-xs text-[#B8FF00] tabular-numbers relative">
+              <span>{movementPercentage}%</span>
             </div>
           </div>
-          <div className="w-12 h-12 rounded-full border-2 border-white/10 flex items-center justify-center font-bold text-xs text-[#B8FF00] tabular-numbers relative">
-            <span>{movementPercentage}%</span>
-          </div>
+
+          <button
+            onClick={() => setIsShareOpen(true)}
+            title="Compartilhar no Instagram / WhatsApp"
+            className="h-[74px] px-3.5 rounded-2xl bg-[#171A1D] hover:bg-[#B8FF00]/10 hover:border-[#B8FF00]/40 border border-white/8 text-[#8E9499] hover:text-[#B8FF00] transition-all flex flex-col items-center justify-center gap-1 group"
+          >
+            <Share2 size={18} className="group-hover:scale-110 transition-transform" />
+            <span className="text-[9px] font-mono uppercase font-bold tracking-wider">Share</span>
+          </button>
         </div>
       </div>
 
@@ -325,6 +340,28 @@ export function TodayView() {
           </div>
         </div>
       </div>
+
+      {/* Share Card Modal */}
+      <ShareCardModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        data={{
+          userName: user?.name || 'Matheus Bacochina',
+          overallScore: Math.round(
+            (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
+          ),
+          scoreStatus: 'Ritmo Consistente',
+          streakDays: 14,
+          consistencyRate: movementPercentage,
+          completedHabitsCount: todayHabitsDone,
+          areas: {
+            corpo: lifeScore.corpo.score,
+            dinheiro: lifeScore.dinheiro.score,
+            carreira: lifeScore.carreira.score,
+            vida: lifeScore.vida.score,
+          },
+        }}
+      />
     </div>
   );
 }

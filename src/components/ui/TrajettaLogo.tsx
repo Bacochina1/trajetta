@@ -21,7 +21,7 @@ export function TrajettaLogo({
         style={{ width: size, height: size }}
       >
         <img
-          src="/trajetta-logo-transparent.png"
+          src="/trajetta-logo.svg"
           alt="Trajetta Logo"
           className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(184,255,0,0.35)]"
         />

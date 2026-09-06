@@ -8,10 +8,13 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS, NORTH_STAR_DESCRIPTION } from '@/lib/constants';
 import { LifeArea } from '@/types';
 import { DAY_NAMES, DAY_INITIALS } from '@/lib/utils';
-import { CalendarCheck, CheckCircle2, TrendingUp, Edit3, Check } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, TrendingUp, Edit3, Check, Share2 } from 'lucide-react';
+import { ShareCardModal } from '@/components/ui/ShareCardModal';
+import { ShareCardData } from '@/lib/shareCardGenerator';
 
 export function WeekView() {
-  const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits } = useTrajetta();
+  const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits, lifeScore } = useTrajetta();
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [editingArea, setEditingArea] = useState<LifeArea | null>(null);
   const [editText, setEditText] = useState('');
   const [capacity, setCapacity] = useState<'leve' | 'normal' | 'intensa'>('normal');
@@ -65,16 +68,28 @@ export function WeekView() {
           </p>
         </div>
 
-        {/* Action: Open Review */}
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => setIsReviewModalOpen(true)}
-          className="shadow-[0_0_25px_rgba(184,255,0,0.25)]"
-        >
-          <CheckCircle2 size={16} strokeWidth={2.2} />
-          <span>Fazer Weekly Review</span>
-        </Button>
+        {/* Action: Share & Open Review */}
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => setIsShareOpen(true)}
+            className="flex items-center gap-1.5 text-xs font-bold"
+          >
+            <Share2 size={15} className="text-[#B8FF00]" />
+            <span>Compartilhar</span>
+          </Button>
+
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => setIsReviewModalOpen(true)}
+            className="shadow-[0_0_25px_rgba(184,255,0,0.25)]"
+          >
+            <CheckCircle2 size={16} strokeWidth={2.2} />
+            <span>Fazer Weekly Review</span>
+          </Button>
+        </div>
       </div>
 
       {/* North Star Metric Hero Card */}
@@ -317,6 +332,28 @@ export function WeekView() {
           })}
         </div>
       </div>
+
+      {/* Share Card Modal */}
+      <ShareCardModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        data={{
+          userName: user.name || 'Matheus Bacochina',
+          overallScore: Math.round(
+            (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
+          ),
+          scoreStatus: 'Ritmo Consistente',
+          streakDays: 14,
+          consistencyRate: 86,
+          completedHabitsCount: habits.filter(h => h.daysCompletedThisWeek.length > 0).length,
+          areas: {
+            corpo: lifeScore.corpo.score,
+            dinheiro: lifeScore.dinheiro.score,
+            carreira: lifeScore.carreira.score,
+            vida: lifeScore.vida.score,
+          },
+        }}
+      />
     </div>
   );
 }
