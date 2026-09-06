@@ -379,7 +379,51 @@ Qual é o hábito indispensável que você quer sustentar nesta primeira semana?
 A recuperação é imediata: execute o próximo movimento planejado com calma, sem tentar compensar o passado.`;
   }
 
-  // Case 11: Resposta padrão reflexiva e proporcional
+  // Case 11: Saúde, corpo, emagrecimento e treino
+  if (
+    qLower.includes('emagrec') ||
+    qLower.includes('perder peso') ||
+    qLower.includes('peso') ||
+    qLower.includes('dieta') ||
+    qLower.includes('alimentação') ||
+    qLower.includes('alimentacao') ||
+    qLower.includes('treino') ||
+    qLower.includes('exercício') ||
+    qLower.includes('exercicio') ||
+    qLower.includes('saúde') ||
+    qLower.includes('saude') ||
+    qLower.includes('corpo')
+  ) {
+    return `Para o corpo evoluir de forma sustentável, a regra de ouro é o **piso mínimo** sem extremismos:
+1. **Alimentação**: reduza excessos óbvios sem dietas punitivas que geram compulsão no fim de semana.
+2. **Sono**: proteja pelo menos 7h; o déficit crônico de sono eleva o estresse e desregula o apetite.
+3. **Movimento**: garanta constância (3 a 4 vezes na semana), mesmo que sejam sessões curtas de 25 a 30 minutos.
+
+Qual é a primeira dessas três frentes que você quer destravar nesta semana?`;
+  }
+
+  // Case 12: Respostas curtas de desabafo ("tudo", "nada", "não sei", etc.)
+  if (qLower === 'tudo' || qLower === 'tudo de uma vez' || qLower === 'tudo!' || qLower.startsWith('tudo')) {
+    return `Quando tudo parece urgente, nada é prioridade real.
+
+Escolha apenas uma única frente para organizar hoje: Corpo, Trabalho ou Rotina pessoal. Qual delas causará o maior alívio se for destravada primeiro?`;
+  }
+
+  if (qLower === 'nada' || qLower === 'nenhum' || qLower === 'nenhuma') {
+    return `Se nenhuma pendência imediata está pressionando agora, use esse momento para descansar conscientemente ou consolidar um hábito que já funciona bem. O que você gostaria de revisar com calma?`;
+  }
+
+  if (qLower === 'não sei' || qLower === 'nao sei' || qLower === 'estou perdido' || qLower === 'perdido') {
+    return `Não saber por onde começar é um sinal comum de sobrecarga mental.
+
+Vamos simplificar: qual é o menor gesto prático que você pode concluir nos próximos 15 minutos para quebrar a inércia?`;
+  }
+
+  // Case 13: Resposta adaptativa contextual (evita loop se o usuário continuar a conversa)
+  if (priorText.includes('o que está demandando mais sua atenção') || priorText.includes('clareza acontece quando você isola')) {
+    return `Entendido. Para dar tração sem sobrecarregar sua rotina, escolha apenas um micro-passo para hoje. Qual é a ação imediata que você prefere executar?`;
+  }
+
   return `O maior ganho de clareza acontece quando você isola o ruído e define o próximo passo viável para agora.
 
 O que está demandando mais sua atenção neste momento?`;

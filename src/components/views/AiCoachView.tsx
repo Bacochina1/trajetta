@@ -112,6 +112,10 @@ export function AiCoachView() {
       const lower = query.toLowerCase();
       if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('pesad')) {
         fallback = 'Em dias de sobrecarga, reduza a pressão. Escolha apenas o piso mínimo dos seus hábitos para manter a constância sem se esgotar.';
+      } else if (lower.includes('emagrec') || lower.includes('peso') || lower.includes('saúde') || lower.includes('dieta') || lower.includes('treino')) {
+        fallback = 'Para o corpo, o piso mínimo vence extremismos: sono regulado, alimentação limpa e movimento constante 3x na semana. Qual dessas três frentes você quer destravar primeiro?';
+      } else if (lower === 'tudo' || lower.includes('tudo')) {
+        fallback = 'Quando tudo parece urgente, nada é prioridade real. Escolha apenas uma única frente: Corpo, Trabalho ou Rotina pessoal. Em qual você quer focar agora?';
       } else if (lower.includes('hoje')) {
         fallback = 'O que precisa estar resolvido até o final do dia para você encerrar com tranquilidade?';
       } else if (lower.includes('semana') || lower.includes('plano') || lower === 'pla') {
