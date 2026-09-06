@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
-import { Button } from '@/components/ui/Button';
-import { Lock, Mail, User as UserIcon, Shield, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, User as UserIcon, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface AuthGateViewProps {
@@ -18,31 +17,6 @@ export function AuthGateView({ onLoginSuccess }: AuthGateViewProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  const handleQuickDemo = async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@trajetta.app', password: 'TrajettaAdmin2026!' }),
-      });
-      const data = await res.json();
-      if (data.ok && data.user) {
-        setSuccess('Autenticado com sucesso como Jim (Membro Fundador)!');
-        setTimeout(() => {
-          onLoginSuccess(data.user);
-        }, 600);
-      } else {
-        setError(data.error || 'Falha ao autenticar com conta demo.');
-      }
-    } catch {
-      setError('Erro de conexão com o servidor.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,25 +184,6 @@ export function AuthGateView({ onLoginSuccess }: AuthGateViewProps) {
               <ArrowRight size={14} />
             </button>
           </form>
-
-          {/* Quick Demo Access Divider */}
-          <div className="relative flex items-center justify-center my-6">
-            <div className="border-t border-white/10 w-full" />
-            <span className="bg-[#0e1218] px-3 text-[10px] font-mono text-[#8E9499] uppercase tracking-widest absolute">
-              Acesso de Teste
-            </span>
-          </div>
-
-          {/* 1-Click Admin Demo Login */}
-          <button
-            type="button"
-            onClick={handleQuickDemo}
-            disabled={loading}
-            className="w-full py-2.5 px-4 rounded-xl bg-[#14181f] hover:bg-[#1a2028] border border-white/10 hover:border-white/20 text-xs text-[#F2F1ED] font-medium transition-all flex items-center justify-center gap-2 group"
-          >
-            <Shield size={14} className="text-[#B8FF00]" />
-            <span>Entrar como Membro Fundador (Demo: Jim)</span>
-          </button>
         </div>
       </div>
 

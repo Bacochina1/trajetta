@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { useTrajetta } from '@/context/TrajettaContext';
-import { Lock, Mail, User as UserIcon, Shield, Check, AlertCircle } from 'lucide-react';
+import { Lock, Mail, User as UserIcon, Check, AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -20,42 +20,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  const handleQuickAdmin = async () => {
-    setEmail('admin@trajetta.app');
-    setPassword('TrajettaAdmin2026!');
-    setError(null);
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@trajetta.app', password: 'TrajettaAdmin2026!' }),
-      });
-
-      const data = await res.json();
-      if (data.ok && data.user) {
-        login(data.user);
-        setUserProfile({
-          name: data.user.name,
-          title: 'Membro Fundador (Admin)',
-          avatar: data.user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
-        });
-        setSuccess('Logado com sucesso como Admin (Jim)!');
-        setTimeout(() => {
-          onClose();
-          setSuccess(null);
-        }, 800);
-      } else {
-        setError(data.error || 'Erro ao conectar conta admin.');
-      }
-    } catch {
-      setError('Falha de conexão com o servidor de autenticação.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,28 +85,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Sua Conta Trajetta">
       <div className="space-y-5">
-        {/* Quick Admin Access Banner */}
-        <div className="p-3.5 rounded-xl bg-[#1F2328] border border-[#B8FF00]/30 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center text-[#B8FF00]">
-              <Shield className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-[#F2F1ED] block">Conta de Administrador (Jim)</span>
-              <span className="text-[11px] text-[#8E9499]">admin@trajetta.app</span>
-            </div>
-          </div>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleQuickAdmin}
-            disabled={loading}
-            className="text-xs py-1 px-3"
-          >
-            Entrar como Admin
-          </Button>
-        </div>
-
         {/* Tabs */}
         <div className="flex rounded-lg bg-[#111315] p-1 border border-white/8">
           <button

@@ -201,7 +201,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
                 </span>
               </div>
               <p className="text-xs text-[#8E9499] mt-0.5">
-                {user.email || 'admin@trajetta.app'}
+                {user.email || (user.role === 'ADMIN' ? 'admin@trajetta.app' : 'membro@trajetta.app')}
               </p>
               <div className="flex items-center gap-2 mt-2 text-[11px] text-[#8E9499]">
                 <Globe size={12} />

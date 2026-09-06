@@ -123,6 +123,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
           setUser((prev) => ({
             ...prev,
             name: data.user.name || prev.name,
+            email: data.user.email || prev.email,
             title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
             avatar: data.user.avatar || prev.avatar,
             role: data.user.role || prev.role || 'USER',
@@ -155,6 +156,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setUser((prev) => ({
         ...prev,
         name: userData.name || prev.name,
+        email: userData.email || prev.email,
         title: userData.role === 'ADMIN' ? 'Membro Fundador (Admin)' : (prev.title || 'Explorador'),
         avatar: userData.avatar || prev.avatar,
         role: userData.role || 'USER',
