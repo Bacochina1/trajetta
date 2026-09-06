@@ -27,7 +27,7 @@ export function AiCoachView() {
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'metas' | 'habitos' | 'lifescore' | 'estrategia'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'evolucao' | 'metas' | 'habitos' | 'lifescore' | 'estrategia'>('all');
   const [refreshSeed, setRefreshSeed] = useState(0);
 
   // Dynamic reflection prompts generated from user's live data
@@ -38,9 +38,10 @@ export function AiCoachView() {
       habits,
       journeys,
       weeklyPlan,
+      weeklyReviews,
       lifeScore,
     });
-  }, [user, goals, habits, journeys, weeklyPlan, lifeScore, refreshSeed]);
+  }, [user, goals, habits, journeys, weeklyPlan, weeklyReviews, lifeScore, refreshSeed]);
 
   const filteredPrompts = useMemo(() => {
     if (selectedCategory === 'all') return dynamicPrompts;
@@ -240,10 +241,11 @@ export function AiCoachView() {
             <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
               {[
                 { id: 'all', label: 'Todas' },
+                { id: 'evolucao', label: '🚀 Evolução' },
                 { id: 'metas', label: '🎯 Metas' },
                 { id: 'habitos', label: '⚡ Hábitos' },
                 { id: 'lifescore', label: '⚖️ Life Score' },
-                { id: 'estrategia', label: '🧭 Estratégia' },
+                { id: 'estrategia', label: '🧭 Desejos & Futuro' },
               ].map(cat => (
                 <button
                   key={cat.id}

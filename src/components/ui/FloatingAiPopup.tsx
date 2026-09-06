@@ -56,7 +56,7 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'metas' | 'habitos' | 'lifescore' | 'estrategia'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'evolucao' | 'metas' | 'habitos' | 'lifescore' | 'estrategia'>('all');
   const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,9 +69,10 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
       habits,
       journeys,
       weeklyPlan,
+      weeklyReviews,
       lifeScore,
     });
-  }, [user, goals, habits, journeys, weeklyPlan, lifeScore]);
+  }, [user, goals, habits, journeys, weeklyPlan, weeklyReviews, lifeScore]);
 
   const filteredPrompts = useMemo(() => {
     if (selectedCategory === 'all') return dynamicPrompts.slice(0, 4);
@@ -271,9 +272,11 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 text-[10px] font-mono">
               {[
                 { id: 'all', label: 'Todas' },
+                { id: 'evolucao', label: '🚀 Evolução' },
                 { id: 'metas', label: '🎯 Metas' },
                 { id: 'habitos', label: '⚡ Hábitos' },
                 { id: 'lifescore', label: '⚖️ Life Score' },
+                { id: 'estrategia', label: '🧭 Desejos' },
               ].map((tab) => (
                 <button
                   key={tab.id}
