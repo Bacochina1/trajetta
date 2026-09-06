@@ -5,6 +5,7 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { Button } from '@/components/ui/Button';
 import { Brain, Send, Compass, ArrowRight, RefreshCw, Sparkles, Flame, Target, Scale } from 'lucide-react';
 import { generatePersonalizedPrompts, PromptSuggestion } from '@/lib/ai/promptSuggestions';
+import { FormattedMessage } from '@/components/ui/FormattedMessage';
 
 interface Message {
   id: string;
@@ -16,11 +17,14 @@ interface Message {
 export function AiCoachView() {
   const { user, goals, habits, journeys, weeklyPlan, weeklyReviews, timeline, lifeScore } = useTrajetta();
 
+  const firstName = user.name ? user.name.split(' ')[0] : 'Explorador';
+  const targetNote = user.target12Months && user.target12Months.length > 2 ? ` com foco em ${user.target12Months}` : '';
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'm-1',
       sender: 'ia',
-      text: `Olá ${user.name}. Eu acompanho sua trajetória desde que você começou. Sei que sua meta principal de 12 meses é "${user.target12Months}". Como posso ajudar a calibrar sua semana ou seus hábitos hoje?`,
+      text: `Olá, ${firstName}. Acompanho sua trajetória${targetNote}. Quer organizar o dia de hoje ou ajustar o plano da semana?`,
       timestamp: 'Hoje às 09:00',
     },
   ]);
@@ -104,16 +108,14 @@ export function AiCoachView() {
       setMessages((prev) => [...prev, iaMsg]);
     } catch (err) {
       console.warn('Chat request fallback:', err);
-      let fallback = '';
+      let fallback = 'Quer organizar o dia de hoje ou precisa de direcionamento para a semana?';
       const lower = query.toLowerCase();
-      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('reduzir') || lower.includes('treino')) {
-        fallback = `Entendo a sobrecarga, ${user.name || 'Explorador'}. Em fases de atrito intenso, o objetivo no Trajetta é não zerar: reduza o volume das suas metas para 30% e proteja a constância de base sem se desgastar.`;
-      } else if (lower.includes('acordar') || lower.includes('disciplina') || lower.includes('começar') || lower.includes('foco')) {
-        fallback = `Para vencer o atrito inicial com "${query.slice(0, 40)}...", aplique a regra do primeiro minuto: organize o ambiente na véspera e dê apenas o menor passo físico possível amanhã sem depender de motivação.`;
-      } else if (lower.includes('meta') || lower.includes('dinheiro') || lower.includes('score')) {
-        fallback = `Analisando suas prioridades atuais${user.target12Months ? ` rumo a "${user.target12Months}"` : ''}, divida o horizonte dos próximos dias em passos binários claros e execute o primeiro hoje.`;
-      } else {
-        fallback = `${user.name || 'Explorador'}, sobre sua reflexão ("${query.length > 45 ? query.slice(0, 42) + '...' : query}"): o segredo da consistência duradoura é escolher uma única prioridade para hoje e sustentá-la com calma.`;
+      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('pesad')) {
+        fallback = 'Em dias de sobrecarga, reduza a pressão. Escolha apenas o piso mínimo dos seus hábitos para manter a constância sem se esgotar.';
+      } else if (lower.includes('hoje')) {
+        fallback = 'O que precisa estar resolvido até o final do dia para você encerrar com tranquilidade?';
+      } else if (lower.includes('semana') || lower.includes('plano') || lower === 'pla') {
+        fallback = 'Quer organizar o dia de hoje ou montar o plano da semana?';
       }
 
       const iaMsg: Message = {
@@ -200,7 +202,11 @@ export function AiCoachView() {
                       : 'bg-[#111315] border border-white/8 text-[#F2F1ED]'
                   }`}
                 >
-                  <p>{msg.text}</p>
+                  {isUser ? (
+                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                  ) : (
+                    <FormattedMessage content={msg.text} />
+                  )}
                   <span
                     className={`text-[10px] block mt-1.5 ${
                       isUser ? 'text-[#0D0F10]/70 text-right' : 'text-[#8E9499]'

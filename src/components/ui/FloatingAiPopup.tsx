@@ -16,6 +16,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { generatePersonalizedPrompts, PromptSuggestion } from '@/lib/ai/promptSuggestions';
+import { FormattedMessage } from '@/components/ui/FormattedMessage';
 
 interface Message {
   id: string;
@@ -45,11 +46,13 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
     setActiveView
   } = useTrajetta();
 
+  const firstName = user.name ? user.name.split(' ')[0] : 'Explorador';
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'm-1',
       sender: 'ia',
-      text: `Olá ${user.name || 'Explorador'}! Acompanho sua trajetória em tempo real. Como posso ajudar a calibrar sua semana ou seus hábitos agora?`,
+      text: `Olá, ${firstName}. Acompanho sua trajetória. Quer organizar o dia de hoje ou ajustar o plano da semana?`,
       timestamp: 'Hoje',
     },
   ]);
@@ -145,14 +148,14 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
       setMessages((prev) => [...prev, iaMsg]);
     } catch (err) {
       console.warn('Floating chat request fallback:', err);
-      let fallback = '';
+      let fallback = 'Quer organizar o dia de hoje ou precisa de direcionamento para a semana?';
       const lower = query.toLowerCase();
-      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('reduzir') || lower.includes('treino')) {
-        fallback = `Entendo a sobrecarga, ${user.name || 'Explorador'}. Em fases de atrito intenso, reduza o volume das metas para 30% e proteja a base da sua consistência sem culpa.`;
-      } else if (lower.includes('acordar') || lower.includes('disciplina') || lower.includes('começar') || lower.includes('foco')) {
-        fallback = `Para vencer o atrito inicial com "${query.slice(0, 35)}...", aplique a regra do primeiro minuto: dê apenas o menor passo físico possível amanhã.`;
-      } else {
-        fallback = `${user.name || 'Explorador'}, sobre "${query.length > 40 ? query.slice(0, 37) + '...' : query}": o segredo da constância sustentável é isolar uma única prioridade para hoje e sustentá-la com calma.`;
+      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('pesad')) {
+        fallback = 'Em dias de sobrecarga, reduza a pressão. Escolha apenas o piso mínimo dos seus hábitos para manter a constância sem se esgotar.';
+      } else if (lower.includes('hoje')) {
+        fallback = 'O que precisa estar resolvido até o final do dia para você encerrar com tranquilidade?';
+      } else if (lower.includes('semana') || lower.includes('plano') || lower === 'pla') {
+        fallback = 'Quer organizar o dia de hoje ou montar o plano da semana?';
       }
 
       const iaMsg: Message = {
@@ -338,7 +341,11 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
                       : 'bg-[#10141B] text-neutral-200 border border-white/8 rounded-tl-none relative shadow-sm'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">{m.text}</p>
+                  {isUser ? (
+                    <p className="whitespace-pre-wrap">{m.text}</p>
+                  ) : (
+                    <FormattedMessage content={m.text} />
+                  )}
                   <span className="text-[9px] font-mono text-neutral-500 block mt-1 text-right">
                     {m.timestamp}
                   </span>

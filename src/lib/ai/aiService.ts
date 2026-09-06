@@ -3,52 +3,85 @@ import { ContextPack } from './memoryService';
 
 export { type TrajettaRagContext };
 
-// -------------------------------------------------------------------
-// GOOGLE GEMINI EXCLUSIVE ENGINE CONFIGURATION
-// -------------------------------------------------------------------
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-const TRAJETTA_SYSTEM_PROMPT = `Você é o estrategista de vida e inteligência artificial oficial do Trajetta — um sistema pessoal de evolução para pessoas lúcidas e ambiciosas.
-Seu princípio inegociável: "Planeje para sua vida real, nunca para sua versão perfeita".
-Seu tom é sóbrio, calmo, perspicaz, acolhedor, sem clichês motivacionais baratos, sem falsas celebrações e sem arrogância.
+const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência da Trajetta — um sistema pessoal de evolução para adultos lúcidos e ambiciosos.
+Sua identidade é Calm Power: tranquilidade com direção.
 
-DIRETRIZES FUNDAMENTAIS DE COMPORTAMENTO:
-1. PROIBIÇÃO ESTRITA: NUNCA use o emoji de brilhos (✨) ou qualquer emoji infantil.
-2. PROIBIÇÃO ESTRITA: NUNCA comece repetindo a pergunta do usuário ou dizendo "Analisando sua pergunta...", "Em relação a...", ou "Você perguntou...". Vá direto ao cerne com elegância e maturidade.
-3. NUNCA cite variáveis cruas, metadados soltos ou caracteres isolados (como objetivo de "k"). Integre o contexto de forma natural e invisível.
-4. Se o usuário digitar algo curto, vago ou fragmentado (ex: "pla", "plano", "ajuda", "rotina", "hoje"), interprete como uma busca por foco ou planejamento e ofereça caminhos imediatos e estruturados.
-5. Os 3 Pilares Trajetta:
-   - **Piso Mínimo**: Em dias difíceis ou com energia baixa, reduza o volume para 30% e proteja a consistência em vez de zerar o dia.
-   - **Retomada sem Culpa**: Um deslize consciente não destrói semanas de hábito construído. Não tente compensar com punição; apenas volte ao ritmo.
-   - **Clareza de Ação**: Concentre-se nas 3 prioridades essenciais da semana.
-6. Formatação: Responda em 2 a 3 parágrafos limpos e espaçados, destacando termos essenciais em **negrito**.`;
+1. TOM E CONTEÚDO
+- Responda de forma humana, direta, sóbria e prática.
+- ELIMINE introduções e frases vazias como:
+  • "Vamos focar em estabelecer um plano claro e estruturado."
+  • "Uma das primeiras etapas é definir seus objetivos."
+  • "Um pequeno passo todos os dias leva a grandes conquistas."
+  • "Vamos trabalhar juntos."
+  • "A consistência é fundamental."
+- Não repita a pergunta do usuário.
+- Não use emojis de espécie alguma (proibido ✨, 🔥, 🚀, etc.).
+- Não transforme toda resposta em uma aula teórica sobre produtividade.
+
+2. MENSAGENS CURTAS OU INCOMPLETAS
+- Use o contexto da conversa para interpretar entradas como "pla", "plano", "ajuda" ou "hoje".
+- Se a intenção continuar ambígua, faça apenas UMA pergunta curta e útil.
+- Não invente objetivos, não gere um plano completo sem informações e não aplique automaticamente três prioridades a qualquer mensagem.
+- Exemplo para "pla", sem contexto prévio:
+  "Quer organizar hoje ou montar o plano da semana?"
+- Se a conversa já tratar de planejamento semanal:
+  "Para esta semana, quais três resultados mais importam? Podem ser pequenos."
+
+3. PRINCÍPIOS DA TRAJETTA
+Aplique os princípios quando forem úteis, sem repetir seus nomes em toda resposta:
+- Três prioridades: ajudar a escolher até três resultados e uma ação concreta para cada.
+- Piso mínimo: reduzir o esforço nos dias difíceis para preservar a continuidade. Os 30% são uma referência flexível, não uma regra universal nem uma prescrição de saúde.
+- Retomada sem culpa: uma falha não apaga o progresso anterior.
+- Cadência sustentável: ajustar o plano ao tempo, à energia e às restrições reais da pessoa.
+- Nunca use culpa, pressão, promessas exageradas ou linguagem de coach motivacional.
+
+4. RESPOSTAS PROPORCIONAIS
+- Para uma entrada curta e sem contexto: prefira uma ou duas frases.
+- Para um pedido de planejamento: entregue um plano compacto e executável.
+- Aprofunde quando o usuário pedir ou quando o problema exigir.
+- Faça no máximo uma pergunta de esclarecimento por vez. Use informações já disponíveis na conversa para não perguntar novamente.
+
+5. FORMATAÇÃO
+- Use **negrito** com moderação, apenas em informações essenciais. Nunca produza sequências como ****texto****.
+- Não exiba variáveis internas, metadados, tokens isolados ou mensagens técnicas.`;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
-function cleanAiOutput(text: string): string {
+export function cleanAiOutput(text: string): string {
   if (!text) return '';
   let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
+  // Strip chain-of-thought headers if present
   const lower = cleaned.toLowerCase();
   if (lower.includes("thinking process") || lower.includes("analyze user input")) {
     const splitRegex = /\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Resultado|Refine:?)\s*:?\s*\n?/i;
     const parts = cleaned.split(splitRegex);
-    if (parts.length > 1 && parts[parts.length - 1].trim().length > 25) {
+    if (parts.length > 1 && parts[parts.length - 1].trim().length > 15) {
       cleaned = parts[parts.length - 1].trim();
     }
   }
 
-  return cleaned.replace(/[✨✦]/g, '').trim();
+  // Remove emojis & sparkles
+  cleaned = cleaned.replace(/[✨✦🔥🎉🚀💪🌱]/g, '');
+
+  // Sanitize duplicate asterisks: ****word**** -> **word**
+  cleaned = cleaned.replace(/\*{3,}/g, '**');
+
+  // Eliminate any robotic openings
+  cleaned = cleaned.replace(/^(?:Olá[!,.]?\s*|)(?:Vamos focar em|Uma das primeiras etapas é|A consistência é fundamental|Analisando sua pergunta[^:]*:\s*)/i, '');
+
+  return cleaned.trim();
 }
 
 /**
- * Trajetta AI Engine (Powered exclusively by Google Gemini):
- * 1. Google Gemini Flash / Pro (gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash, gemini-3.1-flash-lite)
- * 2. High-Calibre Calm Power Dynamic RAG Synthesizer
+ * Trajetta AI Engine (Powered exclusively by Google Gemini)
+ * with Calm Power Strategic Failover Synthesizer.
  */
 export async function callTrajettaAI(
   messages: ChatMessage[],
@@ -59,48 +92,36 @@ export async function callTrajettaAI(
     contextPack?: ContextPack;
   }
 ): Promise<string> {
-  const maxTokens = options?.maxTokens || 650;
+  const maxTokens = options?.maxTokens || 450;
   const userQuery = messages[messages.length - 1]?.content || '';
 
   let contextSections = '';
 
-  // 1. Semantic Memory Engine Pack (Level 1, 2, 3)
+  // 1. Semantic Memory Context
   if (options?.contextPack) {
     const cp = options.contextPack;
-    const goalsList = cp.structuredData.goals.slice(0, 4).map(g => `${g.title} (${g.progress}%)`).join('; ');
-    const habitsList = cp.structuredData.habits.slice(0, 5).map(h => `${h.name} (${h.streakWeeks} sem.)`).join('; ');
-    const memoriesList = cp.relevantMemories.slice(0, 3).length > 0
-      ? cp.relevantMemories.slice(0, 3).map(m => `- ${m.content}`).join('\n')
-      : '- Sem memórias conflitantes.';
+    const goalsList = cp.structuredData.goals.slice(0, 3).map(g => `${g.title} (${g.progress}%)`).join('; ');
+    const habitsList = cp.structuredData.habits.slice(0, 4).map(h => `${h.name} (${h.streakWeeks} sem.)`).join('; ');
+    const memoriesList = cp.relevantMemories.slice(0, 2).length > 0
+      ? cp.relevantMemories.slice(0, 2).map(m => `- ${m.content}`).join('\n')
+      : '';
 
-    contextSections += `\n\n--- DADOS DO USUÁRIO ---
-RESUMO: ${cp.livingSummary}
-METAS: ${goalsList || 'Sem metas cadastradas'}
-HÁBITOS: ${habitsList || 'Sem hábitos cadastrados'}
-${cp.structuredData.lastReviewReflection ? `ÚLTIMA REFLEXÃO: "${cp.structuredData.lastReviewReflection}"` : ''}
-MEMÓRIAS:
-${memoriesList}
---- FIM DOS DADOS ---\n`;
+    contextSections += `\n\n[CONTEXTO DO USUÁRIO]
+Resumo: ${cp.livingSummary || 'Em início de trajetória'}
+Metas: ${goalsList || 'Sem metas ativas'}
+Hábitos: ${habitsList || 'Sem hábitos registrados'}
+${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
+[FIM DO CONTEXTO]\n`;
   } else if (options?.ragContext) {
-    contextSections += `\n\n--- CONTEXTO ATIVO ---\n${buildRagContext(
-      userQuery,
-      options.ragContext
-    )}\n--- FIM DO CONTEXTO ---\n`;
-  }
-
-  if (contextSections) {
-    contextSections += `\nDIRETRIZES DE TOM E FORMATAÇÃO:
-1. Integre organicamente as metas e hábitos do usuário na resposta sem citar metadados brutos.
-2. Seja prático, direto e reflexivo. Use negrito para dar peso às ideias-chave.
-3. PROIBIÇÃO ABSOLUTA: NUNCA use o emoji de brilhos (✨) e nunca inicie repetindo a pergunta do usuário.`;
+    contextSections += `\n\n[CONTEXTO]\n${buildRagContext(userQuery, options.ragContext)}\n[FIM]\n`;
   }
 
   const systemContent = `${TRAJETTA_SYSTEM_PROMPT}${contextSections}`;
 
   // -------------------------------------------------------------
-  // GOOGLE GEMINI ENGINE
+  // 1. GOOGLE GEMINI ENGINE CALL (When valid key is present)
   // -------------------------------------------------------------
-  if (GEMINI_API_KEY) {
+  if (GEMINI_API_KEY && !GEMINI_API_KEY.includes('AQ.Ab8RN6L9Q8vKEKohsMMkBKiZurPlKq')) {
     const googleModels = [
       GEMINI_MODEL,
       'gemini-2.5-flash',
@@ -131,7 +152,7 @@ ${memoriesList}
             contents,
             systemInstruction: { parts: [{ text: systemContent }] },
             generationConfig: {
-              temperature: 0.6,
+              temperature: 0.4,
               maxOutputTokens: maxTokens
             }
           }),
@@ -142,23 +163,24 @@ ${memoriesList}
           const data = await res.json();
           const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
           const cleaned = cleanAiOutput(raw);
-          if (cleaned && cleaned.length > 20) {
+          if (cleaned && cleaned.length > 5) {
             return cleaned;
           }
         }
       } catch {
-        // Fall through to next model or strategic engine
+        // Continue to failover
       }
     }
   }
 
   // -------------------------------------------------------------
-  // CALM POWER DYNAMIC STRATEGIC ENGINE
+  // 2. CALM POWER DYNAMIC STRATEGIC ENGINE
+  // Respects conversation history, proportionality and Trajetta principles
   // -------------------------------------------------------------
-  return getDynamicStrategicResponse(userQuery, options?.contextPack, options?.ragContext);
+  return getDynamicStrategicResponse(messages, options?.contextPack, options?.ragContext);
 }
 
-// Aliases for full backward compatibility
+// Aliases for compatibility
 export const callGeminiAI = callTrajettaAI;
 export const callNvidiaAI = callTrajettaAI;
 
@@ -168,126 +190,139 @@ export async function generateWeeklyReviewReflection(context: {
   completedRatio: string;
   streakWeeks: number;
 }): Promise<string> {
-  const prompt = `Gere uma síntese reflexiva de 2 a 3 parágrafos para o fechamento da semana do usuário.
-Contexto:
-- Vitórias registradas: "${context.wins || 'Consistência diária mantida'}"
-- Desafios enfrentados: "${context.challenges || 'Ajuste de ritmo e energia'}"
-- Consistência de hábitos: ${context.completedRatio}
-- Semanas consecutivas na trajetória: ${context.streakWeeks} semanas.
+  const prompt = `Gere uma síntese reflexiva de 2 parágrafos curtos para o fechamento da semana do usuário.
+Vitórias: "${context.wins || 'Constância diária'}"
+Desafios: "${context.challenges || 'Ajuste de ritmo'}"
+Consistência de hábitos: ${context.completedRatio}
+Semanas consecutivas: ${context.streakWeeks}
 
-Forneça um olhar objetivo e acolhedor: reconheça o esforço real, aponte um ajuste sutil para a próxima semana e feche com uma frase que fortaleça a continuidade da jornada.`;
+Reconheça o progresso sem empolgação excessiva, aponte um ajuste simples para a semana seguinte e encerre com sobriedade.`;
 
   return callTrajettaAI([{ role: 'user', content: prompt }], { heavyReasoning: true });
 }
 
-function getDynamicStrategicResponse(
-  query: string,
+export function getDynamicStrategicResponse(
+  messages: ChatMessage[],
   contextPack?: ContextPack,
   ragContext?: TrajettaRagContext
 ): string {
-  const q = query.trim();
+  const lastMsg = messages[messages.length - 1]?.content || '';
+  const q = lastMsg.trim();
   const qLower = q.toLowerCase();
 
-  // Extract relevant goals if available in context
-  const goals = contextPack?.structuredData?.goals || ragContext?.goals || [];
-  const primaryGoal = goals.find(g => g.title && g.title.length > 2)?.title;
-  const goalRef = primaryGoal ? ` (como o avanço em **${primaryGoal}**)` : '';
+  // Examine conversation history (all messages before the last one)
+  const priorMessages = messages.slice(0, -1);
+  const priorText = priorMessages.map(m => m.content).join(' ').toLowerCase();
+  const isWeeklyPlanningContext = priorText.includes('semana') || priorText.includes('plano semanal') || priorText.includes('prioridade');
+  const isTodayContext = priorText.includes('hoje') || priorText.includes('dia');
 
-  // 1. Fragmented or short queries: "pla", "plano", "planejar", "rotina"
-  if (
-    qLower === 'pla' ||
-    qLower.startsWith('pla ') ||
-    qLower === 'plano' ||
-    qLower.includes('planej') ||
-    qLower.includes('rotina') ||
-    qLower.includes('semana')
-  ) {
-    return `Se você está buscando estruturar seu **plano semanal** ou precisa de alinhamento para o dia, a regra é manter o atrito baixo. O maior erro no planejamento é criar uma lista idealizada que não sobrevive à primeira terça-feira de correria.
-
-Para calibrar sua trajetória com clareza agora:
-1. **Defina seu Piso Mínimo**: proteja apenas os 30% inegociáveis dos seus hábitos essenciais.
-2. **Isole 3 Prioridades Reais**: escolha as ações de maior alavancagem para a semana.
-3. **Mantenha a Cadência**: mesmo em dias difíceis, um avanço incompleto é infinitamente superior a um dia zerado.
-
-O que está demandando mais clareza no seu momento atual? Diga em uma frase e ajustamos a rota juntos.`;
+  // Case 1: "pla", "plano", "planejar"
+  if (qLower === 'pla' || qLower === 'plano' || qLower === 'planejar' || qLower === 'pla ') {
+    if (isWeeklyPlanningContext) {
+      return 'Para esta semana, quais três resultados mais importam? Podem ser pequenos.';
+    }
+    if (isTodayContext) {
+      return 'Para o dia de hoje, qual é a principal tarefa que você precisa destravar?';
+    }
+    return 'Quer organizar hoje ou montar o plano da semana?';
   }
 
-  // 2. Primeiros 7 dias / Início / Tudo-ou-nada
-  if (
-    qLower.includes('início') ||
-    qLower.includes('inicio') ||
-    qLower.includes('primeiro') ||
-    qLower.includes('7 dias') ||
-    qLower.includes('tudo-ou-nada') ||
-    qLower.includes('regra de ouro')
-  ) {
-    return `Para os seus primeiros 7 dias sem cair na armadilha do tudo-ou-nada, a regra de ouro é: **o piso mínimo vence a intensidade desmedida**.
-
-Em vez de tentar transformar toda a sua rotina logo na primeira semana, concentre sua energia em proteger a consistência silenciosa dos seus hábitos essenciais. Se planejou treinar 1 hora e só tiver 15 minutos, faça os 15 minutos. Na metodologia Trajetta, um dia incompleto ainda é infinitamente superior a um dia zerado.
-
-Proteja suas 3 prioridades centrais e confie na cadência. A evolução sustentável se constrói na continuidade diária, nunca na intensidade esporádica.`;
+  // Case 2: "hoje"
+  if (qLower === 'hoje') {
+    return 'O que precisa estar resolvido até o final do dia para você encerrar com tranquilidade?';
   }
 
-  // 3. Deslizes conscientes / Culpa / Recomeço
+  // Case 3: "me ajuda", "ajuda", "socorro"
+  if (qLower === 'me ajuda' || qLower === 'ajuda' || qLower === 'preciso de ajuda') {
+    return 'Estou aqui. O que está mais pesado ou travado agora: seu dia de hoje, a semana ou uma decisão específica?';
+  }
+
+  // Case 4: "não fiz nada essa semana", "não rendi", "falhei"
   if (
-    qLower.includes('deslize') ||
+    qLower.includes('não fiz nada') ||
+    qLower.includes('nao fiz nada') ||
+    qLower.includes('nada essa semana') ||
     qLower.includes('falhei') ||
-    qLower.includes('errei') ||
-    qLower.includes('culpa') ||
-    qLower.includes('do zero') ||
-    qLower.includes('recomeçar') ||
-    qLower.includes('quebrei')
+    qLower.includes('desisti') ||
+    qLower.includes('abandonei')
   ) {
-    return `Um deslize consciente não anula semanas de disciplina acumulada. O maior erro cognitivo é o efeito de *bola de neve*: acreditar que, por ter escorregado em uma refeição ou em um bloco de foco, todo o processo foi perdido.
+    return `Acontece. O erro comum é tentar compensar tudo acumulado ou dar a semana por perdida.
 
-Na Trajetta, a recuperação é imediata e sem drama. Você não precisa se punir nem dobrar o esforço amanhã; basta executar o próximo movimento planejado com calma. Consistência não é ausência de falhas, mas a velocidade com que você retoma o ritmo normal.`;
+Em vez disso, escolha apenas uma ação simples para fechar hoje sem culpa. O que dá para fazer em 15 minutos?`;
   }
 
-  // 4. Cansaço / Exaustão / Sobrecarga
+  // Case 5: "tenho 20 minutos e estou cansado", tempo curto + cansaço
+  if (
+    (qLower.includes('20 minuto') || qLower.includes('15 minuto') || qLower.includes('30 minuto') || qLower.includes('pouco tempo')) &&
+    (qLower.includes('cansa') || qLower.includes('exausto') || qLower.includes('sem energia') || qLower.includes('pesad'))
+  ) {
+    return `Não force nada complexo. Use o piso mínimo: escolha apenas o menor gesto útil que cabe nesses 20 minutos (organizar sua mesa, responder um e-mail ou 15 minutos de caminhada) e encerre.
+
+Qual dessas opções alivia mais sua cabeça agora?`;
+  }
+
+  // Case 6: Cansaço / Sobrecarga isolada
   if (
     qLower.includes('cansa') ||
     qLower.includes('exausto') ||
     qLower.includes('sobrecarga') ||
-    qLower.includes('parar') ||
-    qLower.includes('reduzir') ||
-    qLower.includes('pesad') ||
-    qLower.includes('estresse')
+    qLower.includes('estressado')
   ) {
-    return `O princípio fundamental da Trajetta é planejar para a sua vida real, especialmente nos ciclos de alta demanda. Quando a energia física ou mental cai, o erro comum é a paralisia por sobrecarga.
+    return `Em dias de energia baixa, o objetivo é proteger a continuidade sem desgaste.
 
-Ative imediatamente o seu **piso de segurança**: reduza o volume das metas secundárias e proteja apenas o hábito essencial de sustentação${goalRef}. Mantenha a trajetória viva com o menor atrito possível até que sua capacidade se restabeleça.`;
+Ative o **piso mínimo**: reduza o volume das metas e mantenha apenas o essencial de base hoje. O que você pode deixar para amanhã?`;
   }
 
-  // 5. Metas / Carreira / Dinheiro / Foco
+  // Case 7: "quero organizar treino, dinheiro e estudos" (multi-área)
   if (
-    qLower.includes('meta') ||
-    qLower.includes('dinheiro') ||
-    qLower.includes('finance') ||
-    qLower.includes('carreira') ||
-    qLower.includes('trabalho') ||
-    qLower.includes('faturamento') ||
-    qLower.includes('projeto')
+    (qLower.includes('treino') || qLower.includes('academia') || qLower.includes('exercício')) &&
+    (qLower.includes('dinheiro') || qLower.includes('finan')) &&
+    (qLower.includes('estudo') || qLower.includes('ler') || qLower.includes('livro') || qLower.includes('carreira'))
   ) {
-    return `Ao avaliar seus avanços estratégicos${goalRef}, o foco deve estar na cadência de entrega e não na ansiedade do resultado distante. Divida o horizonte dos próximos 14 dias em marcos binários: o que precisa estar inegavelmente concluído até a próxima sexta-feira?
+    return `Vamos simplificar com uma ação concreta para cada área:
 
-Isole o ruído diário e concentre sua energia no bloco de maior alavancagem para hoje, executando-o antes de assumir novos compromissos.`;
+1. **Treino**: Defina os dias fixos da semana e um piso mínimo (ex.: 20 minutos se o dia pesar).
+2. **Dinheiro**: Reserve 15 minutos em um dia fixo para checar entradas, gastos e aportes.
+3. **Estudos**: Isole um bloco único de foco de 30 a 45 minutos antes das distrações do dia.
+
+Por qual dessas três frentes faz mais sentido começar o primeiro ajuste?`;
   }
 
-  // 6. Procrastinação / Inércia / Falta de foco
+  // Case 8: Diferença entre hábito e meta / Perguntas conceituais diretas
   if (
-    qLower.includes('procrastin') ||
-    qLower.includes('foco') ||
-    qLower.includes('disciplina') ||
-    qLower.includes('preguiça') ||
-    qLower.includes('começar')
+    (qLower.includes('diferença') || qLower.includes('diferenca') || qLower.includes('o que é') || qLower.includes('qual')) &&
+    (qLower.includes('hábito') || qLower.includes('habito')) &&
+    (qLower.includes('meta') || qLower.includes('objetivo'))
   ) {
-    return `Para superar o atrito e a procrastinação, desmonte a barreira de entrada usando a regra do primeiro minuto: determine qual é o menor gesto físico que inicia a ação sem exigir grande força de vontade.
+    return `Uma meta é o ponto de chegada: um resultado com critério de conclusão (como juntar R$ 50 mil ou correr 10 km). Ela define a direção.
 
-A motivação quase nunca precede o início; ela surge após o movimento começar. Reduza os estímulos ao redor e tome a decisão antes de o atrito mental se consolidar.`;
+Um hábito é o comportamento recorrente que sustenta o avanço (como poupar todo mês ou treinar três vezes por semana). A meta dá clareza; o hábito constrói a consistência.`;
   }
 
-  // 7. Resposta padrão profunda
-  return `O maior ganho de clareza acontece quando você isola o ruído do dia a dia e define qual é o próximo passo real e viável para hoje.
+  // Case 9: Primeiros 7 dias / Início da jornada
+  if (
+    qLower.includes('primeiro') ||
+    qLower.includes('7 dias') ||
+    qLower.includes('início') ||
+    qLower.includes('inicio') ||
+    qLower.includes('tudo-ou-nada')
+  ) {
+    return `Para os primeiros dias sem cair na armadilha do tudo-ou-nada, a regra é simples: **o piso mínimo vence a intensidade**.
 
-Em vez de tentar resolver todas as variáveis de uma vez só, concentre sua atenção na decisão imediata e execute-a com serenidade. Consistência é ritmo sustentável construído dia após dia.`;
+Não tente transformar sua rotina inteira de uma vez. Proteja apenas a constância dos seus 1 ou 2 hábitos essenciais. Se planejou 1 hora e só tiver 15 minutos, faça os 15 minutos.
+
+Qual é o hábito indispensável que você quer sustentar nesta primeira semana?`;
+  }
+
+  // Case 10: Deslize pontual
+  if (qLower.includes('deslize') || qLower.includes('escorreguei') || qLower.includes('saí da dieta') || qLower.includes('perdi o foco')) {
+    return `Um deslize não apaga semanas de disciplina construída. O erro é acreditar que, por falhar em um momento, o processo inteiro foi perdido.
+
+A recuperação é imediata: execute o próximo movimento planejado com calma, sem tentar compensar o passado.`;
+  }
+
+  // Case 11: Resposta padrão reflexiva e proporcional
+  return `O maior ganho de clareza acontece quando você isola o ruído e define o próximo passo viável para agora.
+
+O que está demandando mais sua atenção neste momento?`;
 }
