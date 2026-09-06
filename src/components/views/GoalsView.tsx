@@ -62,7 +62,7 @@ export function GoalsView() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar touch-scroll">
         {areas.map(area => {
           const isSelected = selectedArea === area;
           const label = area === 'todas' ? 'Todas as Áreas' : LIFE_AREAS[area].label;
@@ -70,7 +70,7 @@ export function GoalsView() {
             <button
               key={area}
               onClick={() => setSelectedArea(area)}
-              className={`px-4 py-1.5 min-h-[36px] rounded-full text-sm font-semibold whitespace-nowrap transition-colors tactile-btn ${
+              className={`px-3.5 py-1.5 min-h-[38px] rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors tactile-btn flex-shrink-0 ${
                 isSelected
                   ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_15px_rgba(184,255,0,0.15)]'
                   : 'bg-[#171A1D] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -190,11 +190,11 @@ export function GoalsView() {
                 {/* Incremental Milestones (Collapsible) */}
                 {isExpanded && goal.milestones && goal.milestones.length > 0 && (
                   <div className="pt-2 border-t border-white/8 space-y-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <span className="text-xs font-bold text-[#F2F1ED] uppercase tracking-wider flex items-center gap-1.5">
                         <Flag size={13} className="text-[#B8FF00]" /> Marcos Progressivos
                       </span>
-                      <span className="text-[11px] text-[#8E9499]">
+                      <span className="text-[10px] sm:text-[11px] text-[#8E9499]">
                         Clique para marcar marcos atingidos
                       </span>
                     </div>

@@ -275,7 +275,7 @@ export function WeekView() {
               <button
                 key={cap}
                 onClick={() => setCapacity(cap)}
-                className={`min-h-[36px] py-1.5 rounded-lg text-sm font-semibold capitalize transition-colors ${
+                className={`min-h-[40px] py-1.5 px-1 rounded-lg text-xs sm:text-sm font-semibold capitalize transition-colors ${
                   capacity === cap
                     ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_12px_rgba(184,255,0,0.2)]'
                     : 'bg-[#111315] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'

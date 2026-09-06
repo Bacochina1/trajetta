@@ -71,8 +71,8 @@ export function TodayView() {
         </div>
 
         {/* Daily Progress Gauge & Share */}
-        <div className="flex items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
-          <div className="bg-[#171A1D] border border-white/8 rounded-2xl p-3 sm:p-4 flex-1 sm:min-w-[200px] flex items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="bg-[#171A1D] border border-white/8 rounded-2xl p-2.5 sm:p-4 flex-1 sm:min-w-[200px] flex items-center justify-between gap-2.5 sm:gap-4">
             <div>
               <span className="text-[10px] sm:text-[11px] text-[#8E9499] uppercase tracking-wider block font-semibold">
                 Consistência do dia
@@ -81,10 +81,10 @@ export function TodayView() {
                 <span className="text-xl sm:text-2xl font-black text-[#F2F1ED] tabular-numbers">
                   {completedMovements}
                 </span>
-                <span className="text-[11px] text-[#8E9499]">de {totalMovements}</span>
+                <span className="text-[10px] sm:text-[11px] text-[#8E9499]">de {totalMovements}</span>
               </div>
             </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/10 flex items-center justify-center font-bold text-xs text-[#B8FF00] tabular-numbers relative">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/10 flex items-center justify-center font-bold text-xs text-[#B8FF00] tabular-numbers relative flex-shrink-0">
               <span>{movementPercentage}%</span>
             </div>
           </div>
@@ -92,7 +92,8 @@ export function TodayView() {
           <button
             onClick={() => setIsShareOpen(true)}
             title="Compartilhar no Instagram / WhatsApp"
-            className="px-3 sm:px-3.5 py-2 sm:h-[74px] rounded-2xl bg-[#171A1D] hover:bg-[#B8FF00]/10 hover:border-[#B8FF00]/40 border border-white/8 text-[#8E9499] hover:text-[#B8FF00] transition-all flex flex-col items-center justify-center gap-1 group tactile-btn flex-shrink-0"
+            aria-label="Compartilhar consistência do dia"
+            className="px-3 sm:px-3.5 py-2 sm:h-[74px] min-h-[44px] rounded-2xl bg-[#171A1D] hover:bg-[#B8FF00]/10 hover:border-[#B8FF00]/40 border border-white/8 text-[#8E9499] hover:text-[#B8FF00] transition-all flex flex-col items-center justify-center gap-1 group tactile-btn flex-shrink-0"
           >
             <Share2 size={16} className="group-hover:scale-110 transition-transform" />
             <span className="text-[9px] font-mono uppercase font-bold tracking-wider">Share</span>
@@ -113,7 +114,7 @@ export function TodayView() {
             </div>
             <button
               onClick={() => setActiveView('habitos')}
-              className="text-xs font-semibold text-[#B8FF00] hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-[#B8FF00] hover:underline flex items-center gap-1 min-h-[36px] px-1"
             >
               Ver todos <ArrowUpRight size={13} />
             </button>
@@ -139,7 +140,7 @@ export function TodayView() {
                   <div
                     key={habit.id}
                     onClick={() => toggleHabitToday(habit.id)}
-                    className="trajetta-card p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none group min-w-0"
+                    className="trajetta-card p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none group min-w-0"
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
                       <div className="flex-shrink-0">
@@ -172,7 +173,7 @@ export function TodayView() {
                       </div>
                     </div>
 
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 hidden xs:block">
                       <AreaBadge area={habit.lifeArea} size="sm" showIcon={false} />
                     </div>
                   </div>

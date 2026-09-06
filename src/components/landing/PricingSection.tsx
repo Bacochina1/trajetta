@@ -38,11 +38,11 @@ export function PricingSection() {
           </p>
 
           {/* Billing Switcher */}
-          <div className="inline-flex items-center p-1.5 rounded-xl bg-[#14181F] border border-white/8 mt-4">
+          <div className="inline-flex items-center p-1.5 rounded-xl bg-[#14181F] border border-white/8 mt-4 max-w-full">
             <button
               type="button"
               onClick={() => setBillingCycle('monthly')}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all min-h-[36px] ${
                 billingCycle === 'monthly'
                   ? 'bg-[#B8FF00] text-[#060709]'
                   : 'text-[#8E9499] hover:text-[#F2F1ED]'
@@ -53,7 +53,7 @@ export function PricingSection() {
             <button
               type="button"
               onClick={() => setBillingCycle('annual')}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 min-h-[36px] ${
                 billingCycle === 'annual'
                   ? 'bg-[#B8FF00] text-[#060709]'
                   : 'text-[#8E9499] hover:text-[#F2F1ED]'
@@ -61,19 +61,19 @@ export function PricingSection() {
             >
               <span>Anual</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-[#060709] text-[#B8FF00]">
-                Economize R$ 118
+                -33%
               </span>
             </button>
           </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto items-stretch">
           {/* Plan: Trajetta Pro Mensal */}
-          <div className="p-7 sm:p-8 rounded-3xl bg-[#0D0F10] border border-white/8 flex flex-col justify-between space-y-6">
+          <div className="p-5 sm:p-8 rounded-3xl bg-[#0D0F10] border border-white/8 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-[#F2F1ED]">Trajetta Pro Mensal</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-[#F2F1ED]">Trajetta Pro Mensal</h3>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-[#171B20] text-[#8E9499] font-mono">
                   Flexibilidade
                 </span>
@@ -83,7 +83,7 @@ export function PricingSection() {
               </p>
               <div className="pt-2 flex items-baseline gap-1">
                 <span className="text-xs text-[#8E9499]">R$</span>
-                <span className="text-4xl font-extrabold text-[#F2F1ED]">29,90</span>
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#F2F1ED]">29,90</span>
                 <span className="text-xs text-[#8E9499]">/mês</span>
               </div>
               <div className="text-[11px] text-[#B8FF00] font-semibold">
@@ -103,7 +103,7 @@ export function PricingSection() {
             <Link
               href={appendUtmToUrl('/register')}
               onClick={() => handlePlanClick('Pro Mensal')}
-              className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all"
+              className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all"
             >
               <span>Começar 14 dias grátis</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -111,9 +111,9 @@ export function PricingSection() {
           </div>
 
           {/* Plan: Trajetta Pro Anual (Highlighted as requested) */}
-          <div className="p-7 sm:p-8 rounded-3xl bg-[#0D0F10] border-2 border-[#B8FF00]/60 relative flex flex-col justify-between space-y-6 shadow-[0_0_50px_rgba(184,255,0,0.12)]">
+          <div className="p-5 sm:p-8 rounded-3xl bg-[#0D0F10] border-2 border-[#B8FF00]/60 relative flex flex-col justify-between space-y-6 shadow-[0_0_50px_rgba(184,255,0,0.12)]">
             {/* Top Badge */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-md">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-md whitespace-nowrap">
               Melhor Custo-Benefício
             </div>
 

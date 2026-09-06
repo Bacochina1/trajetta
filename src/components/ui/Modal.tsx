@@ -31,7 +31,7 @@ export function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-6">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#0D0F10]/80 backdrop-blur-sm transition-opacity duration-200"
@@ -45,23 +45,23 @@ export function Modal({
           maxWidth
         )}
       >
-        <div className="flex items-start justify-between p-4 sm:p-6 border-b border-white/8 flex-shrink-0">
+        <div className="flex items-start justify-between p-3.5 xs:p-4 sm:p-6 border-b border-white/8 flex-shrink-0">
           <div className="pr-2 min-w-0">
-            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[#F2F1ED] truncate">{title}</h3>
-            {subtitle && <p className="text-xs sm:text-sm text-[#8E9499] mt-0.5 sm:mt-1 leading-relaxed">{subtitle}</p>}
+            <h3 className="text-base sm:text-xl font-bold tracking-tight text-[#F2F1ED] truncate">{title}</h3>
+            {subtitle && <p className="text-xs sm:text-sm text-[#8E9499] mt-0.5 sm:mt-1 leading-relaxed line-clamp-2">{subtitle}</p>}
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
             aria-label="Fechar"
-            className="text-[#8E9499] hover:text-[#F2F1ED] flex-shrink-0"
+            className="text-[#8E9499] hover:text-[#F2F1ED] flex-shrink-0 min-w-[36px] min-h-[36px] p-1.5"
           >
             <X size={18} />
           </Button>
         </div>
 
-        <div className="p-4 sm:p-6 overflow-y-auto flex-1">{children}</div>
+        <div className="p-3.5 xs:p-4 sm:p-6 overflow-y-auto flex-1 touch-scroll">{children}</div>
       </div>
     </div>
   );

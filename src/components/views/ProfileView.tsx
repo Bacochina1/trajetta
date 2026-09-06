@@ -183,35 +183,35 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
       </div>
 
       {/* Profile Card */}
-      <div className="trajetta-card p-6 border border-white/8 space-y-6">
+      <div className="trajetta-card p-4 sm:p-6 border border-white/8 space-y-5 sm:space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-[#1F2328] border border-white/10 flex items-center justify-center text-xl font-bold text-[#F2F1ED] overflow-hidden shadow-[0_0_20px_rgba(184,255,0,0.1)]">
+          <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1F2328] border border-white/10 flex items-center justify-center text-lg sm:text-xl font-bold text-[#F2F1ED] overflow-hidden shadow-[0_0_20px_rgba(184,255,0,0.1)] flex-shrink-0">
               {user.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
               ) : (
                 user.avatarText || user.name.charAt(0)
               )}
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#F2F1ED]">{user.name}</h2>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base sm:text-lg font-bold text-[#F2F1ED] truncate">{user.name}</h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#B8FF00]/10 text-[#B8FF00] text-[10px] font-bold">
                   {user.role}
                 </span>
               </div>
-              <p className="text-xs text-[#8E9499] mt-0.5">
+              <p className="text-xs text-[#8E9499] mt-0.5 truncate">
                 {user.email || (user.role === 'ADMIN' ? 'admin@trajetta.app' : 'membro@trajetta.app')}
               </p>
-              <div className="flex items-center gap-2 mt-2 text-[11px] text-[#8E9499]">
-                <Globe size={12} />
-                <span>Fuso Horário: {user.timezone || 'America/Sao_Paulo (GMT-3)'}</span>
+              <div className="flex items-center gap-1.5 mt-1.5 text-[10px] sm:text-[11px] text-[#8E9499]">
+                <Globe size={12} className="flex-shrink-0" />
+                <span className="truncate">Fuso: {user.timezone || 'America/Sao_Paulo (GMT-3)'}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-end gap-1">
-            <span className="text-xs text-[#8E9499]">Área Prioritária</span>
+          <div className="flex flex-col items-start sm:items-end gap-1 pt-1 sm:pt-0 border-t border-white/5 sm:border-0 w-full sm:w-auto">
+            <span className="text-[11px] sm:text-xs text-[#8E9499]">Área Prioritária</span>
             <AreaBadge area={user.primaryFocusArea} size="sm" />
           </div>
         </div>

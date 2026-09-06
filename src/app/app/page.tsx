@@ -65,7 +65,7 @@ export default function TrajettaAppPage() {
         <Topbar onOpenMobile={() => setMobileMenuOpen(true)} />
 
         {/* Dynamic Viewport */}
-        <main className="flex-1 p-4 sm:p-8 max-w-6xl w-full mx-auto pb-24 md:pb-12">
+        <main className="flex-1 px-3 py-4 sm:p-8 max-w-6xl w-full mx-auto pb-28 md:pb-12">
           {activeView === 'hoje' && <TodayView />}
           {activeView === 'semana' && <WeekView />}
           {activeView === 'metas' && <GoalsView />}

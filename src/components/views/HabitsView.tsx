@@ -105,34 +105,34 @@ export function HabitsView() {
             return (
               <div
                 key={habit.id}
-                className="trajetta-card p-3.5 sm:p-5 border border-white/8 space-y-3.5"
+                className="trajetta-card p-3 sm:p-5 border border-white/8 space-y-3"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <AreaBadge area={habit.lifeArea} size="sm" />
-                      <span className="text-xs text-[#8E9499]">
+                      <span className="text-[11px] sm:text-xs text-[#8E9499]">
                         Alvo: {habit.frequencyPerWeek}x na semana
                       </span>
                     </div>
-                    <h3 className="text-base font-bold text-[#F2F1ED] mt-1 break-words">
+                    <h3 className="text-sm sm:text-base font-bold text-[#F2F1ED] mt-1 break-words">
                       {habit.title}
                     </h3>
                   </div>
 
                   {/* Streak & Status & Delete */}
-                  <div className="flex items-center justify-between sm:justify-end gap-2.5 flex-wrap pt-1 sm:pt-0 border-t border-white/5 sm:border-0">
+                  <div className="flex items-center justify-between sm:justify-end gap-2 flex-wrap pt-1 sm:pt-0 border-t border-white/5 sm:border-0">
                     <div className="text-left sm:text-right">
                       <span className="text-xs font-bold text-[#B8FF00] flex items-center gap-1">
                         <Flame size={13} /> {habit.streakWeeks} semanas
                       </span>
-                      <span className="text-[11px] text-[#8E9499]">
+                      <span className="text-[10px] sm:text-[11px] text-[#8E9499]">
                         {completedCount} de {habit.frequencyPerWeek} dias
                       </span>
                     </div>
 
                     {isTargetMet && (
-                      <span className="px-2 py-0.5 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-[11px] font-bold flex items-center gap-1 flex-shrink-0">
+                      <span className="px-2 py-0.5 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-[10px] sm:text-[11px] font-bold flex items-center gap-1 flex-shrink-0">
                         <Check size={11} strokeWidth={2.5} /> Meta Batida
                       </span>
                     )}
@@ -157,9 +157,10 @@ export function HabitsView() {
                       <button
                         onClick={() => setHabitToDelete(habit.id)}
                         title="Excluir hábito"
-                        className="p-1.5 rounded-lg text-[#8E9499] hover:text-red-400 hover:bg-white/5 transition-colors flex-shrink-0"
+                        aria-label="Excluir hábito"
+                        className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg text-[#8E9499] hover:text-red-400 hover:bg-white/5 transition-colors flex-shrink-0"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={15} />
                       </button>
                     )}
                   </div>
@@ -176,7 +177,8 @@ export function HabitsView() {
                         <button
                           key={day}
                           onClick={() => toggleHabitToday(habit.id)}
-                          className={`flex-1 py-1.5 sm:py-2 min-h-[44px] rounded-xl flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition-all tactile-btn select-none ${
+                          aria-label={`${DAY_NAMES[day]}: ${isDone ? 'Concluído' : 'Não concluído'}`}
+                          className={`flex-1 min-w-0 py-1.5 sm:py-2 px-0.5 min-h-[44px] rounded-xl flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition-all tactile-btn select-none ${
                             isDone
                               ? 'bg-[#B8FF00] text-[#0D0F10] font-black shadow-[0_0_10px_rgba(184,255,0,0.2)]'
                               : isToday
@@ -184,7 +186,7 @@ export function HabitsView() {
                               : 'bg-[#111315] border border-white/5 text-[#8E9499] hover:border-white/20'
                           }`}
                         >
-                          <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider">
+                          <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider leading-none">
                             {DAY_INITIALS[day]}
                           </span>
                           <div

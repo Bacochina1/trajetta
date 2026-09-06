@@ -22,15 +22,15 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto space-y-6 sm:space-y-7">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#171B20] border border-white/10 text-[11px] sm:text-xs font-medium text-[#8E9499] shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_#B8FF00] animate-pulse" />
-            <span>Construído junto com os primeiros usuários</span>
-            <span className="text-white/20">|</span>
+          <div className="inline-flex flex-wrap items-center justify-center gap-1.5 xs:gap-2 px-3 py-1.5 rounded-full bg-[#171B20] border border-white/10 text-[10px] xs:text-[11px] sm:text-xs font-medium text-[#8E9499] shadow-sm max-w-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_#B8FF00] animate-pulse flex-shrink-0" />
+            <span className="truncate">Construído com os primeiros usuários</span>
+            <span className="text-white/20 hidden xs:inline">|</span>
             <span className="text-[#F2F1ED] font-semibold">14 dias grátis</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#F2F1ED] leading-[1.15]">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#F2F1ED] leading-[1.15]">
             Torne visível quem você{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#B8FF00] via-[#D4FF5E] to-white">
               está se tornando.
@@ -38,16 +38,16 @@ export function HeroSection() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-base sm:text-lg lg:text-xl text-[#8E9499] leading-relaxed max-w-2xl mx-auto font-normal">
+          <p className="text-sm sm:text-lg lg:text-xl text-[#8E9499] leading-relaxed max-w-2xl mx-auto font-normal">
             Planeje suas semanas, acompanhe metas, hábitos e áreas da sua vida e tenha uma IA que aprende com sua trajetória para ajudar você a continuar avançando.
           </p>
 
           {/* CTAs */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
             <Link
               href={appendUtmToUrl('/register')}
               onClick={handlePrimaryCta}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_30px_rgba(184,255,0,0.3)] hover:shadow-[0_0_40px_rgba(184,255,0,0.4)] transition-all transform active:scale-95"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 min-h-[48px] rounded-xl text-xs sm:text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_30px_rgba(184,255,0,0.3)] hover:shadow-[0_0_40px_rgba(184,255,0,0.4)] transition-all transform active:scale-95"
             >
               <span>Começar 14 dias grátis</span>
               <ArrowRight className="w-4 h-4" />
@@ -56,7 +56,7 @@ export function HeroSection() {
             <a
               href="#metodo"
               onClick={handleSecondaryCta}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-semibold bg-[#14181F] text-[#F2F1ED] border border-white/10 hover:border-white/20 hover:bg-[#1A1F27] transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 min-h-[48px] rounded-xl text-xs sm:text-sm font-semibold bg-[#14181F] text-[#F2F1ED] border border-white/10 hover:border-white/20 hover:bg-[#1A1F27] transition-all"
             >
               <Play className="w-3.5 h-3.5 text-[#B8FF00]" fill="currentColor" />
               <span>Ver como funciona</span>

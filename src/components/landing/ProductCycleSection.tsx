@@ -28,11 +28,11 @@ export function ProductCycleSection() {
         </div>
 
         {/* Tab Selector Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 max-w-2xl mx-auto">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 xs:gap-2 sm:gap-3 mb-8 sm:mb-10 max-w-2xl mx-auto">
           <button
             type="button"
             onClick={() => handleTabChange('semana')}
-            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`px-3 xs:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold min-h-[38px] transition-all ${
               activeTab === 'semana'
                 ? 'bg-[#B8FF00] text-[#060709] shadow-[0_0_20px_rgba(184,255,0,0.3)]'
                 : 'bg-[#14181F] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -43,7 +43,7 @@ export function ProductCycleSection() {
           <button
             type="button"
             onClick={() => handleTabChange('hoje')}
-            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`px-3 xs:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold min-h-[38px] transition-all ${
               activeTab === 'hoje'
                 ? 'bg-[#B8FF00] text-[#060709] shadow-[0_0_20px_rgba(184,255,0,0.3)]'
                 : 'bg-[#14181F] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -54,7 +54,7 @@ export function ProductCycleSection() {
           <button
             type="button"
             onClick={() => handleTabChange('habitos')}
-            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`px-3 xs:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold min-h-[38px] transition-all ${
               activeTab === 'habitos'
                 ? 'bg-[#B8FF00] text-[#060709] shadow-[0_0_20px_rgba(184,255,0,0.3)]'
                 : 'bg-[#14181F] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -65,7 +65,7 @@ export function ProductCycleSection() {
           <button
             type="button"
             onClick={() => handleTabChange('review')}
-            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            className={`px-3 xs:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold min-h-[38px] transition-all ${
               activeTab === 'review'
                 ? 'bg-[#B8FF00] text-[#060709] shadow-[0_0_20px_rgba(184,255,0,0.3)]'
                 : 'bg-[#14181F] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -76,7 +76,7 @@ export function ProductCycleSection() {
         </div>
 
         {/* Tab Display Panel */}
-        <div className="max-w-4xl mx-auto rounded-2xl bg-[#0D0F10] border border-white/10 p-6 sm:p-10 shadow-2xl">
+        <div className="max-w-4xl mx-auto rounded-2xl bg-[#0D0F10] border border-white/10 p-4 sm:p-10 shadow-2xl">
           {activeTab === 'semana' && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div className="border-b border-white/8 pb-4">

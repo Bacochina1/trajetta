@@ -13,17 +13,17 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   return (
     <header className="sticky top-0 z-30 h-14 sm:h-16 bg-[#0D0F10]/95 backdrop-blur-md border-b border-white/8 px-2.5 sm:px-8 flex items-center justify-between">
       {/* Left: Mobile trigger & Breadcrumb */}
-      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+      <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0">
         <button
           onClick={onOpenMobile}
           aria-label="Abrir menu"
-          className="min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] p-2 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 md:hidden tactile-btn flex items-center justify-center flex-shrink-0"
+          className="min-w-[44px] min-h-[44px] p-2 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 md:hidden tactile-btn flex items-center justify-center flex-shrink-0"
         >
-          <Menu size={18} />
+          <Menu size={20} />
         </button>
 
         <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0">
-          <span className="text-[#8E9499] truncate max-w-[130px] sm:max-w-none">{dateFormatted}</span>
+          <span className="text-[#8E9499] truncate max-w-[95px] xs:max-w-[150px] sm:max-w-none font-medium">{dateFormatted}</span>
           <span className="text-white/20 hidden sm:inline">·</span>
           <span className="font-semibold text-[#F2F1ED] hidden sm:inline flex-shrink-0">
             Semana {weeklyPlan.weekNumber} de 52
@@ -32,7 +32,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
         {/* Nova Meta (Hidden on tiny screens, icon on md) */}
         <Button
           variant="secondary"
@@ -49,18 +49,19 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           variant="primary"
           size="sm"
           onClick={() => setIsReviewModalOpen(true)}
-          className="text-xs px-2.5 sm:px-3 h-8 sm:h-9"
+          className="text-xs px-2.5 sm:px-3 h-8 sm:h-9 min-h-[36px]"
         >
           <CheckCircle2 size={13} strokeWidth={2.2} />
           <span className="hidden sm:inline">Fechar Semana</span>
-          <span className="sm:hidden">Revisão</span>
+          <span className="sm:hidden font-bold">Revisão</span>
         </Button>
 
         {/* Account / Login Trigger */}
         <button
           onClick={() => setIsAuthModalOpen(true)}
           title="Conta & Autenticação"
-          className="w-8 h-8 sm:w-auto min-h-[32px] sm:min-h-[36px] px-0 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center justify-center gap-1.5 text-xs sm:text-sm"
+          aria-label="Conta e Autenticação"
+          className="w-9 h-9 sm:w-auto min-h-[36px] px-0 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center justify-center gap-1.5 text-xs sm:text-sm"
         >
           <User size={14} className="text-[#B8FF00]" />
           <span className="hidden md:inline font-medium truncate max-w-[100px]">
