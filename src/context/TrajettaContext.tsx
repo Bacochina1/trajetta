@@ -22,6 +22,12 @@ import {
   INITIAL_TIMELINE,
   INITIAL_USER,
   INITIAL_WEEKLY_PLAN,
+  DEMO_USER,
+  DEMO_GOALS,
+  DEMO_HABITS,
+  DEMO_JOURNEYS,
+  DEMO_WEEKLY_PLAN,
+  DEMO_TIMELINE,
 } from '@/lib/seedData';
 
 type TrajettaContextType = {
@@ -56,6 +62,7 @@ type TrajettaContextType = {
   createHabit: (habitData: Partial<Habit>) => void;
   updateHabit: (habitId: string, patch: Partial<Habit>) => void;
   deleteHabit: (habitId: string) => void;
+  createJourney: (journeyData: Partial<Journey>) => void;
   incrementJourneyDay: (journeyId: string) => void;
   recordJourneySlip: (journeyId: string) => void;
   updateWeeklyPriority: (area: LifeArea, text: string) => void;
@@ -173,27 +180,55 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem('trajetta_store_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.user) {
-          setUser(parsed.user);
-          if (!parsed.user.isOnboarded) {
-            setIsOnboardingOpen(true);
-          }
-        } else {
+
+        // Detect if user has legacy marathon demo data or is not onboarded
+        const hasLegacyMarathon =
+          Array.isArray(parsed.goals) &&
+          parsed.goals.some(
+            (g: any) =>
+              g.id === 'goal-1' ||
+              (typeof g.title === 'string' &&
+                (g.title.toLowerCase().includes('maratona') ||
+                 g.title.toLowerCase().includes('21 km') ||
+                 g.title.toLowerCase().includes('21km')))
+          );
+
+        if (hasLegacyMarathon || !parsed.user?.isOnboarded) {
+          // Clear legacy runner data and enforce fresh clean onboarding
+          setGoals([]);
+          setHabits([]);
+          setJourneys([]);
+          setTimeline([]);
+          setUser((prev) => ({
+            ...prev,
+            name: parsed.user?.name || prev.name || '',
+            isOnboarded: false,
+          }));
           setIsOnboardingOpen(true);
+        } else {
+          if (parsed.user) setUser(parsed.user);
+          if (parsed.goals) setGoals(parsed.goals);
+          if (parsed.habits) setHabits(parsed.habits);
+          if (parsed.journeys) setJourneys(parsed.journeys);
+          if (parsed.weeklyPlan) setWeeklyPlan(parsed.weeklyPlan);
+          if (parsed.weeklyReviews) setWeeklyReviews(parsed.weeklyReviews);
+          if (parsed.timeline) setTimeline(parsed.timeline);
+          if (parsed.lifeScore) setLifeScore(parsed.lifeScore);
         }
-        if (parsed.goals) setGoals(parsed.goals);
-        if (parsed.habits) setHabits(parsed.habits);
-        if (parsed.journeys) setJourneys(parsed.journeys);
-        if (parsed.weeklyPlan) setWeeklyPlan(parsed.weeklyPlan);
-        if (parsed.weeklyReviews) setWeeklyReviews(parsed.weeklyReviews);
-        if (parsed.timeline) setTimeline(parsed.timeline);
-        if (parsed.lifeScore) setLifeScore(parsed.lifeScore);
       } else {
-        // No saved state in this browser: trigger fresh onboarding!
+        // No saved state in this browser: trigger fresh onboarding with empty data!
+        setGoals([]);
+        setHabits([]);
+        setJourneys([]);
+        setTimeline([]);
         setIsOnboardingOpen(true);
       }
     } catch (e) {
       console.warn('Could not read from localStorage', e);
+      setGoals([]);
+      setHabits([]);
+      setJourneys([]);
+      setTimeline([]);
       setIsOnboardingOpen(true);
     }
     setMounted(true);
@@ -339,6 +374,22 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
 
   const deleteHabit = (habitId: string) => {
     setHabits(prev => prev.filter(h => h.id !== habitId));
+  };
+
+  const createJourney = (journeyData: Partial<Journey>) => {
+    const total = journeyData.totalDays || 21;
+    const newJourney: Journey = {
+      id: 'journey-' + Date.now(),
+      title: journeyData.title || 'Nova Jornada',
+      description: journeyData.description || '',
+      lifeArea: journeyData.lifeArea || 'corpo',
+      totalDays: total,
+      currentDay: 1,
+      slipDays: 0,
+      status: 'active',
+      badgeText: `Dia 1 de ${total} · Em andamento`,
+    };
+    setJourneys(prev => [...prev, newJourney]);
   };
 
   const incrementJourneyDay = (journeyId: string) => {
@@ -520,6 +571,21 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     }
     setHabits(newHabits);
 
+    // Initial starter journey for focus
+    setJourneys([
+      {
+        id: 'journey-' + Date.now(),
+        title: '21 Dias de Foco & Construção',
+        description: 'Construir consistência nos seus novos hábitos sem abrir mão do descanso.',
+        lifeArea: data.primaryArea,
+        totalDays: 21,
+        currentDay: 1,
+        slipDays: 0,
+        status: 'active',
+        badgeText: 'Dia 1 de 21 · Jornada Iniciada',
+      },
+    ]);
+
     // Initial timeline event
     const now = new Date();
     const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -536,6 +602,14 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         tag: 'Boas-vindas',
       },
     ]);
+
+    // Update weekly plan intention
+    setWeeklyPlan(prev => ({
+      ...prev,
+      northStarGoal: data.target12Months
+        ? `Foco: Avançar rumo a "${data.target12Months.slice(0, 70)}"`
+        : 'Construir consistência nos primeiros hábitos diários.',
+    }));
 
     setIsOnboardingOpen(false);
   };
@@ -563,13 +637,13 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetToDemoData = () => {
-    setUser(INITIAL_USER);
-    setGoals(INITIAL_GOALS);
-    setHabits(INITIAL_HABITS);
-    setJourneys(INITIAL_JOURNEYS);
-    setWeeklyPlan(INITIAL_WEEKLY_PLAN);
+    setUser(DEMO_USER);
+    setGoals(DEMO_GOALS);
+    setHabits(DEMO_HABITS);
+    setJourneys(DEMO_JOURNEYS);
+    setWeeklyPlan(DEMO_WEEKLY_PLAN);
     setWeeklyReviews([]);
-    setTimeline(INITIAL_TIMELINE);
+    setTimeline(DEMO_TIMELINE);
     setLifeScore(INITIAL_LIFE_SCORE);
     localStorage.removeItem('trajetta_store_v1');
   };
@@ -602,6 +676,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       createHabit,
       updateHabit,
       deleteHabit,
+      createJourney,
       incrementJourneyDay,
       recordJourneySlip,
       updateWeeklyPriority,

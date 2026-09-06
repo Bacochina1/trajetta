@@ -18,7 +18,9 @@ export function WeekView() {
   const [editingArea, setEditingArea] = useState<LifeArea | null>(null);
   const [editText, setEditText] = useState('');
   const [capacity, setCapacity] = useState<'leve' | 'normal' | 'intensa'>('normal');
-  const [weekIntention, setWeekIntention] = useState('Manter constância no treino e preservar o ritmo de trabalho sem queimar a largada.');
+  const [weekIntention, setWeekIntention] = useState(
+    weeklyPlan.northStarGoal || 'Construir consistência nas ações essenciais e preservar energia ao longo dos dias.'
+  );
   const [isEditingIntention, setIsEditingIntention] = useState(false);
   const [tempIntention, setTempIntention] = useState(weekIntention);
 

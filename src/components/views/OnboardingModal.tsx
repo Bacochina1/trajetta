@@ -18,14 +18,14 @@ interface HabitChoice {
 
 const PRESET_HABITS: HabitChoice[] = [
   { title: 'Treino de Musculação / Academia', lifeArea: 'corpo', frequencyPerWeek: 4 },
-  { title: 'Caminhada ou Corrida Leve', lifeArea: 'corpo', frequencyPerWeek: 3 },
+  { title: 'Caminhada ou Atividade Física', lifeArea: 'corpo', frequencyPerWeek: 3 },
   { title: 'Beber 2 Litros de Água', lifeArea: 'corpo', frequencyPerWeek: 7 },
   { title: 'Dormir 7h a 8h por Noite', lifeArea: 'corpo', frequencyPerWeek: 7 },
   { title: 'Aporte / Economia Semanal', lifeArea: 'dinheiro', frequencyPerWeek: 1 },
   { title: 'Revisar Gastos e Orçamento', lifeArea: 'dinheiro', frequencyPerWeek: 1 },
   { title: 'Trabalho Focado / Deep Work (90 min)', lifeArea: 'carreira', frequencyPerWeek: 5 },
-  { title: 'Estudo Focado (30 min)', lifeArea: 'carreira', frequencyPerWeek: 4 },
-  { title: 'Noite de Qualidade em Família', lifeArea: 'vida', frequencyPerWeek: 2 },
+  { title: 'Estudo ou Leitura (20 min)', lifeArea: 'carreira', frequencyPerWeek: 4 },
+  { title: 'Tempo de Qualidade em Família / Lazer', lifeArea: 'vida', frequencyPerWeek: 2 },
   { title: 'Livre de Telas antes de Dormir', lifeArea: 'vida', frequencyPerWeek: 5 },
 ];
 
@@ -36,9 +36,9 @@ export function OnboardingModal() {
   const [userName, setUserName] = useState(user.name || '');
   const [selectedAreas, setSelectedAreas] = useState<LifeArea[]>(['corpo', 'dinheiro', 'carreira', 'vida']);
   const [selectedHabits, setSelectedHabits] = useState<HabitChoice[]>([
-    { title: 'Treino de Musculação / Academia', lifeArea: 'corpo', frequencyPerWeek: 4 },
     { title: 'Beber 2 Litros de Água', lifeArea: 'corpo', frequencyPerWeek: 7 },
     { title: 'Trabalho Focado / Deep Work (90 min)', lifeArea: 'carreira', frequencyPerWeek: 5 },
+    { title: 'Dormir 7h a 8h por Noite', lifeArea: 'corpo', frequencyPerWeek: 7 },
   ]);
   const [customHabitTitle, setCustomHabitTitle] = useState('');
   const [customHabitArea, setCustomHabitArea] = useState<LifeArea>('corpo');

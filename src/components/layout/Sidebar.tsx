@@ -88,6 +88,28 @@ export function Sidebar({
           </div>
         </div>
 
+        {/* Onboarding Callout Banner when not onboarded */}
+        {!user.isOnboarded && (
+          <div className="mb-4 p-3 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/30 space-y-2">
+            <div className="flex items-center gap-2 text-[#B8FF00] font-bold text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
+              <span>Configure seu perfil</span>
+            </div>
+            <p className="text-[11px] text-[#8E9499] leading-tight">
+              Defina seu nome, hábitos e primeira meta real.
+            </p>
+            <button
+              onClick={() => {
+                setIsOnboardingOpen(true);
+                onClose();
+              }}
+              className="w-full py-1.5 px-2.5 rounded-lg bg-[#B8FF00] text-[#0D0F10] text-xs font-bold hover:bg-[#a3e600] transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>Fazer Onboarding</span>
+            </button>
+          </div>
+        )}
+
         {/* Navigation label */}
         <div className="text-[10px] font-bold text-[#8E9499] uppercase tracking-[0.18em] px-2 mb-2">
           Ciclo de Evolução

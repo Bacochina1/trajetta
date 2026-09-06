@@ -96,52 +96,69 @@ export function TimelineView() {
 
       {/* Longitudinal Vertical Timeline */}
       <div className="relative pl-6 sm:pl-8 border-l border-white/10 space-y-8 mt-6">
-        {filteredEvents.map(event => {
-          const areaConfig = event.lifeArea ? LIFE_AREAS[event.lifeArea] : null;
-
-          return (
-            <div key={event.id} className="relative group">
-              {/* Timeline Node Point */}
-              <div
-                className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-[#0D0F10] transition-transform duration-200 group-hover:scale-125"
-                style={{
-                  backgroundColor: areaConfig ? areaConfig.color : '#B8FF00',
-                  boxShadow: `0 0 10px ${areaConfig ? areaConfig.color : '#B8FF00'}40`,
-                }}
-              />
-
-              {/* Event Card */}
-              <div className="trajetta-card p-5 border border-white/8 space-y-2.5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#B8FF00] tabular-numbers">
-                      {event.month} {event.year}
-                    </span>
-                    <span className="text-white/20">·</span>
-                    <span className="text-[11px] text-[#8E9499]">{event.date}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {event.lifeArea && <AreaBadge area={event.lifeArea} size="sm" />}
-                    {event.tag && (
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-[#8E9499] font-medium">
-                        {event.tag}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <h3 className="text-base font-bold text-[#F2F1ED] leading-snug">
-                  {event.title}
-                </h3>
-
-                <p className="text-xs text-[#8E9499] leading-relaxed">
-                  {event.description}
-                </p>
-              </div>
+        {filteredEvents.length === 0 ? (
+          <div className="trajetta-card p-8 text-center space-y-3 border border-white/8">
+            <div className="w-10 h-10 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/25 flex items-center justify-center mx-auto text-[#B8FF00]">
+              <History size={20} />
             </div>
-          );
-        })}
+            <h3 className="text-sm font-bold text-[#F2F1ED]">Nenhum marco registrado ainda</h3>
+            <p className="text-xs text-[#8E9499] max-w-sm mx-auto">
+              Registre momentos e conquistas importantes para visualizar sua linha de evolução histórica.
+            </p>
+            <div className="pt-1">
+              <Button variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
+                <Plus size={14} /> Registrar Primeiro Marco
+              </Button>
+            </div>
+          </div>
+        ) : (
+          filteredEvents.map(event => {
+            const areaConfig = event.lifeArea ? LIFE_AREAS[event.lifeArea] : null;
+
+            return (
+              <div key={event.id} className="relative group">
+                {/* Timeline Node Point */}
+                <div
+                  className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-[#0D0F10] transition-transform duration-200 group-hover:scale-125"
+                  style={{
+                    backgroundColor: areaConfig ? areaConfig.color : '#B8FF00',
+                    boxShadow: `0 0 10px ${areaConfig ? areaConfig.color : '#B8FF00'}40`,
+                  }}
+                />
+
+                {/* Event Card */}
+                <div className="trajetta-card p-5 border border-white/8 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#B8FF00] tabular-numbers">
+                        {event.month} {event.year}
+                      </span>
+                      <span className="text-white/20">·</span>
+                      <span className="text-[11px] text-[#8E9499]">{event.date}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {event.lifeArea && <AreaBadge area={event.lifeArea} size="sm" />}
+                      {event.tag && (
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-[#8E9499] font-medium">
+                          {event.tag}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <h3 className="text-base font-bold text-[#F2F1ED] leading-snug">
+                    {event.title}
+                  </h3>
+
+                  <p className="text-xs text-[#8E9499] leading-relaxed">
+                    {event.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Modal Novo Marco */}
@@ -156,7 +173,7 @@ export function TimelineView() {
                   type="text"
                   value={newTitle}
                   onChange={e => setNewTitle(e.target.value)}
-                  placeholder="Ex: Primeira corrida de 10k, Novo cargo..."
+                  placeholder="Ex: Promoção no trabalho, Início do curso, Primeira meta batida..."
                   required
                   className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
                 />

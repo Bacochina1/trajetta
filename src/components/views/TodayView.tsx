@@ -188,31 +188,43 @@ export function TodayView() {
             </div>
 
             <div className="space-y-2.5">
-              {activeGoalActions.map(action => (
-                <div
-                  key={action.id}
-                  onClick={() => toggleGoalActionToday(action.goalId, action.id)}
-                  className="trajetta-card p-3.5 flex items-center gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none"
-                >
-                  <CheckCircle
-                    checked={!!action.completedToday}
-                    onClick={() => toggleGoalActionToday(action.goalId, action.id)}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <span
-                      className={`text-sm font-medium ${
-                        action.completedToday ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
-                      }`}
-                    >
-                      {action.title}
-                    </span>
-                    <span className="block text-[11px] text-[#8E9499] mt-0.5 truncate">
-                      Meta: {action.goalTitle}
-                    </span>
-                  </div>
-                  <AreaBadge area={action.lifeArea} size="sm" />
+              {activeGoalActions.length === 0 ? (
+                <div className="trajetta-card p-5 text-center border border-white/8 space-y-2">
+                  <p className="text-xs text-[#8E9499]">Nenhuma ação de meta pendente hoje.</p>
+                  <button
+                    onClick={() => setIsNewGoalModalOpen(true)}
+                    className="text-xs font-bold text-[#B8FF00] hover:underline"
+                  >
+                    + Adicionar Meta ou Ação
+                  </button>
                 </div>
-              ))}
+              ) : (
+                activeGoalActions.map(action => (
+                  <div
+                    key={action.id}
+                    onClick={() => toggleGoalActionToday(action.goalId, action.id)}
+                    className="trajetta-card p-3.5 flex items-center gap-3.5 cursor-pointer hover:border-white/20 transition-all select-none"
+                  >
+                    <CheckCircle
+                      checked={!!action.completedToday}
+                      onClick={() => toggleGoalActionToday(action.goalId, action.id)}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <span
+                        className={`text-sm font-medium ${
+                          action.completedToday ? 'line-through text-[#8E9499]' : 'text-[#F2F1ED]'
+                        }`}
+                      >
+                        {action.title}
+                      </span>
+                      <span className="block text-[11px] text-[#8E9499] mt-0.5 truncate">
+                        Meta: {action.goalTitle}
+                      </span>
+                    </div>
+                    <AreaBadge area={action.lifeArea} size="sm" />
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -220,7 +232,7 @@ export function TodayView() {
         {/* Right Col: Active Journey & AI Reflection (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
           {/* Active Journey Card */}
-          {activeJourney && (
+          {activeJourney ? (
             <div className="trajetta-card p-5 border border-[#B8FF00]/20 bg-gradient-to-br from-[#171A1D] to-[#121416] relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold tracking-widest text-[#B8FF00] uppercase flex items-center gap-1.5">
@@ -274,6 +286,28 @@ export function TodayView() {
                 </Button>
               </div>
             </div>
+          ) : (
+            <div className="trajetta-card p-5 border border-white/8 bg-gradient-to-br from-[#171A1D] to-[#121416] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold tracking-widest text-[#B8FF00] uppercase flex items-center gap-1.5">
+                  <Compass size={13} /> Jornada de Foco
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-[#F2F1ED]">
+                Inicie um ciclo fechado de evolução
+              </h3>
+              <p className="text-xs text-[#8E9499]">
+                Desafios temporais de 21, 30 ou 90 dias com recuperação humana e sem punição.
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setActiveView('jornadas')}
+                className="w-full text-xs"
+              >
+                Ver Jornadas Disponíveis
+              </Button>
+            </div>
           )}
 
           {/* Quick Contextual Coach Insight */}
@@ -285,7 +319,13 @@ export function TodayView() {
               <span className="text-xs font-bold text-[#F2F1ED]">Insight da Trajetta</span>
             </div>
             <blockquote className="text-xs text-[#8E9499] leading-relaxed border-l-2 border-[#B8FF00] pl-3 italic">
-              &ldquo;Você manteve 3 treinos nas últimas semanas mesmo com o aumento das demandas de trabalho. Isso não é sorte, é consistência deliberada.&rdquo;
+              &ldquo;
+              {goals.length > 0
+                ? `Cada micro-ação executada hoje em direção a "${goals[0].title}" reduz a distância para o seu objetivo principal.`
+                : user.target12Months
+                ? `Seu alvo de 12 meses ("${user.target12Months.slice(0, 70)}...") é a bússola para cada pequena escolha de hoje.`
+                : 'Consistência não é sobre perfeição em dias fáceis, mas sobre manter o ritmo mínimo nos dias em que a energia oscila.'}
+              &rdquo;
             </blockquote>
             <Button
               variant="ghost"

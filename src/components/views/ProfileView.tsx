@@ -558,26 +558,34 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
 
       {/* Reset Account & Redo Onboarding */}
       <div className="p-5 rounded-2xl bg-[#14181f] border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
             <RotateCcw size={16} className="text-amber-400" />
-            <h3 className="text-sm font-bold text-[#F2F1ED]">Começar do Zero / Refazer Onboarding</h3>
+            <h3 className="text-sm font-bold text-[#F2F1ED]">Onboarding & Trajetória Pessoal</h3>
           </div>
-          <p className="text-xs text-[#8E9499] mt-1">
-            Limpa metas e dados herdados para que você configure sua trajetória real do zero, com seu próprio nome e hábitos.
+          <p className="text-xs text-[#8E9499]">
+            Configure seu perfil real, defina seus próprios hábitos e estabeleça sua primeira meta sem dados herdados.
           </p>
         </div>
-        <button
-          onClick={() => {
-            if (window.confirm('Tem certeza que deseja limpar os dados pré-carregados e refazer o onboarding 100% do zero?')) {
-              resetToZero();
-            }
-          }}
-          className="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 transition-all flex items-center gap-2 select-none flex-shrink-0 tactile-btn"
-        >
-          <RotateCcw size={14} />
-          <span>Resetar Conta do Zero</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#F2F1ED] text-xs font-bold border border-white/10 transition-all flex items-center gap-2 select-none tactile-btn"
+          >
+            <span>Refazer Onboarding</span>
+          </button>
+          <button
+            onClick={() => {
+              if (window.confirm('Tem certeza que deseja limpar todos os dados e recomeçar sua conta 100% do zero?')) {
+                resetToZero();
+              }
+            }}
+            className="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 transition-all flex items-center gap-2 select-none tactile-btn"
+          >
+            <RotateCcw size={14} />
+            <span>Resetar do Zero</span>
+          </button>
+        </div>
       </div>
 
       {/* Logout Action Bar */}
