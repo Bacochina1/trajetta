@@ -48,22 +48,22 @@ export function HeroSection() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-[26px] xs:text-[34px] sm:text-5xl md:text-6xl lg:text-[72px] leading-[1.12] sm:leading-[1.06] font-normal tracking-[-0.03em] text-white break-words">
-            Torne visível quem você<br className="hidden xs:inline" />{' '}
+          <h1 className="text-[27px] xs:text-[32px] sm:text-5xl md:text-6xl lg:text-[72px] leading-[1.14] sm:leading-[1.06] font-normal tracking-[-0.03em] text-white [text-wrap:balance]">
+            Torne visível quem você<br className="hidden md:inline" />{' '}
             está se tornando.
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-3.5 sm:mt-6 text-[13.5px] xs:text-[15px] sm:text-lg text-neutral-300/90 font-normal max-w-xl leading-relaxed tracking-tight">
+          <p className="mt-3.5 sm:mt-6 text-[14px] xs:text-[15px] sm:text-lg text-neutral-300/90 font-normal max-w-xl leading-relaxed tracking-tight [text-wrap:pretty]">
             O sistema pessoal que une direção de longo prazo, ciclos semanais sem punição e clareza silenciosa para as áreas que realmente importam da sua vida.
           </p>
 
           {/* CTA Action Buttons — Symmetrical on all screens */}
-          <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3 w-full max-w-md xs:max-w-none">
+          <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-none">
             <a
               href="#waitlist"
               onClick={() => handleCtaClick('hero_primary_waitlist')}
-              className="w-full xs:w-auto inline-flex items-center justify-center bg-white hover:bg-neutral-200 active:scale-95 text-neutral-900 text-[11px] xs:text-[12px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-4 xs:px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 shadow-xl shadow-white/10 text-center cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-neutral-200 active:scale-95 text-neutral-900 text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 shadow-xl shadow-white/10 text-center cursor-pointer"
             >
               <span>GARANTIR VAGA NA LISTA VIP</span>
               <ArrowRight className="w-3.5 h-3.5 ml-2 flex-shrink-0" />
@@ -72,7 +72,7 @@ export function HeroSection() {
             <a
               href="#metodo"
               onClick={() => handleCtaClick('hero_secondary_method')}
-              className="w-full xs:w-auto inline-flex items-center justify-center bg-[#14181f]/85 hover:bg-[#1a212b] active:scale-95 backdrop-blur-md text-white border border-white/20 text-[11px] xs:text-[12px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-4 xs:px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 text-center cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-[#14181f]/85 hover:bg-[#1a212b] active:scale-95 backdrop-blur-md text-white border border-white/20 text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 text-center cursor-pointer"
             >
               <span>CONHECER O MÉTODO</span>
               <ArrowRight className="w-3.5 h-3.5 ml-2 text-neutral-400 flex-shrink-0" />

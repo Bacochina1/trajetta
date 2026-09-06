@@ -86,7 +86,7 @@ export function WaitlistSection() {
 
       {/* Section Heading */}
       <div className="max-w-3xl mb-12">
-        <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
+        <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4 [text-wrap:balance]">
           Garanta sua vaga no <span className="text-neutral-500">próximo ciclo de convites</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed">

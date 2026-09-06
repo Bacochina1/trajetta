@@ -12,10 +12,10 @@ export function SubHeaderSection() {
       </div>
 
       {/* Huge Lead Typography */}
-      <h2 className="text-[22px] xs:text-[28px] sm:text-4xl md:text-5xl lg:text-[58px] font-normal tracking-tight leading-[1.18] sm:leading-[1.1] break-words">
+      <h2 className="text-[22px] xs:text-[28px] sm:text-4xl md:text-5xl lg:text-[58px] font-normal tracking-tight leading-[1.18] sm:leading-[1.1] break-words [text-wrap:balance]">
         <span className="text-white">Viva com direção clara,</span>
         <span className="text-[#555d68]"> sem a ansiedade</span>{' '}
-        <br className="hidden sm:inline" />
+        <br className="hidden md:inline" />
         <span className="text-[#555d68]">dos rastreadores comuns.</span>
       </h2>
     </section>

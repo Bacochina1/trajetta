@@ -72,7 +72,7 @@ export function LifeAreasSection() {
       </div>
 
       {/* Section Heading */}
-      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">
+      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-6 sm:mb-8 [text-wrap:balance]">
         Um sistema unificado, <span className="text-neutral-500">clareza para toda a sua vida.</span>
       </h2>
 

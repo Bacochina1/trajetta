@@ -13,7 +13,7 @@ export function HowItWorksSection() {
       </div>
 
       {/* Section Heading */}
-      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-10">
+      <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-8 sm:mb-10 [text-wrap:balance]">
         Uma direção para começar, <span className="text-neutral-500">três passos para a clareza.</span>
       </h2>
 

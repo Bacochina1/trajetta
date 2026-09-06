@@ -53,7 +53,7 @@ export function FaqSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
         {/* Left Col: Heading & CTA */}
         <div className="lg:col-span-5">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4 [text-wrap:balance]">
             Tudo o que você <span className="text-neutral-500">precisa saber</span>
           </h2>
           <p className="text-xs xs:text-sm text-neutral-400 font-light leading-relaxed mb-6 sm:mb-8">
