@@ -14,15 +14,18 @@ import { JourneysView } from '@/components/views/JourneysView';
 import { TimelineView } from '@/components/views/TimelineView';
 import { LifeScoreView } from '@/components/views/LifeScoreView';
 import { AiCoachView } from '@/components/views/AiCoachView';
+import { ProfileView } from '@/components/views/ProfileView';
 
 import { WeeklyReviewModal } from '@/components/views/WeeklyReviewModal';
 import { OnboardingModal } from '@/components/views/OnboardingModal';
 import { NewGoalModal } from '@/components/views/NewGoalModal';
 import { AuthModal } from '@/components/views/AuthModal';
+import { PaywallModal } from '@/components/views/PaywallModal';
 
 export default function TrajettaAppPage() {
   const { activeView, isAuthModalOpen, setIsAuthModalOpen } = useTrajetta();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#0D0F10] text-[#F2F1ED] flex">
@@ -47,6 +50,7 @@ export default function TrajettaAppPage() {
           {activeView === 'timeline' && <TimelineView />}
           {activeView === 'lifescore' && <LifeScoreView />}
           {activeView === 'ia' && <AiCoachView />}
+          {activeView === 'voce' && <ProfileView onOpenPaywall={() => setIsPaywallOpen(true)} />}
         </main>
       </div>
 
@@ -58,6 +62,8 @@ export default function TrajettaAppPage() {
       <OnboardingModal />
       <NewGoalModal />
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
     </div>
   );
 }
+

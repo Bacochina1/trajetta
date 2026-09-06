@@ -14,6 +14,10 @@ export function WeekView() {
   const { weeklyPlan, user, updateWeeklyPriority, setIsReviewModalOpen, habits } = useTrajetta();
   const [editingArea, setEditingArea] = useState<LifeArea | null>(null);
   const [editText, setEditText] = useState('');
+  const [capacity, setCapacity] = useState<'leve' | 'normal' | 'intensa'>('normal');
+  const [weekIntention, setWeekIntention] = useState('Manter constância no treino e preservar o ritmo de trabalho sem queimar a largada.');
+  const [isEditingIntention, setIsEditingIntention] = useState(false);
+  const [tempIntention, setTempIntention] = useState(weekIntention);
 
   const todayIndex = new Date().getDay();
 
@@ -156,8 +160,86 @@ export function WeekView() {
         </div>
       </div>
 
+      {/* Intention & Perceived Capacity (Capítulo 6 - PRD) */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        {/* Intention (8 cols) */}
+        <div className="md:col-span-8 p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#8E9499] uppercase tracking-wider">
+              Intenção da Semana
+            </span>
+            {!isEditingIntention ? (
+              <button
+                onClick={() => {
+                  setTempIntention(weekIntention);
+                  setIsEditingIntention(true);
+                }}
+                className="text-[11px] text-[#8E9499] hover:text-[#F2F1ED] flex items-center gap-1"
+              >
+                <Edit3 size={11} /> Editar
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setWeekIntention(tempIntention);
+                  setIsEditingIntention(false);
+                }}
+                className="text-[11px] text-[#B8FF00] font-semibold flex items-center gap-1"
+              >
+                <Check size={11} /> Salvar
+              </button>
+            )}
+          </div>
+          {!isEditingIntention ? (
+            <p className="text-sm font-semibold text-[#F2F1ED] italic leading-relaxed">
+              &ldquo;{weekIntention}&rdquo;
+            </p>
+          ) : (
+            <textarea
+              value={tempIntention}
+              onChange={(e) => setTempIntention(e.target.value)}
+              rows={2}
+              className="w-full bg-[#111315] border border-white/15 rounded-xl p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
+            />
+          )}
+        </div>
+
+        {/* Perceived Capacity (4 cols) */}
+        <div className="md:col-span-4 p-5 rounded-2xl bg-[#171A1D] border border-white/8 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#8E9499] uppercase tracking-wider">
+              Capacidade Percebida
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-[#B8FF00] font-bold uppercase">
+              {capacity}
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            {(['leve', 'normal', 'intensa'] as const).map((cap) => (
+              <button
+                key={cap}
+                onClick={() => setCapacity(cap)}
+                className={`py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${
+                  capacity === cap
+                    ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_12px_rgba(184,255,0,0.2)]'
+                    : 'bg-[#111315] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
+                }`}
+              >
+                {cap}
+              </button>
+            ))}
+          </div>
+          <p className="text-[10px] text-[#8E9499] leading-tight pt-0.5">
+            {capacity === 'leve' && 'Semana de manutenção. Mantenha apenas o piso.'}
+            {capacity === 'normal' && 'Ritmo sustentável e equilibrado nas 4 áreas.'}
+            {capacity === 'intensa' && 'Pico de foco. Cuidado para não queimar largada.'}
+          </p>
+        </div>
+      </div>
+
       {/* 4 Life Areas: Weekly Intentions */}
       <div>
+
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-[#F2F1ED]">

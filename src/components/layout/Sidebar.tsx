@@ -14,6 +14,7 @@ import {
   Brain,
   ChevronRight,
   TrendingUp,
+  User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +35,7 @@ export function Sidebar({
     { id: 'jornadas', label: 'Jornadas', icon: Compass },
     { id: 'timeline', label: 'Linha do Tempo', icon: History },
     { id: 'lifescore', label: 'Life Score', icon: Layers },
+    { id: 'voce', label: 'Você & Perfil', icon: User },
   ];
 
   return (
@@ -157,8 +159,11 @@ export function Sidebar({
 
           {/* User Profile Chip */}
           <button
-            onClick={() => setIsAuthModalOpen(true)}
-            title="Conta & Login (Admin/Social)"
+            onClick={() => {
+              setActiveView('voce');
+              onClose();
+            }}
+            title="Configurações & Perfil"
             className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-white/5 transition-colors duration-150 tactile-btn group"
           >
             <div className="w-8 h-8 rounded-full bg-[#252A2E] border border-white/10 flex items-center justify-center text-xs font-bold text-[#F2F1ED] overflow-hidden">

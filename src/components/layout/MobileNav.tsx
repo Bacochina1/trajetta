@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { ActiveView } from '@/types';
-import { Calendar, CalendarDays, Crosshair, Repeat, Brain } from 'lucide-react';
+import { Calendar, CalendarDays, Crosshair, History, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function MobileNav() {
@@ -13,8 +13,8 @@ export function MobileNav() {
     { id: 'hoje', label: 'Hoje', icon: Calendar },
     { id: 'semana', label: 'Semana', icon: CalendarDays },
     { id: 'metas', label: 'Metas', icon: Crosshair },
-    { id: 'habitos', label: 'Hábitos', icon: Repeat },
-    { id: 'ia', label: 'IA Mentor', icon: Brain },
+    { id: 'timeline', label: 'Progresso', icon: History },
+    { id: 'voce', label: 'Você', icon: User },
   ];
 
   return (

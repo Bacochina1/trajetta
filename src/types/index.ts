@@ -74,6 +74,8 @@ export type WeeklyPlan = {
   northStarGoal: string;
   areaPriorities: Record<LifeArea, string>;
   isCompleted: boolean;
+  perceivedCapacity?: 'leve' | 'normal' | 'intensa';
+  weekIntention?: string;
 };
 
 export type WeeklyReview = {
@@ -134,6 +136,9 @@ export type UserProfile = {
   target12Months: string;
   primaryFocusArea: LifeArea;
   completedWeeksCount: number;
+  timezone?: string;
+  subscriptionPlan?: 'trial' | 'pro_monthly' | 'pro_annual' | 'founding';
+  trialDaysRemaining?: number;
 };
 
 export type ActiveView = 
@@ -145,4 +150,6 @@ export type ActiveView =
   | 'review'
   | 'timeline'
   | 'lifescore'
-  | 'ia';
+  | 'ia'
+  | 'voce';
+
