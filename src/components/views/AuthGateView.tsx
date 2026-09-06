@@ -211,18 +211,8 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
             </button>
 
             {mode === 'login' ? (
-              <div className="pt-2 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('bacochinamatheus@gmail.com');
-                    setPassword('Trajetta2026!');
-                    setError(null);
-                  }}
-                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors font-mono underline decoration-dotted"
-                >
-                  Preencher dados de Fundador (Matheus)
-                </button>
+              <div className="pt-2 text-center text-[11px] text-[#8E9499] font-mono">
+                Acesso seguro com criptografia de ponta a ponta
               </div>
             ) : (
               <div className="pt-2 text-center text-[11px] text-[#8E9499] font-mono">
