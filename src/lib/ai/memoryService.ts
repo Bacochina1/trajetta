@@ -145,6 +145,19 @@ export const memoryService = {
   },
 
   async getLivingSummary(userId: string) {
+    if (userId === 'demo-user') {
+      return {
+        id: 'demo-summary',
+        userId,
+        summary: 'Usuário focado em consistência de hábitos, clareza estratégica e evolução sustentável.',
+        focusAreas: '["corpo","carreira","dinheiro","vida"]',
+        keyDifficulties: '[]',
+        keyWins: '[]',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    }
+
     try {
       const existing = await prisma.userContextSummary.findUnique({
         where: { userId },
@@ -155,10 +168,10 @@ export const memoryService = {
         data: {
           userId,
           summary:
-            'Usuário atualmente focado em saúde (corpo) e carreira. Construindo consistência de hábitos com rotina sustentável. Busca correr sua primeira meia maratona e consolidar patrimônio.',
-          focusAreas: JSON.stringify(['corpo', 'carreira', 'dinheiro']),
-          keyDifficulties: JSON.stringify(['Demandas de trabalho de alta intensidade que tendem a pressionar horários de treino']),
-          keyWins: JSON.stringify(['Consistência de 4x treinos semanais sustentada']),
+            'Usuário focado em construir rotinas sustentáveis, proteger a consistência diária e avançar com serenidade nas suas prioridades de vida.',
+          focusAreas: JSON.stringify(['corpo', 'carreira', 'dinheiro', 'vida']),
+          keyDifficulties: JSON.stringify(['Demandas de alta intensidade que tendem a pressionar a rotina']),
+          keyWins: JSON.stringify(['Consistência de hábitos de base sustentada']),
         },
       });
     } catch (e) {
@@ -262,6 +275,7 @@ export const memoryService = {
   },
 
   async extractAndSaveChatMemory(userId: string, userMessage: string, aiResponse: string) {
+    if (!userId || userId === 'demo-user') return;
     const text = userMessage.trim();
     if (text.length < 8) return;
 

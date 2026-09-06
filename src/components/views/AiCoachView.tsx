@@ -102,19 +102,18 @@ export function AiCoachView() {
       };
 
       setMessages((prev) => [...prev, iaMsg]);
-    } catch {
+    } catch (err) {
+      console.warn('Chat request fallback:', err);
       let fallback = '';
       const lower = query.toLowerCase();
-      if (lower.includes('reduzir') || lower.includes('parar') || lower.includes('treino')) {
-        fallback =
-          'Eu entendo a sobrecarga de trabalho. Analisando seu histórico, você já acumulou consistência notável nos últimos meses. Em vez de abandonar o hábito, que tal reduzirmos temporariamente a duração ou frequência? Assim você não quebra a identidade construída e mantém o ritmo sem desgaste.';
-      } else if (lower.includes('consistência') || lower.includes('semanas')) {
-        fallback = `Você já concluiu ${user.completedWeeksCount} semanas consecutivas de planejamento na Trajetta! Mantenha a atenção aos momentos de descanso no meio da semana para sustentar essa consistência.`;
-      } else if (lower.includes('atenção') || lower.includes('área') || lower.includes('score')) {
-        fallback =
-          'Pelo seu Life Score atual, a área de Dinheiro e Vida pedem atenção equilibrada. Você tem sido exemplar em Corpo e Carreira, mas o tempo com quem você ama à noite encolheu nos últimos dias. Uma noite inteira livre de telas nesta semana trará um retorno enorme para seu equilíbrio.';
+      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('reduzir') || lower.includes('treino')) {
+        fallback = `Entendo a sobrecarga, ${user.name || 'Explorador'}. Em fases de atrito intenso, o objetivo no Trajetta é não zerar: reduza o volume das suas metas para 30% e proteja a constância de base sem se desgastar.`;
+      } else if (lower.includes('acordar') || lower.includes('disciplina') || lower.includes('começar') || lower.includes('foco')) {
+        fallback = `Para vencer o atrito inicial com "${query.slice(0, 40)}...", aplique a regra do primeiro minuto: organize o ambiente na véspera e dê apenas o menor passo físico possível amanhã sem depender de motivação.`;
+      } else if (lower.includes('meta') || lower.includes('dinheiro') || lower.includes('score')) {
+        fallback = `Analisando suas prioridades atuais${user.target12Months ? ` rumo a "${user.target12Months}"` : ''}, divida o horizonte dos próximos dias em passos binários claros e execute o primeiro hoje.`;
       } else {
-        fallback = `Entendido, ${user.name}. Com base no seu compromisso de longo prazo ("${user.target12Months}"), o segredo não é acelerar na marra, mas escolher uma única ação realizável para o dia de hoje e sustentá-la com calma.`;
+        fallback = `${user.name || 'Explorador'}, sobre sua reflexão ("${query.length > 45 ? query.slice(0, 42) + '...' : query}"): o segredo da consistência duradoura é escolher uma única prioridade para hoje e sustentá-la com calma.`;
       }
 
       const iaMsg: Message = {

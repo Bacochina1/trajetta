@@ -143,16 +143,16 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
       };
 
       setMessages((prev) => [...prev, iaMsg]);
-    } catch {
+    } catch (err) {
+      console.warn('Floating chat request fallback:', err);
       let fallback = '';
       const lower = query.toLowerCase();
-      if (lower.includes('reduzir') || lower.includes('parar') || lower.includes('treino')) {
-        fallback =
-          'Eu entendo a sobrecarga. Analisando seu histórico, você já acumulou consistência importante. Em vez de abandonar o hábito, que tal reduzirmos temporariamente a frequência para manter a identidade viva sem desgaste?';
-      } else if (lower.includes('consistência') || lower.includes('semanas')) {
-        fallback = `Você já registrou ${user.completedWeeksCount} semanas consecutivas de planejamento na Trajetta! Mantenha a atenção aos momentos de descanso para sustentar seu ritmo com calma.`;
+      if (lower.includes('cansa') || lower.includes('sobrecarga') || lower.includes('reduzir') || lower.includes('treino')) {
+        fallback = `Entendo a sobrecarga, ${user.name || 'Explorador'}. Em fases de atrito intenso, reduza o volume das metas para 30% e proteja a base da sua consistência sem culpa.`;
+      } else if (lower.includes('acordar') || lower.includes('disciplina') || lower.includes('começar') || lower.includes('foco')) {
+        fallback = `Para vencer o atrito inicial com "${query.slice(0, 35)}...", aplique a regra do primeiro minuto: dê apenas o menor passo físico possível amanhã.`;
       } else {
-        fallback = `Entendido, ${user.name || 'Explorador'}. O segredo não é acelerar na marra, mas escolher uma única ação viável para hoje e sustentá-la com calma.`;
+        fallback = `${user.name || 'Explorador'}, sobre "${query.length > 40 ? query.slice(0, 37) + '...' : query}": o segredo da constância sustentável é isolar uma única prioridade para hoje e sustentá-la com calma.`;
       }
 
       const iaMsg: Message = {
