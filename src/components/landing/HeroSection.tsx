@@ -15,49 +15,24 @@ export function HeroSection() {
       data-purpose="hero-section"
       id="visao"
     >
-      {/* 1. Cinematic Atmospheric Mountain Backdrop matching FeatureCards & LifeAreas */}
+      {/* 1. Cinematic 4K Atmospheric Backdrop with Monumental Neon-Lime Portal */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" data-purpose="cinematic-backdrop">
-        {/* Sky & mountain dark atmospheric gradient layers */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1c242e] via-[#11161d] to-[#060709]"></div>
+        {/* Base dark canvas */}
+        <div className="absolute inset-0 bg-[#060709]" />
 
-        {/* Mountain silhouette shapes matching Feature Cards */}
-        <svg className="absolute w-full h-[75%] sm:h-[85%] bottom-0 opacity-45 pointer-events-none" fill="none" preserveAspectRatio="none" viewBox="0 0 1440 800">
-          <path d="M0 450L210 260L460 380L720 220L980 340L1240 180L1440 320V800H0V450Z" fill="#0b1016"></path>
-          <path d="M-100 520L280 320L580 440L880 290L1180 410L1480 260V800H-100V520Z" fill="#06090e" opacity="0.85"></path>
-        </svg>
+        {/* 4K Rendered Monumental Portal & Trajectory Backdrop */}
+        <img
+          src="/trajetta-hero-bg-4k.jpg"
+          alt="Trajetta Portal Monumental"
+          className="absolute inset-0 w-full h-full object-cover object-right md:object-center opacity-90 pointer-events-none"
+        />
 
-        {/* Luminous Golden Doorway / Portal Feature on the RIGHT */}
-        <div className="absolute right-[8%] sm:right-[14%] lg:right-[18%] top-[130px] xs:top-[150px] sm:top-[190px] flex flex-col items-center pointer-events-none z-20">
-          {/* Estrela-Guia & Trajectory light above the portal */}
-          <div className="relative -mb-3 flex flex-col items-center">
-            {/* 4-pointed radiant star */}
-            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-amber-200 animate-pulse drop-shadow-[0_0_12px_rgba(255,220,130,0.85)]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0L14 9L23 12L14 15L12 24L10 15L1 12L10 9L12 0Z" />
-            </svg>
-            {/* Subtle trajectory arching curves */}
-            <svg className="w-32 sm:w-40 h-10 opacity-60 text-amber-200/50 -mt-2" viewBox="0 0 140 40" fill="none" stroke="currentColor" strokeWidth="1">
-              <path d="M10 38C40 10 90 8 130 35" />
-              <path d="M25 38C50 18 90 16 120 38" opacity="0.5" />
-            </svg>
-          </div>
+        {/* Left Dark Gradient Overlay for Maximum Text Contrast and Readability on Mobile and Desktop */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#060709] via-[#060709]/80 to-transparent w-full md:w-[65%]" />
 
-          {/* Portal frame */}
-          <div className="w-[76px] sm:w-[92px] h-[155px] sm:h-[185px] border-[2.5px] border-amber-200/90 portal-frame bg-amber-100/10 backdrop-blur-[2px] relative z-20 rounded-[2px] shadow-[0_0_40px_rgba(251,191,36,0.35)]">
-            <div className="absolute inset-0 bg-gradient-to-t from-amber-300/40 via-amber-100/20 to-transparent"></div>
-            {/* Subtle neon lime accent stroke along the opening edge */}
-            <div className="absolute inset-y-0 right-0 w-[2px] bg-[#B8FF00]/80 shadow-[0_0_8px_#B8FF00]"></div>
-          </div>
-
-          {/* Water waterline divide */}
-          <div className="w-[260px] sm:w-[350px] h-[2px] bg-gradient-to-r from-transparent via-amber-200/60 to-transparent my-1 blur-[1px]"></div>
-
-          {/* Portal water reflection */}
-          <div className="w-[72px] sm:w-[86px] h-[145px] sm:h-[175px] bg-gradient-to-b from-amber-300/40 via-amber-200/15 to-transparent portal-reflection opacity-60 transform scale-y-95"></div>
-        </div>
-
-        {/* Soft atmospheric gradient fog to base black */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-transparent opacity-95"></div>
-        <div className="absolute inset-0 hero-bottom-fade"></div>
+        {/* Top and Bottom Fades to seamlessly blend with Navbar and SubHeaderSection */}
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#060709] via-[#060709]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#060709]/90 to-transparent" />
       </div>
 
       {/* 2. Hero Content Body — Symmetrical & Responsive across 320px to 4K */}
