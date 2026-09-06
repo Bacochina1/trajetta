@@ -179,4 +179,26 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       });
     });
   });
+
+  // -------------------------------------------------------------
+  // 6. LISTA DE ESPERA (WAITLIST PIPELINE)
+  // -------------------------------------------------------------
+  describe('6. Waitlist Pipeline Tests', () => {
+    it('deve registrar um novo lead na lista de espera com persistência no banco', async () => {
+      const testEmail = `lead_${Date.now()}@exemplo.com`;
+      const waitlistEntry = await prisma.waitlist.create({
+        data: {
+          email: testEmail,
+          name: 'Lead VIP QA',
+          source: 'landing_page',
+        },
+      });
+
+      expect(waitlistEntry.id).toBeDefined();
+      expect(waitlistEntry.email).toBe(testEmail);
+
+      // Clean up
+      await prisma.waitlist.delete({ where: { id: waitlistEntry.id } });
+    });
+  });
 });

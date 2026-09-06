@@ -88,3 +88,11 @@ model DailyLog {
   consistencyScore Int      @default(0)
   createdAt        DateTime @default(now())
 }
+
+model Waitlist {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  source    String   @default("landing_page")
+  createdAt DateTime @default(now())
+}
