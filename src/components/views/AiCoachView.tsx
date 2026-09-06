@@ -119,20 +119,29 @@ export function AiCoachView() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto pb-16">
-      {/* Header */}
-      <div className="pb-2 border-b border-white/8">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold tracking-[0.2em] text-[#A98CF7] uppercase">
-            Inteligência Contextual
-          </span>
-          <span className="w-8 h-px bg-[#A98CF7]/40 inline-block" />
+      {/* Header with Mascot */}
+      <div className="flex items-center gap-4 pb-2 border-b border-white/8">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-[#1E2530] to-[#0D1015] border border-[#B8FF00]/30 flex items-center justify-center flex-shrink-0 p-1 shadow-[0_0_16px_rgba(184,255,0,0.2)]">
+          <img
+            src="/trajetta-ai-avatar.png"
+            alt="Trajetta AI Mascot"
+            className="w-full h-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]"
+          />
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#F2F1ED] mt-2">
-          IA da <span className="text-[#A98CF7]">Trajetta.</span>
-        </h1>
-        <p className="text-sm text-[#8E9499] mt-1">
-          Não é um chat genérico. A Trajetta conhece seus 4 meses de histórico e sugere ajustes de rota realistas.
-        </p>
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold tracking-[0.2em] text-[#B8FF00] uppercase">
+              Inteligência Contextual
+            </span>
+            <span className="w-8 h-px bg-[#B8FF00]/40 inline-block" />
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#F2F1ED] mt-0.5">
+            IA da <span className="text-[#B8FF00]">Trajetta.</span>
+          </h1>
+          <p className="text-sm text-[#8E9499] mt-0.5">
+            Não é um chat genérico. O coach conhece seu histórico e sugere ajustes de rota realistas.
+          </p>
+        </div>
       </div>
 
       {/* Live RAG Engine Context Badge */}
@@ -164,8 +173,12 @@ export function AiCoachView() {
                 className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
               >
                 {!isUser && (
-                  <div className="w-7 h-7 rounded-lg bg-[#A98CF7]/20 border border-[#A98CF7]/30 flex items-center justify-center text-[#A98CF7] flex-shrink-0 mt-0.5">
-                    <Brain size={15} />
+                  <div className="w-8 h-8 rounded-full bg-[#171A1D] border border-[#B8FF00]/40 flex items-center justify-center flex-shrink-0 mt-0.5 overflow-hidden shadow-[0_0_10px_rgba(184,255,0,0.15)] p-0.5">
+                    <img
+                      src="/trajetta-ai-avatar.png"
+                      alt="Trajetta AI"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 )}
 

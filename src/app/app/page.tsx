@@ -22,6 +22,7 @@ import { NewGoalModal } from '@/components/views/NewGoalModal';
 import { AuthModal } from '@/components/views/AuthModal';
 import { PaywallModal } from '@/components/views/PaywallModal';
 import { AuthGateView } from '@/components/views/AuthGateView';
+import { FloatingAiTrigger } from '@/components/ui/FloatingAiTrigger';
 
 export default function TrajettaAppPage() {
   const {
@@ -79,6 +80,9 @@ export default function TrajettaAppPage() {
 
       {/* Mobile Bottom Dock */}
       <MobileNav />
+
+      {/* Floating AI Mascot Trigger Sphere */}
+      <FloatingAiTrigger />
 
       {/* Global Modals */}
       <WeeklyReviewModal />
