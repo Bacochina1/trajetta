@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export function Footer() {
@@ -85,8 +84,7 @@ export function Footer() {
                 <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas</a></li>
                 <li><a className="hover:text-white transition-colors" href="#metodo">O Método</a></li>
                 <li><a className="hover:text-white transition-colors" href="#waitlist">Lista VIP</a></li>
-                <li><Link className="hover:text-white transition-colors" href="/login">Login</Link></li>
-                <li><Link className="hover:text-white transition-colors" href="/register">Criar Conta</Link></li>
+                <li><a className="hover:text-white transition-colors" href="#faq">Perguntas Frequentes</a></li>
               </ul>
             </div>
 

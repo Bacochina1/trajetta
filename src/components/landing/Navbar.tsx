@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, ArrowRight, User, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
 
 interface NavbarProps {
@@ -46,29 +46,11 @@ export function Navbar({ isAuthenticated, user }: NavbarProps) {
         <a
           href="#waitlist"
           onClick={() => handleCtaClick('navbar_waitlist')}
-          className="bg-white hover:bg-neutral-100 text-black text-[11px] sm:text-[12px] font-bold tracking-wider uppercase px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-white/5 active:scale-95"
+          className="bg-white hover:bg-neutral-100 text-black text-[11px] sm:text-[12px] font-bold tracking-wider uppercase px-4 sm:px-6 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-white/5 active:scale-95"
         >
           <span>LISTA VIP</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
-
-        {/* Login or Dashboard Button */}
-        {isAuthenticated ? (
-          <Link
-            href="/app"
-            className="bg-[#1e2329]/90 hover:bg-[#2a3038] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200 flex items-center space-x-1.5"
-          >
-            <User className="w-3.5 h-3.5 text-[#B8FF00]" />
-            <span className="hidden sm:inline truncate max-w-[90px]">{user?.name?.split(' ')[0] || 'Painel'}</span>
-          </Link>
-        ) : (
-          <Link
-            href="/login"
-            className="bg-[#1e2329]/90 hover:bg-[#2a3038] text-white text-[11px] sm:text-[12px] font-semibold tracking-wider uppercase px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/10 transition-colors duration-200"
-          >
-            LOGIN
-          </Link>
-        )}
 
         {/* Mobile Menu Toggle Button */}
         <button
@@ -126,13 +108,6 @@ export function Navbar({ isAuthenticated, user }: NavbarProps) {
             >
               Entrar na Lista VIP
             </a>
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center bg-[#1e2329] text-white font-medium text-xs uppercase py-2.5 rounded-full border border-white/10"
-            >
-              Entrar na Conta
-            </Link>
           </div>
         </div>
       )}
