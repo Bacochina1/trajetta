@@ -203,15 +203,15 @@ export function AiCoachView() {
 
         {/* Quick Prompts */}
         <div className="space-y-2 pt-2 border-t border-white/8">
-          <span className="text-[10px] font-bold text-[#8E9499] uppercase tracking-wider block">
+          <span className="text-[11px] font-bold text-[#8E9499] uppercase tracking-wider block">
             Sugestões de Reflexão:
           </span>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {quickPrompts.map((p, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(p)}
-                className="text-[11px] text-[#8E9499] hover:text-[#F2F1ED] bg-[#111315] hover:bg-white/5 border border-white/8 px-2.5 py-1.5 rounded-lg text-left transition-colors tactile-btn"
+                className="text-xs text-[#8E9499] hover:text-[#F2F1ED] bg-[#111315] hover:bg-white/5 border border-white/8 px-3 py-2 rounded-lg text-left transition-colors tactile-btn min-h-[36px]"
               >
                 {p}
               </button>
@@ -225,17 +225,17 @@ export function AiCoachView() {
             e.preventDefault();
             handleSend();
           }}
-          className="flex gap-2 pt-2"
+          className="flex gap-2.5 pt-2"
         >
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Ex: Como posso readequar meus objetivos nesta semana?"
-            className="flex-1 bg-[#111315] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none focus:border-[#B8FF00]"
+            className="flex-1 h-11 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
           />
-          <Button variant="primary" size="md" type="submit" disabled={!input.trim()}>
-            <Send size={15} />
+          <Button variant="primary" size="icon" type="submit" disabled={!input.trim()} aria-label="Enviar mensagem">
+            <Send size={16} />
           </Button>
         </form>
       </div>

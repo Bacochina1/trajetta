@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useTrajetta } from '@/context/TrajettaContext';
-import { Check, ShieldCheck, Sparkles, Zap, ArrowRight, RotateCcw } from 'lucide-react';
+import { Check, ShieldCheck, Zap, ArrowRight, RotateCcw } from 'lucide-react';
 
 interface PaywallModalProps {
   isOpen: boolean;
@@ -194,7 +194,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               size="md"
               disabled={loading}
               onClick={handleSubscribe}
-              className="bg-[#B8FF00] text-[#0D0F10] font-bold text-xs"
+              className="bg-[#B8FF00] text-[#0D0F10] font-bold"
             >
               {loading ? 'Processando...' : 'Confirmar Plano'}
               <ArrowRight size={14} />

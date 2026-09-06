@@ -69,24 +69,26 @@ export function NewGoalModal() {
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-[#F2F1ED] mb-1">Título da Meta</label>
+          <label htmlFor="goal-title" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">Título da Meta</label>
           <input
+            id="goal-title"
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Ex: Correr Meia Maratona (21k), Reserva de R$ 50k..."
             required
-            className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+            className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-[#F2F1ED] mb-1">Área da Vida</label>
+            <label htmlFor="goal-area" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">Área da Vida</label>
             <select
+              id="goal-area"
               value={lifeArea}
               onChange={e => setLifeArea(e.target.value as LifeArea)}
-              className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
             >
               <option value="corpo">Corpo</option>
               <option value="dinheiro">Dinheiro</option>
@@ -96,33 +98,35 @@ export function NewGoalModal() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#F2F1ED] mb-1">Prazo Alvo</label>
+            <label htmlFor="goal-date" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">Prazo Alvo</label>
             <input
+              id="goal-date"
               type="date"
               value={targetDate}
               onChange={e => setTargetDate(e.target.value)}
-              className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#F2F1ED] mb-1">
+          <label htmlFor="goal-why" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">
             Por que isso importa? (Motivo Existencial)
           </label>
           <textarea
+            id="goal-why"
             value={whyItMatters}
             onChange={e => setWhyItMatters(e.target.value)}
-            rows={2}
+            rows={3}
             placeholder="O que alcançar essa meta vai mudar na pessoa que você está se tornando?"
-            className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
+            className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
           />
         </div>
 
         {/* Incremental Milestones Section */}
         <div className="pt-2 border-t border-white/8 space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-[#F2F1ED]">Marcos Progressivos</label>
+            <span className="text-xs font-bold text-[#F2F1ED]">Marcos Progressivos</span>
             <button
               type="button"
               onClick={addMilestone}
@@ -141,13 +145,14 @@ export function NewGoalModal() {
                   value={m.title}
                   onChange={e => updateMilestoneTitle(index, e.target.value)}
                   placeholder={`Ex: Etapa ${index + 1}...`}
-                  className="flex-1 bg-[#111315] border border-white/10 rounded-lg p-2 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                  className="flex-1 h-9 bg-[#111315] border border-white/10 rounded-lg px-3 text-xs sm:text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
                 />
                 {milestones.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeMilestone(index)}
-                    className="p-1.5 text-[#8E9499] hover:text-red-400"
+                    aria-label={`Remover marco ${index + 1}`}
+                    className="p-2 text-[#8E9499] hover:text-red-400 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -157,12 +162,13 @@ export function NewGoalModal() {
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-3 border-t border-white/8">
-          <Button variant="ghost" size="sm" type="button" onClick={() => setIsNewGoalModalOpen(false)}>
-            Cancelar
-          </Button>
+        {/* Design for Developers: Both primary and secondary actions placed at the bottom-left */}
+        <div className="flex items-center gap-3 pt-4 border-t border-white/8">
           <Button variant="primary" size="md" type="submit">
-            <Check size={14} /> Salvar Meta
+            <Check size={16} /> Criar Meta
+          </Button>
+          <Button variant="ghost" size="md" type="button" onClick={() => setIsNewGoalModalOpen(false)}>
+            Cancelar
           </Button>
         </div>
       </form>

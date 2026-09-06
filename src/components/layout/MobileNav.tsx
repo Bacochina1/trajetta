@@ -27,14 +27,14 @@ export function MobileNav() {
             key={item.id}
             onClick={() => setActiveView(item.id)}
             className={cn(
-              'flex-1 min-h-[44px] flex flex-col items-center justify-center gap-1 rounded-xl text-[10px] font-medium transition-all duration-150 tactile-btn relative',
+              'flex-1 min-h-[48px] flex flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium transition-all duration-150 tactile-btn relative',
               isActive
                 ? 'text-[#B8FF00] font-bold'
                 : 'text-[#8E9499] hover:text-[#F2F1ED]'
             )}
           >
             {isActive && (
-              <span className="absolute top-0 w-6 h-0.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_rgba(184,255,0,0.6)]" />
+              <span className="absolute top-0 w-8 h-0.5 rounded-full bg-[#B8FF00] shadow-[0_0_8px_rgba(184,255,0,0.6)]" />
             )}
             <Icon size={18} strokeWidth={isActive ? 2.3 : 1.8} />
             <span>{item.label}</span>

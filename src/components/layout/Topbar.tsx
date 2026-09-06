@@ -17,7 +17,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         <button
           onClick={onOpenMobile}
           aria-label="Abrir menu"
-          className="p-2 -ml-2 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 md:hidden tactile-btn"
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 md:hidden tactile-btn flex items-center justify-center"
         >
           <Menu size={20} />
         </button>
@@ -37,9 +37,9 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         <button
           onClick={() => setIsAuthModalOpen(true)}
           title="Conta & Autenticação"
-          className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center gap-1.5 text-xs"
+          className="min-h-[36px] px-3 py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center gap-1.5 text-xs sm:text-sm"
         >
-          <User size={13} className="text-[#B8FF00]" />
+          <User size={14} className="text-[#B8FF00]" />
           <span className="hidden sm:inline font-medium">
             {user.role?.includes('Admin') ? 'Jim (Admin)' : user.name}
           </span>
@@ -49,7 +49,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         <button
           onClick={resetToDemoData}
           title="Restaurar dados iniciais de demonstração"
-          className="p-2 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 tactile-btn hidden lg:flex items-center gap-1.5 text-xs"
+          className="min-h-[36px] px-3 py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 tactile-btn hidden lg:flex items-center gap-1.5 text-xs sm:text-sm"
         >
           <RotateCcw size={14} />
           <span>Restaurar Demo</span>
@@ -60,7 +60,6 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           variant="secondary"
           size="sm"
           onClick={() => setIsNewGoalModalOpen(true)}
-          className="text-xs"
         >
           <Plus size={14} />
           <span className="hidden sm:inline">Nova Meta</span>
@@ -71,7 +70,6 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           variant="primary"
           size="sm"
           onClick={() => setIsReviewModalOpen(true)}
-          className="text-xs"
         >
           <CheckCircle2 size={14} strokeWidth={2.2} />
           <span>Fechar Semana</span>

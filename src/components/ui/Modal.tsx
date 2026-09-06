@@ -41,7 +41,7 @@ export function Modal({
       {/* Modal Container: Concentric Radius (20px outer) */}
       <div
         className={cn(
-          'relative w-full bg-[#171A1D] border border-white/10 rounded-[20px] shadow-[0_25px_60px_rgba(0,0,0,0.6)] overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150',
+          'relative w-full bg-[#171A1D] border border-white/10 rounded-[20px] shadow-depth-2 overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150',
           maxWidth
         )}
       >

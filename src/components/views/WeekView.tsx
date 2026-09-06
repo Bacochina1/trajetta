@@ -219,7 +219,7 @@ export function WeekView() {
               <button
                 key={cap}
                 onClick={() => setCapacity(cap)}
-                className={`py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${
+                className={`min-h-[36px] py-1.5 rounded-lg text-sm font-semibold capitalize transition-colors ${
                   capacity === cap
                     ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_12px_rgba(184,255,0,0.2)]'
                     : 'bg-[#111315] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -268,9 +268,9 @@ export function WeekView() {
                   {!isEditing && (
                     <button
                       onClick={() => handleStartEdit(area)}
-                      className="text-xs text-[#8E9499] hover:text-[#F2F1ED] p-1 rounded hover:bg-white/5 flex items-center gap-1 transition-colors"
+                      className="text-xs text-[#8E9499] hover:text-[#F2F1ED] p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1 transition-colors min-h-[36px]"
                     >
-                      <Edit3 size={13} />
+                      <Edit3 size={14} />
                       <span>Editar foco</span>
                     </button>
                   )}
@@ -282,7 +282,7 @@ export function WeekView() {
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={3}
-                      className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
+                      className="w-full bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
                       placeholder={`Qual seu principal avanço para ${config.label}?`}
                     />
                     <div className="flex justify-end gap-2">
@@ -290,7 +290,6 @@ export function WeekView() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setEditingArea(null)}
-                        className="text-xs"
                       >
                         Cancelar
                       </Button>
@@ -298,9 +297,8 @@ export function WeekView() {
                         variant="primary"
                         size="sm"
                         onClick={() => handleSaveEdit(area)}
-                        className="text-xs"
                       >
-                        <Check size={13} /> Salvar Foco
+                        <Check size={14} /> Salvar Foco
                       </Button>
                     </div>
                   </div>

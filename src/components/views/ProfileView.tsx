@@ -293,14 +293,14 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-1">
-          {/* Export JSON */}
+          {/* Export Full Data (LGPD) */}
           <Button
             variant="secondary"
             size="md"
             onClick={handleExportData}
-            className="flex-1 text-xs justify-center"
+            className="flex-1 justify-center"
           >
-            <Download size={14} />
+            <Download size={15} />
             <span>Exportar Histórico (JSON)</span>
           </Button>
 
@@ -309,32 +309,32 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
             variant="secondary"
             size="md"
             onClick={resetToDemoData}
-            className="text-xs justify-center"
+            className="justify-center"
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={15} />
             <span>Restaurar Demonstração</span>
           </Button>
         </div>
 
         {exportSuccess && (
-          <div className="p-3 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-xs font-semibold flex items-center gap-2">
-            <Check size={14} />
+          <div className="p-3 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-sm font-semibold flex items-center gap-2">
+            <Check size={16} />
             <span>Arquivo JSON gerado e baixado com sucesso!</span>
           </div>
         )}
 
         {accountDeleted && (
-          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold flex items-center gap-2">
-            <Check size={14} />
+          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-semibold flex items-center gap-2">
+            <Check size={16} />
             <span>Dados da conta reiniciados com sucesso.</span>
           </div>
         )}
 
         {/* Delete Account Dialog */}
-        <div className="pt-4 border-t border-white/8 flex items-center justify-between">
+        <div className="pt-4 border-t border-white/8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-0.5">
-            <span className="text-xs font-bold text-red-400">Exclusão de Conta</span>
-            <p className="text-[11px] text-[#8E9499]">
+            <span className="text-sm font-bold text-red-400">Exclusão de Conta</span>
+            <p className="text-xs text-[#8E9499]">
               Remove permanentemente suas metas, hábitos, memórias e registros.
             </p>
           </div>
@@ -342,22 +342,22 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           {!showDeleteConfirm ? (
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/20 transition-colors flex items-center gap-1.5"
+              className="px-4 py-2 min-h-[40px] rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-semibold border border-red-500/20 transition-colors flex items-center justify-center gap-2 select-none tactile-btn"
             >
-              <Trash2 size={13} />
+              <Trash2 size={15} />
               <span>Excluir Conta</span>
             </button>
           ) : (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-2.5 py-1 text-xs text-[#8E9499] hover:text-[#F2F1ED]"
+                className="px-3 py-2 text-sm text-[#8E9499] hover:text-[#F2F1ED] min-h-[40px]"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDeleteAccount}
-                className="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-bold transition-colors"
+                className="px-4 py-2 min-h-[40px] rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition-colors select-none tactile-btn"
               >
                 Confirmar Exclusão
               </button>

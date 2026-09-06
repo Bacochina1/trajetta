@@ -82,15 +82,21 @@ export function OnboardingModal() {
               </p>
             </div>
 
-            <input
-              type="text"
-              value={userName}
-              onChange={e => setUserName(e.target.value)}
-              placeholder="Seu primeiro nome"
-              className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-sm text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
-            />
+            <div>
+              <label htmlFor="onboarding-name" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                Seu Primeiro Nome
+              </label>
+              <input
+                id="onboarding-name"
+                type="text"
+                value={userName}
+                onChange={e => setUserName(e.target.value)}
+                placeholder="Ex: Matheus, Jim, Sophia..."
+                className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
+              />
+            </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <Button
                 variant="primary"
                 size="md"
@@ -196,16 +202,17 @@ export function OnboardingModal() {
               ))}
             </div>
 
-            <div className="pt-2">
-              <label className="block text-xs text-[#F2F1ED] font-semibold mb-1">
+            <div className="pt-2 space-y-1.5">
+              <label htmlFor="onboarding-target" className="block text-xs text-[#F2F1ED] font-semibold mb-1.5">
                 Onde você gostaria de estar daqui a 12 meses?
               </label>
               <textarea
+                id="onboarding-target"
                 value={target12Months}
                 onChange={e => setTarget12Months(e.target.value)}
                 rows={3}
                 placeholder="Ex: Correr uma meia maratona, estar com R$ 50k investidos e com o corpo descansado..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
+                className="w-full bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
               />
             </div>
 

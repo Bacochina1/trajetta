@@ -67,7 +67,7 @@ export function GoalsView() {
             <button
               key={area}
               onClick={() => setSelectedArea(area)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors tactile-btn ${
+              className={`px-4 py-1.5 min-h-[36px] rounded-full text-sm font-semibold whitespace-nowrap transition-colors tactile-btn ${
                 isSelected
                   ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_15px_rgba(184,255,0,0.15)]'
                   : 'bg-[#171A1D] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'

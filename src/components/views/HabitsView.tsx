@@ -54,7 +54,6 @@ export function HabitsView() {
           variant="primary"
           size="md"
           onClick={() => setIsModalOpen(true)}
-          className="text-xs"
         >
           <Plus size={15} />
           <span>Novo Hábito</span>
@@ -164,23 +163,29 @@ export function HabitsView() {
             <h3 className="text-lg font-bold text-[#F2F1ED]">Criar Novo Hábito</h3>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs text-[#8E9499] mb-1">Nome do Hábito</label>
+                <label htmlFor="habit-title" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                  Nome do Hábito
+                </label>
                 <input
+                  id="habit-title"
                   type="text"
                   value={newTitle}
                   onChange={e => setNewTitle(e.target.value)}
                   placeholder="Ex: Treino de força, Ler 20 min..."
                   required
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#8E9499] mb-1">Área da Vida</label>
+                <label htmlFor="habit-area" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                  Área da Vida
+                </label>
                 <select
+                  id="habit-area"
                   value={newArea}
                   onChange={e => setNewArea(e.target.value as LifeArea)}
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
                 >
                   <option value="corpo">Corpo</option>
                   <option value="dinheiro">Dinheiro</option>
@@ -190,25 +195,27 @@ export function HabitsView() {
               </div>
 
               <div>
-                <label className="block text-xs text-[#8E9499] mb-1">
+                <label htmlFor="habit-freq" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
                   Frequência Semanal ({newFreq}x por semana)
                 </label>
                 <input
+                  id="habit-freq"
                   type="range"
                   min={1}
                   max={7}
                   value={newFreq}
                   onChange={e => setNewFreq(Number(e.target.value))}
-                  className="w-full accent-[#B8FF00]"
+                  className="w-full accent-[#B8FF00] cursor-pointer"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <Button variant="ghost" size="sm" type="button" onClick={() => setIsModalOpen(false)}>
-                  Cancelar
+              {/* Design for Developers: Both primary and secondary actions placed at the bottom-left */}
+              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+                <Button variant="primary" size="md" type="submit">
+                  Criar Hábito
                 </Button>
-                <Button variant="primary" size="sm" type="submit">
-                  Salvar Hábito
+                <Button variant="ghost" size="md" type="button" onClick={() => setIsModalOpen(false)}>
+                  Cancelar
                 </Button>
               </div>
             </form>

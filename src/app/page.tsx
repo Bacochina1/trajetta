@@ -107,10 +107,10 @@ export default function LandingPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/app"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#171A1D] hover:bg-[#1F2328] border border-white/10 hover:border-white/20 text-[#F2F1ED] transition-all active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8FF00]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 min-h-[36px] rounded-lg text-sm font-semibold bg-[#171A1D] hover:bg-[#1F2328] border border-white/10 hover:border-white/20 text-[#F2F1ED] transition-all active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8FF00]"
           >
             <span>Acessar App</span>
-            <ArrowRight size={13} className="text-[#B8FF00]" />
+            <ArrowRight size={14} className="text-[#B8FF00]" />
           </Link>
         </div>
       </header>
@@ -124,7 +124,7 @@ export default function LandingPage() {
 
         <div className="text-center max-w-3xl mx-auto space-y-6 relative z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-[#8E9499]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#8E9499]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
             <span>LISTA VIP EXCLUSIVA • ACESSO ANTECIPADO 2026</span>
           </div>
@@ -154,7 +154,7 @@ export default function LandingPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Seu nome"
-                    className="w-full sm:w-1/3 bg-transparent px-3.5 py-2.5 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none border-b sm:border-b-0 sm:border-r border-white/8"
+                    className="w-full sm:w-1/3 bg-transparent px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:outline-none border-b sm:border-b-0 sm:border-r border-white/8"
                   />
                   <label htmlFor="hero-email" className="sr-only">Seu E-mail</label>
                   <input
@@ -164,32 +164,32 @@ export default function LandingPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Seu melhor e-mail"
-                    className="flex-1 bg-transparent px-3.5 py-2.5 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none"
+                    className="flex-1 bg-transparent px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-5 py-2.5 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-xs sm:text-sm transition-all active:scale-[0.96] shadow-[0_0_20px_rgba(184,255,0,0.25)] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="px-6 py-3 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-sm transition-all active:scale-[0.96] shadow-[0_0_20px_rgba(184,255,0,0.25)] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white min-h-[44px]"
                   >
                     {loading ? 'Reservando...' : 'Entrar na Lista'}
-                    <ArrowRight size={14} strokeWidth={2.5} />
+                    <ArrowRight size={15} strokeWidth={2.5} />
                   </button>
                 </div>
 
                 {error && (
-                  <div className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 flex items-center justify-center gap-1.5">
-                    <AlertCircle size={14} />
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs sm:text-sm text-red-400 flex items-center justify-center gap-2">
+                    <AlertCircle size={15} />
                     <span>{error}</span>
                   </div>
                 )}
 
-                <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-[#8E9499]">
-                  <span className="flex items-center gap-1">
-                    <Check size={12} className="text-[#B8FF00]" /> Acesso Gratuito no Lançamento
+                <div className="flex items-center justify-center gap-3 pt-1 text-xs text-[#8E9499]">
+                  <span className="flex items-center gap-1.5">
+                    <Check size={14} className="text-[#B8FF00]" /> Acesso Gratuito no Lançamento
                   </span>
                   <span>•</span>
-                  <span className="flex items-center gap-1 text-[#F2F1ED] font-semibold">
-                    <Flame size={12} className="text-[#B8FF00]" /> {waitlistCount.toLocaleString('pt-BR')} pessoas na fila
+                  <span className="flex items-center gap-1.5 text-[#F2F1ED] font-semibold">
+                    <Flame size={14} className="text-[#B8FF00]" /> {waitlistCount.toLocaleString('pt-BR')} pessoas na fila
                   </span>
                 </div>
               </form>
@@ -201,17 +201,17 @@ export default function LandingPage() {
                 <h3 className="text-lg font-bold text-[#F2F1ED]">
                   {alreadyRegistered ? 'Você já está na Lista VIP!' : 'Vaga Reservada com Sucesso!'}
                 </h3>
-                <p className="text-xs text-[#8E9499]">
+                <p className="text-xs sm:text-sm text-[#8E9499]">
                   Sua posição na fila de acesso é <strong className="text-[#B8FF00]">#{userPosition}</strong>. 
                   Enviamos uma confirmação detalhada para seu e-mail.
                 </p>
                 <div className="pt-2">
                   <Link
                     href="/app"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#B8FF00] text-[#0D0F10] font-bold text-xs"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#B8FF00] text-[#0D0F10] font-bold text-sm min-h-[40px] shadow-[0_0_15px_rgba(184,255,0,0.2)]"
                   >
                     <span>Testar Sistema Agora (Acesso Demonstração)</span>
-                    <ArrowRight size={13} />
+                    <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>
@@ -675,27 +675,27 @@ export default function LandingPage() {
         <div className="max-w-md mx-auto">
           {!submitted ? (
             <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row gap-2.5">
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Seu e-mail principal"
-                  className="flex-1 bg-[#171A1D] border border-white/12 rounded-xl px-4 py-3 text-xs sm:text-sm text-[#F2F1ED] placeholder-[#8E9499]/60 focus:outline-none focus:border-[#B8FF00]"
+                  className="flex-1 h-12 bg-[#171A1D] border border-white/12 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-xs sm:text-sm transition-all active:scale-[0.96] shadow-[0_0_25px_rgba(184,255,0,0.25)] flex items-center justify-center gap-2 cursor-pointer"
+                  className="px-6 py-3 min-h-[48px] rounded-xl bg-[#B8FF00] hover:bg-[#C6FF19] text-[#0D0F10] font-bold text-sm transition-all active:scale-[0.96] shadow-[0_0_25px_rgba(184,255,0,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 whitespace-nowrap"
                 >
                   <span>Reservar Vaga</span>
-                  <ArrowRight size={14} strokeWidth={2.5} />
+                  <ArrowRight size={15} strokeWidth={2.5} />
                 </button>
               </div>
             </form>
           ) : (
-            <div className="p-4 rounded-xl bg-[#171A1D] border border-[#B8FF00]/40 text-xs text-[#B8FF00]">
+            <div className="p-4 rounded-xl bg-[#171A1D] border border-[#B8FF00]/40 text-sm font-semibold text-[#B8FF00]">
               ✓ Vaga reservada na posição #{userPosition}.
             </div>
           )}
@@ -704,7 +704,7 @@ export default function LandingPage() {
         <div className="pt-2">
           <Link
             href="/app"
-            className="text-xs text-[#8E9499] hover:text-[#B8FF00] underline underline-offset-4 transition-colors"
+            className="text-xs sm:text-sm text-[#8E9499] hover:text-[#B8FF00] underline underline-offset-4 transition-colors"
           >
             Prefere experimentar o sistema imediatamente? Clique aqui para acessar o App Demo →
           </Link>

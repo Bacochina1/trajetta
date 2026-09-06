@@ -55,8 +55,8 @@ function cleanAiOutput(text: string): string {
     cleaned = 'Sua trajetória não exige perfeição cega, mas continuidade adaptável. Em semanas de sobrecarga profissional, preserve seu piso de consistência reduzindo o volume sem abrir mão do hábito.';
   }
 
-  // Strictly enforce Zero Sparkles
-  return cleaned.replace(/✨/g, '✦').trim();
+  // Strictly enforce Zero Sparkles (neither ✨ nor ✦)
+  return cleaned.replace(/[✨✦]/g, '').trim();
 }
 
 export async function callNvidiaAI(

@@ -172,50 +172,59 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         )}
 
         {/* Credentials Form */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {tab === 'register' && (
-            <div className="space-y-1">
-              <label className="text-[11px] font-semibold text-[#8E9499] uppercase tracking-wider">Seu Nome</label>
+            <div>
+              <label htmlFor="auth-name" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                Seu Nome
+              </label>
               <div className="relative">
-                <UserIcon className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8E9499]" />
+                <UserIcon className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E9499]" />
                 <input
+                  id="auth-name"
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Como devemos te chamar?"
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl pl-10 pr-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
                 />
               </div>
             </div>
           )}
 
-          <div className="space-y-1">
-            <label className="text-[11px] font-semibold text-[#8E9499] uppercase tracking-wider">E-mail</label>
+          <div>
+            <label htmlFor="auth-email" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+              E-mail
+            </label>
             <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8E9499]" />
+              <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E9499]" />
               <input
+                id="auth-email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu.email@exemplo.com"
-                className="w-full bg-[#111315] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl pl-10 pr-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] font-semibold text-[#8E9499] uppercase tracking-wider">Senha</label>
+          <div>
+            <label htmlFor="auth-password" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+              Senha
+            </label>
             <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8E9499]" />
+              <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E9499]" />
               <input
+                id="auth-password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full bg-[#111315] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
+                className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl pl-10 pr-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -223,8 +232,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <Button
             type="submit"
             variant="primary"
+            size="md"
             disabled={loading}
-            className="w-full py-2.5 text-xs font-bold mt-2"
+            className="w-full font-bold mt-2"
           >
             {loading ? 'Processando...' : tab === 'login' ? 'Entrar no Sistema' : 'Iniciar Minha Trajetória'}
           </Button>
@@ -239,11 +249,11 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         </div>
 
         {/* Social Logins */}
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => handleSocialMock('Google')}
-            className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#111315] border border-white/8 hover:border-white/20 text-xs font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
+            className="flex items-center justify-center gap-2 min-h-[44px] py-2 px-4 rounded-xl bg-[#111315] border border-white/8 hover:border-white/20 text-sm font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -269,7 +279,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <button
             type="button"
             onClick={() => handleSocialMock('GitHub')}
-            className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#111315] border border-white/8 hover:border-white/20 text-xs font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
+            className="flex items-center justify-center gap-2 min-h-[44px] py-2 px-4 rounded-xl bg-[#111315] border border-white/8 hover:border-white/20 text-sm font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
           >
             <svg className="w-4 h-4 fill-current text-[#F2F1ED]" viewBox="0 0 24 24">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />

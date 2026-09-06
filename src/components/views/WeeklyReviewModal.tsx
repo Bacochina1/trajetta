@@ -134,18 +134,27 @@ export function WeeklyReviewModal() {
                 </p>
               </div>
 
-              <textarea
-                value={whatAdvanced}
-                onChange={e => setWhatAdvanced(e.target.value)}
-                rows={4}
-                placeholder="Ex: Treinei 4 vezes com corrida de 10km, fechei a proposta de produto e mantive meu sono regulado..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
-              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] text-[#8E9499]">
+                  <span>Máximo 300 caracteres</span>
+                  <span className={whatAdvanced.length > 280 ? 'text-amber-400 font-medium' : ''}>
+                    {whatAdvanced.length}/300 ({Math.max(0, 300 - whatAdvanced.length)} restantes)
+                  </span>
+                </div>
+                <textarea
+                  value={whatAdvanced}
+                  onChange={e => setWhatAdvanced(e.target.value.slice(0, 300))}
+                  rows={4}
+                  maxLength={300}
+                  placeholder="Ex: Treinei 4 vezes com corrida de 10km, fechei a proposta de produto e mantive meu sono regulado..."
+                  className="w-full min-h-[100px] bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
+                />
+              </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end pt-2">
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => setStep(2)}
                   disabled={!whatAdvanced.trim()}
                 >
@@ -170,21 +179,30 @@ export function WeeklyReviewModal() {
                 </p>
               </div>
 
-              <textarea
-                value={whatDistracted}
-                onChange={e => setWhatDistracted(e.target.value)}
-                rows={4}
-                placeholder="Ex: Fiquei no celular até tarde na terça-feira e tive reuniões de última hora que atrasaram meu aporte financeiro..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
-              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] text-[#8E9499]">
+                  <span>Máximo 300 caracteres</span>
+                  <span className={whatDistracted.length > 280 ? 'text-amber-400 font-medium' : ''}>
+                    {whatDistracted.length}/300 ({Math.max(0, 300 - whatDistracted.length)} restantes)
+                  </span>
+                </div>
+                <textarea
+                  value={whatDistracted}
+                  onChange={e => setWhatDistracted(e.target.value.slice(0, 300))}
+                  rows={4}
+                  maxLength={300}
+                  placeholder="Ex: Fiquei no celular até tarde na terça-feira e tive reuniões de última hora que atrasaram meu aporte financeiro..."
+                  className="w-full min-h-[100px] bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
+                />
+              </div>
 
-              <div className="flex justify-between">
-                <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" size="md" onClick={() => setStep(1)}>
                   Voltar
                 </Button>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => setStep(3)}
                   disabled={!whatDistracted.trim()}
                 >
@@ -209,21 +227,30 @@ export function WeeklyReviewModal() {
                 </p>
               </div>
 
-              <textarea
-                value={proudOf}
-                onChange={e => setProudOf(e.target.value)}
-                rows={4}
-                placeholder="Ex: Orgulho de ter colocado meu tênis mesmo cansado na quinta-feira e de ter jantado em família sem checar o Slack..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
-              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] text-[#8E9499]">
+                  <span>Máximo 300 caracteres</span>
+                  <span className={proudOf.length > 280 ? 'text-amber-400 font-medium' : ''}>
+                    {proudOf.length}/300 ({Math.max(0, 300 - proudOf.length)} restantes)
+                  </span>
+                </div>
+                <textarea
+                  value={proudOf}
+                  onChange={e => setProudOf(e.target.value.slice(0, 300))}
+                  rows={4}
+                  maxLength={300}
+                  placeholder="Ex: Orgulho de ter colocado meu tênis mesmo cansado na quinta-feira e de ter jantado em família sem checar o Slack..."
+                  className="w-full min-h-[100px] bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
+                />
+              </div>
 
-              <div className="flex justify-between">
-                <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" size="md" onClick={() => setStep(2)}>
                   Voltar
                 </Button>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => setStep(4)}
                   disabled={!proudOf.trim()}
                 >
@@ -248,16 +275,25 @@ export function WeeklyReviewModal() {
                 </p>
               </div>
 
-              <textarea
-                value={nextWeekAdjustment}
-                onChange={e => setNextWeekAdjustment(e.target.value)}
-                rows={4}
-                placeholder="Ex: Fazer o aporte na segunda-feira pela manhã e desligar o celular às 22h sem exceção..."
-                className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
-              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] text-[#8E9499]">
+                  <span>Máximo 300 caracteres</span>
+                  <span className={nextWeekAdjustment.length > 280 ? 'text-amber-400 font-medium' : ''}>
+                    {nextWeekAdjustment.length}/300 ({Math.max(0, 300 - nextWeekAdjustment.length)} restantes)
+                  </span>
+                </div>
+                <textarea
+                  value={nextWeekAdjustment}
+                  onChange={e => setNextWeekAdjustment(e.target.value.slice(0, 300))}
+                  rows={4}
+                  maxLength={300}
+                  placeholder="Ex: Fazer o aporte na segunda-feira pela manhã e desligar o celular às 22h sem exceção..."
+                  className="w-full min-h-[100px] bg-[#111315] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors resize-none"
+                />
+              </div>
 
-              <div className="flex justify-between">
-                <Button variant="ghost" size="sm" onClick={() => setStep(3)}>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" size="md" onClick={() => setStep(3)}>
                   Voltar
                 </Button>
                 <Button

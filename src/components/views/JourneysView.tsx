@@ -123,7 +123,6 @@ export function JourneysView() {
                   size="sm"
                   onClick={() => incrementJourneyDay(journey.id)}
                   disabled={journey.currentDay >= journey.totalDays}
-                  className="text-xs"
                 >
                   <Check size={14} /> Registrar Dia Concluído
                 </Button>
@@ -132,7 +131,6 @@ export function JourneysView() {
                   variant="secondary"
                   size="sm"
                   onClick={() => recordJourneySlip(journey.id)}
-                  className="text-xs"
                 >
                   <ShieldAlert size={14} className="text-[#F08A76]" /> Registrar Deslize Consciente
                 </Button>

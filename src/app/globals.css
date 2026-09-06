@@ -58,12 +58,24 @@ html, body {
   letter-spacing: -0.04em;
 }
 
-/* Better-UI: Concentric radius & Surface Depth */
+/* Better-UI: Concentric radius & Surface Depth (Design for Developers formulas) */
+.shadow-depth-0 {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.shadow-depth-1 {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.shadow-depth-2 {
+  box-shadow: 0 25px 60px -5px rgba(0, 0, 0, 0.65), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+}
+
 .trajetta-card {
   background-color: #171A1D;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(255, 255, 255, 0.03);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   transition-property: border-color, box-shadow;
   transition-duration: 150ms;
 }
@@ -74,6 +86,13 @@ html, body {
 
 .trajetta-card-inner {
   border-radius: 10px;
+}
+
+/* Design for Developers: Focus via outline/box-shadow without layout shift */
+.focus-ring-trajetta:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(184, 255, 0, 0.5), 0 0 15px rgba(184, 255, 0, 0.15);
+  border-color: #B8FF00;
 }
 
 /* Better-UI: Tactile Scale on Press */

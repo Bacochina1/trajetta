@@ -15,11 +15,11 @@ export function LifeScoreView() {
   const getStatusBadge = (status: 'attention' | 'evolving' | 'strong') => {
     switch (status) {
       case 'strong':
-        return <span className="text-[11px] font-bold text-[#58D6A7] bg-[#58D6A7]/10 px-2.5 py-0.5 rounded-full border border-[#58D6A7]/20">Forte atualmente</span>;
+        return <span className="text-xs font-semibold text-[#58D6A7] bg-[#58D6A7]/10 px-3 py-1 rounded-full border border-[#58D6A7]/20">Forte atualmente</span>;
       case 'evolving':
-        return <span className="text-[11px] font-bold text-[#B8FF00] bg-[#B8FF00]/10 px-2.5 py-0.5 rounded-full border border-[#B8FF00]/20">Em evolução</span>;
+        return <span className="text-xs font-semibold text-[#B8FF00] bg-[#B8FF00]/10 px-3 py-1 rounded-full border border-[#B8FF00]/20">Em evolução</span>;
       case 'attention':
-        return <span className="text-[11px] font-bold text-[#F08A76] bg-[#F08A76]/10 px-2.5 py-0.5 rounded-full border border-[#F08A76]/20">Atenção necessária</span>;
+        return <span className="text-xs font-semibold text-[#F08A76] bg-[#F08A76]/10 px-3 py-1 rounded-full border border-[#F08A76]/20">Atenção necessária</span>;
     }
   };
 
