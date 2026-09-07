@@ -4,7 +4,7 @@ import { ContextPack } from './memoryService';
 export { type TrajettaRagContext };
 
 const NVIDIA_BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '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';
+const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '';
 const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'meta/llama-3.2-11b-vision-instruct';
 const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || 'meta/llama-3.2-11b-vision-instruct';
 
