@@ -97,11 +97,11 @@ const AREAS: AreaInfo[] = [
 export function LifeAreasSection() {
   const [activeIdx, setActiveIdx] = useState(0);
 
-  // Keen Slider for mobile touch swiping
+  // Keen Slider for mobile touch swiping (exact 1 card per view to fit screen perfectly)
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     slides: {
-      perView: 1.08,
+      perView: 1,
       spacing: 12,
     },
     slideChanged(slider) {
@@ -117,7 +117,7 @@ export function LifeAreasSection() {
   const current = AREAS[activeIdx] || AREAS[0];
 
   return (
-    <section className="max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-14 sm:py-24 border-t border-white/10" data-purpose="use-cases" id="areas">
+    <section className="w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-14 sm:py-24 border-t border-white/10 overflow-hidden box-border" data-purpose="use-cases" id="areas">
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
@@ -130,13 +130,12 @@ export function LifeAreasSection() {
       </h2>
 
       {/* ============================================================ */}
-      {/* MOBILE EXPERIENCE (< lg): KEEN SLIDER WITH PEEK & TOUCH SWIPE */}
+      {/* MOBILE EXPERIENCE (< lg): KEEN SLIDER (100% SCREEN WIDTH FIT) */}
       {/* ============================================================ */}
-      <div className="block lg:hidden">
+      <div className="block lg:hidden w-full max-w-full">
         {/* Quick Area Pill Selector */}
-        <div className="flex items-center gap-2 pb-2 mb-4 text-xs font-mono overflow-x-auto scrollbar-none whitespace-nowrap -mx-4 px-4">
+        <div className="flex items-center gap-1.5 pb-2 mb-4 text-xs font-mono overflow-x-auto scrollbar-none whitespace-nowrap w-full">
           {AREAS.map((area, idx) => {
-            const Icon = area.icon;
             const isActive = activeIdx === idx;
             return (
               <button
@@ -145,7 +144,7 @@ export function LifeAreasSection() {
                 onClick={() => goToSlide(idx)}
                 className={`px-3 py-1.5 rounded-full text-[11px] font-mono font-medium transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-white text-black font-bold shadow-md scale-[1.02]'
+                    ? 'bg-white text-black font-bold shadow-md'
                     : 'text-neutral-400 bg-[#12161e] border border-white/10'
                 }`}
               >
@@ -156,13 +155,13 @@ export function LifeAreasSection() {
           })}
         </div>
 
-        {/* Keen Slider Carousel */}
-        <div ref={sliderRef} className="keen-slider overflow-hidden -mx-4 px-4">
+        {/* Keen Slider Carousel (Constrained strictly to container width) */}
+        <div ref={sliderRef} className="keen-slider w-full max-w-full overflow-hidden rounded-2xl">
           {AREAS.map((area, sIdx) => {
             const Icon = area.icon;
             return (
-              <div key={area.id} className="keen-slider__slide">
-                <div className="rounded-2xl bg-[#0c0e12] border border-white/15 p-4 sm:p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden min-h-[460px]">
+              <div key={area.id} className="keen-slider__slide w-full min-w-0 max-w-full box-border">
+                <div className="w-full max-w-full rounded-2xl bg-[#0c0e12] border border-white/15 p-4 xs:p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden box-border">
                   {/* Subtle top accent gradient */}
                   <div 
                     className="absolute top-0 left-0 right-0 h-1 pointer-events-none" 
@@ -170,10 +169,10 @@ export function LifeAreasSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#11161d] to-[#1c242e] opacity-80 pointer-events-none" />
 
-                  <div className="relative z-10">
+                  <div className="relative z-10 w-full min-w-0">
                     {/* Slide Area Header */}
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <div className="flex items-center gap-1.5 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
                         <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: area.color }} />
                         <span 
                           className="text-xs font-mono uppercase tracking-wider font-semibold truncate"
@@ -188,35 +187,35 @@ export function LifeAreasSection() {
                     </div>
 
                     {/* Slide Title & Short Description */}
-                    <h3 className="text-lg font-normal tracking-tight text-white mb-1.5 leading-snug [text-wrap:balance]">
+                    <h3 className="text-base xs:text-lg font-normal tracking-tight text-white mb-1.5 leading-snug [text-wrap:balance]">
                       {area.title}
                     </h3>
-                    <p className="text-xs text-neutral-300/80 font-light leading-relaxed mb-4 [text-wrap:pretty]">
+                    <p className="text-xs text-neutral-300/80 font-light leading-relaxed mb-3.5 [text-wrap:pretty]">
                       {area.desc}
                     </p>
 
                     {/* Mockup Card */}
-                    <div className="bg-[#12161e]/95 border border-white/15 rounded-xl p-3 shadow-xl backdrop-blur-md">
+                    <div className="w-full min-w-0 bg-[#12161e]/95 border border-white/15 rounded-xl p-3 shadow-xl backdrop-blur-md box-border">
                       <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
                         <span className="text-[11px] font-mono text-neutral-200 font-medium truncate mr-2">
                           {area.mockupTitle}
                         </span>
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: area.color }} />
+                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: area.color }} />
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-2 w-full min-w-0">
                         {area.mockupRows.map((row, rIdx) => (
                           <div 
                             key={rIdx} 
-                            className="bg-[#181d26] border border-white/10 rounded-lg px-2.5 py-2 flex items-center justify-between gap-2"
+                            className="w-full min-w-0 bg-[#181d26] border border-white/10 rounded-lg px-2.5 py-2 flex items-center justify-between gap-2 box-border"
                           >
-                            <div className="flex items-center space-x-2 min-w-0 flex-1">
+                            <div className="flex items-center space-x-1.5 min-w-0 flex-1">
                               <CheckCircle2 className="w-3.5 h-3.5 text-[#B8FF00] flex-shrink-0" />
                               <span className="text-[11px] text-neutral-200 truncate">{row.label}</span>
                             </div>
-                            <div className="flex items-center space-x-1.5 flex-shrink-0">
+                            <div className="flex items-center space-x-1 flex-shrink-0">
                               <span className="text-[9.5px] font-mono text-neutral-400">{row.status}</span>
-                              <span className="text-[8.5px] font-mono bg-white/5 border border-white/10 text-neutral-300 px-1 py-0.5 rounded">
+                              <span className="text-[8px] font-mono bg-white/5 border border-white/10 text-neutral-300 px-1 py-0.5 rounded">
                                 {row.tag}
                               </span>
                             </div>
@@ -237,7 +236,7 @@ export function LifeAreasSection() {
 
                   {/* Swipe hint inside card footer */}
                   <div className="relative z-10 pt-3 flex items-center justify-between text-[10.5px] font-mono text-neutral-400">
-                    <span className="text-[10px] text-neutral-500">← Deslize para ver mais →</span>
+                    <span className="text-[10px] text-neutral-500">← Deslize para navegar →</span>
                     <span className="text-white/60 font-semibold">{`0${sIdx + 1} / 04`}</span>
                   </div>
                 </div>
@@ -247,7 +246,7 @@ export function LifeAreasSection() {
         </div>
 
         {/* Carousel Controls: Dots & Chevrons */}
-        <div className="flex items-center justify-between mt-4 px-1">
+        <div className="flex items-center justify-between mt-3 px-1 w-full">
           <div className="flex items-center gap-1.5">
             {AREAS.map((_, idx) => (
               <button
@@ -268,7 +267,7 @@ export function LifeAreasSection() {
             <button
               type="button"
               onClick={() => instanceRef.current?.prev()}
-              className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all"
+              className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all cursor-pointer"
               aria-label="Área anterior"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -276,7 +275,7 @@ export function LifeAreasSection() {
             <button
               type="button"
               onClick={() => instanceRef.current?.next()}
-              className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all"
+              className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all cursor-pointer"
               aria-label="Próxima área"
             >
               <ChevronRight className="w-4 h-4" />
@@ -285,7 +284,7 @@ export function LifeAreasSection() {
         </div>
 
         {/* Mobile Pillars & CTA */}
-        <div className="mt-8 pt-6 border-t border-white/10">
+        <div className="mt-7 pt-6 border-t border-white/10 w-full">
           <div className="space-y-2.5 mb-6 font-mono text-[11px] xs:text-xs text-neutral-300">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
