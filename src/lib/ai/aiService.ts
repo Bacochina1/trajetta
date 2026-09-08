@@ -8,8 +8,7 @@ const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || '';
 const CHAT_MODEL = process.env.NVIDIA_CHAT_MODEL || 'meta/llama-3.2-11b-vision-instruct';
 const REASONING_MODEL = process.env.NVIDIA_REASONING_MODEL || 'meta/llama-3.2-11b-vision-instruct';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+// Exclusively NVIDIA NIM Engine
 
 const TRAJETTA_SYSTEM_PROMPT = `Você é a inteligência da Trajetta — um sistema pessoal de evolução para adultos lúcidos e ambiciosos.
 Sua identidade é Calm Power: tranquilidade com direção.
@@ -177,62 +176,7 @@ ${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
   }
 
   // -------------------------------------------------------------
-  // 2. FAILOVER ENGINE: Google Gemini (When valid key is present)
-  // -------------------------------------------------------------
-  if (GEMINI_API_KEY && !GEMINI_API_KEY.includes('AQ.Ab8RN6L9Q8vKEKohsMMkBKiZurPlKq')) {
-    const googleModels = [
-      GEMINI_MODEL,
-      'gemini-2.5-flash',
-      'gemini-2.0-flash',
-      'gemini-1.5-flash',
-      'gemini-3.1-flash-lite',
-      'gemini-pro'
-    ].filter((m, i, arr) => arr.indexOf(m) === i && Boolean(m));
-
-    const contents = messages
-      .filter(m => m.role !== 'system')
-      .map(m => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      }));
-
-    if (contents.length === 0) {
-      contents.push({ role: 'user', parts: [{ text: 'Olá' }] });
-    }
-
-    for (const model of googleModels) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents,
-            systemInstruction: { parts: [{ text: systemContent }] },
-            generationConfig: {
-              temperature: 0.4,
-              maxOutputTokens: maxTokens
-            }
-          }),
-          signal: AbortSignal.timeout(18000)
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          const cleaned = cleanAiOutput(raw);
-          if (cleaned && cleaned.length > 5) {
-            return cleaned;
-          }
-        }
-      } catch {
-        // Continue to failover
-      }
-    }
-  }
-
-  // -------------------------------------------------------------
-  // 3. TERTIARY SAFETY NET: CALM POWER DYNAMIC STRATEGIC ENGINE
+  // 2. SAFETY NET: CALM POWER DYNAMIC STRATEGIC ENGINE
   // Respects conversation history, proportionality and Trajetta principles
   // -------------------------------------------------------------
   return getDynamicStrategicResponse(messages, options?.contextPack, options?.ragContext);
