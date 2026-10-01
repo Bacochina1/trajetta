@@ -7,6 +7,11 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
+    const user = await getSessionUser();
+    if (!user) {
+      return NextResponse.json({ ok: false, error: 'Não autorizado' }, { status: 401 });
+    }
+
     const { messages, heavyReasoning, ragContext } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
@@ -16,8 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = await getSessionUser();
-    const userId = user?.id || 'demo-user';
+    const userId = user.id;
     const lastUserQuery = messages[messages.length - 1]?.content || '';
 
     // Assemble Level 1, 2, 3 Memory Pack

@@ -1,7 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import { hashPassword, verifyPassword, createSessionToken, verifySessionToken, AuthSessionPayload } from '@/lib/auth/auth';
 
 describe('Agent 1: Auth, Session, Security & Token Gate', () => {
+  beforeEach(() => vi.stubEnv('JWT_SECRET', 'test-session-secret-with-sufficient-entropy'));
+  afterEach(() => vi.unstubAllEnvs());
+
   it('should correctly hash and verify passwords', async () => {
     const rawPass = 'MinhaSenhaSegura2026!';
     const hash = await hashPassword(rawPass);
@@ -42,5 +45,23 @@ describe('Agent 1: Auth, Session, Security & Token Gate', () => {
     const fakeToken = 'invalid.jwt.token';
     const verified = await verifySessionToken(fakeToken);
     expect(verified).toBeNull();
+  });
+
+  it('does not issue or accept sessions without a configured signing secret', async () => {
+    const token = await createSessionToken({
+      userId: 'usr_test_123',
+      email: 'explorador@trajetta.app',
+      name: 'Explorador Real',
+      role: 'USER',
+    });
+    vi.stubEnv('JWT_SECRET', '');
+
+    await expect(verifySessionToken(token)).resolves.toBeNull();
+    await expect(createSessionToken({
+      userId: 'usr_test_123',
+      email: 'explorador@trajetta.app',
+      name: 'Explorador Real',
+      role: 'USER',
+    })).rejects.toThrow('JWT_SECRET must be configured');
   });
 });
