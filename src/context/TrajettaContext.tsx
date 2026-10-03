@@ -234,6 +234,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
             title: data.user.role === 'ADMIN' ? 'Membro Fundador (Admin)' : 'Explorador',
             avatar: data.user.avatar || prev.avatar,
             role: data.user.role || prev.role || 'USER',
+            subscriptionPlan: data.user.subscriptionStatus === 'active' ? (prev.subscriptionPlan === 'trial' ? 'pro_annual' : prev.subscriptionPlan) : prev.subscriptionPlan,
           }));
           loadBackendData();
         } else {

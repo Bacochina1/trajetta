@@ -65,6 +65,7 @@ export async function getSessionUser() {
           name: true,
           role: true,
           avatar: true,
+          subscriptionStatus: true,
           createdAt: true,
         },
       });
@@ -84,6 +85,7 @@ export async function getSessionUser() {
             name: true,
             role: true,
             avatar: true,
+            subscriptionStatus: true,
             createdAt: true,
           },
         });

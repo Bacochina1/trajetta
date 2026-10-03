@@ -10,7 +10,17 @@ import { useI18n } from '@/lib/i18n/context';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
-  const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen, logout } = useTrajetta();
+  const {
+    weeklyPlan,
+    user,
+    setIsReviewModalOpen,
+    setIsNewGoalModalOpen,
+    resetToDemoData,
+    setIsAuthModalOpen,
+    logout,
+    setActiveView,
+    isAuthenticated,
+  } = useTrajetta();
   const { t, formatDate } = useI18n();
   const dateFormatted = formatDate(new Date(), { weekday: 'short', day: 'numeric', month: 'short' });
 
@@ -73,16 +83,30 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           <span className="sm:hidden font-bold">Revisão</span>
         </Button>
 
-        {/* Account / Login Trigger */}
+        {/* User Profile / Account Trigger */}
         <button
-          onClick={() => setIsAuthModalOpen(true)}
-          title="Conta & Autenticação"
-          aria-label="Conta e Autenticação"
+          onClick={() => {
+            if (isAuthenticated) {
+              setActiveView('voce');
+            } else {
+              setIsAuthModalOpen(true);
+            }
+          }}
+          title={isAuthenticated ? 'Meu Perfil & Configurações' : 'Entrar na Conta'}
+          aria-label={isAuthenticated ? 'Meu Perfil & Configurações' : 'Entrar na Conta'}
           className="w-9 h-9 sm:w-auto min-h-[36px] px-0 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[#8E9499] hover:text-[#F2F1ED] hover:bg-white/5 border border-white/8 hover:border-white/15 tactile-btn flex items-center justify-center gap-1.5 text-xs sm:text-sm"
         >
-          <User size={14} className="text-[#B8FF00]" />
-          <span className="hidden md:inline font-medium truncate max-w-[100px]">
-            {user.role?.includes('Admin') ? 'Jim (Admin)' : (user.name || 'Conta')}
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.name}
+              className="w-5 h-5 rounded-full object-cover border border-[#B8FF00]/40 flex-shrink-0"
+            />
+          ) : (
+            <User size={14} className="text-[#B8FF00]" />
+          )}
+          <span className="hidden md:inline font-medium truncate max-w-[120px]">
+            {user.name || (isAuthenticated ? 'Meu Perfil' : 'Entrar')}
           </span>
         </button>
 

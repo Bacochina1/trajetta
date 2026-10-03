@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
@@ -25,11 +26,14 @@ import {
   Receipt,
   XCircle,
   Smartphone,
+  Camera,
+  UploadCloud,
 } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
 import { useI18n } from '@/lib/i18n/context';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { triggerPwaInstall } from '@/components/pwa/PwaManager';
+import { processAndSanitizeAvatar } from '@/lib/avatar/avatarProcessor';
 
 interface ProfileViewProps {
   onOpenPaywall: () => void;
@@ -84,6 +88,68 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelFeedback, setCancelFeedback] = useState<string | null>(null);
+
+  // Avatar Upload & Security State
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [avatarSuccess, setAvatarSuccess] = useState<string | null>(null);
+  const avatarInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setAvatarUploading(true);
+      setAvatarError(null);
+      setAvatarSuccess(null);
+
+      // 1. Sanitização no cliente: descarta metadados EXIF, destrói qualquer payload malicioso e re-renderiza em Canvas 256x256 WebP
+      const processed = await processAndSanitizeAvatar(file);
+
+      // 2. Transmissão para endpoint protegido com validação de magic bytes
+      const res = await fetch('/api/user/avatar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar: processed.dataUrl }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Erro ao salvar avatar.');
+      }
+
+      // 3. Atualizar contexto local do perfil
+      setUserProfile({ avatar: data.avatar });
+      setAvatarSuccess('Foto de perfil atualizada com sucesso!');
+      setTimeout(() => setAvatarSuccess(null), 4000);
+    } catch (err: any) {
+      console.error('Avatar upload error:', err);
+      setAvatarError(err.message || 'Falha ao processar imagem.');
+      setTimeout(() => setAvatarError(null), 5000);
+    } finally {
+      setAvatarUploading(false);
+      if (avatarInputRef.current) avatarInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    try {
+      setAvatarUploading(true);
+      setAvatarError(null);
+      const res = await fetch('/api/user/avatar', { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setUserProfile({ avatar: undefined });
+        setAvatarSuccess('Foto de perfil removida.');
+        setTimeout(() => setAvatarSuccess(null), 3000);
+      }
+    } catch {
+      setAvatarError('Erro ao remover foto de perfil.');
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
 
   useEffect(() => {
     fetch('/api/subscription/status')
@@ -259,34 +325,97 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </p>
         </div>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setIsAuthModalOpen(true)}
-          className="text-xs"
-        >
-          <Shield size={14} className="text-[#B8FF00]" />
-          <span>Conta & Login</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          {user.role === 'ADMIN' && (
+            <Link
+              href="/admin/crm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#B8FF00]/10 hover:bg-[#B8FF00]/20 text-[#B8FF00] border border-[#B8FF00]/30 text-xs font-bold transition-all"
+            >
+              <Shield size={14} />
+              <span>Painel CRM</span>
+            </Link>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={logout}
+            className="text-xs text-red-400 hover:text-red-300 hover:border-red-500/30"
+          >
+            <LogOut size={14} />
+            <span>Sair da Conta</span>
+          </Button>
+        </div>
       </div>
+
+      {/* Avatar Feedback Notices */}
+      {avatarSuccess && (
+        <div className="p-3.5 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/30 text-[#B8FF00] text-xs font-semibold flex items-center gap-2 shadow-sm animate-fade-in">
+          <Check size={14} />
+          <span>{avatarSuccess}</span>
+        </div>
+      )}
+      {avatarError && (
+        <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2 shadow-sm animate-fade-in">
+          <AlertTriangle size={14} />
+          <span>{avatarError}</span>
+        </div>
+      )}
 
       {/* Profile Card */}
       <div className="trajetta-card p-4 sm:p-6 border border-white/8 space-y-5 sm:space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1F2328] border border-white/10 flex items-center justify-center text-lg sm:text-xl font-bold text-[#F2F1ED] overflow-hidden shadow-[0_0_20px_rgba(184,255,0,0.1)] flex-shrink-0">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-              ) : (
-                user.avatarText || user.name.charAt(0)
-              )}
+            {/* Avatar with Camera Trigger */}
+            <div className="relative group flex-shrink-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1F2328] border border-white/10 flex items-center justify-center text-lg sm:text-xl font-bold text-[#F2F1ED] overflow-hidden shadow-[0_0_20px_rgba(184,255,0,0.1)]">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  user.avatarText || user.name.charAt(0)
+                )}
+              </div>
+
+              {/* Floating Camera Button */}
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={avatarUploading}
+                title="Alterar foto de perfil (JPG, PNG ou WEBP)"
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#B8FF00] hover:bg-[#c8ff3b] text-[#060709] flex items-center justify-center shadow-lg transition-transform hover:scale-110 disabled:opacity-50"
+              >
+                {avatarUploading ? (
+                  <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera size={12} strokeWidth={2.4} />
+                )}
+              </button>
+
+              {/* Hidden Secure File Input */}
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
             </div>
+
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-bold text-[#F2F1ED] truncate">{user.name}</h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#B8FF00]/10 text-[#B8FF00] text-[10px] font-bold">
                   {user.role}
                 </span>
+                {user.avatar && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveAvatar}
+                    disabled={avatarUploading}
+                    className="text-[10px] text-red-400/80 hover:text-red-400 underline underline-offset-2 transition-colors ml-1"
+                  >
+                    Remover foto
+                  </button>
+                )}
               </div>
               <p className="text-xs text-[#8E9499] mt-0.5 truncate">
                 {user.email || (user.role === 'ADMIN' ? 'admin@trajetta.app' : 'membro@trajetta.app')}

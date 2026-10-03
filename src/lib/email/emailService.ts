@@ -261,7 +261,7 @@ export function renderWelcomeEmail(userName: string, position: number = 1481): s
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 24px;">
                 <tr>
                   <td align="center">
-                    <a href="https://trajetta-app.vercel.app" style="display: inline-block; background-color: #B8FF00; color: #0D0F10; font-family: monospace; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 16px 36px; border-radius: 100px; box-shadow: 0 8px 20px rgba(184,255,0,0.3);">
+                    <a href="https://trajettacompany.com.br/app" style="display: inline-block; background-color: #B8FF00; color: #0D0F10; font-family: monospace; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 16px 36px; border-radius: 100px; box-shadow: 0 8px 20px rgba(184,255,0,0.3);">
                       ACESSAR AMBIENTE TRAJETTA →
                     </a>
                   </td>
@@ -281,7 +281,7 @@ export function renderWelcomeEmail(userName: string, position: number = 1481): s
                 TRAJETTA • SISTEMA PESSOAL DE EVOLUÇÃO • DISCIPLINA SUSTENTÁVEL
               </p>
               <p style="font-size: 11px; color: #50565E; margin: 0; line-height: 1.5;">
-                Você recebeu este e-mail porque reservou sua vaga na Lista VIP da Trajetta em <a href="https://trajetta-app.vercel.app" style="color: #8E9499; text-decoration: underline;">trajetta-app.vercel.app</a>.<br>
+                Você recebeu este e-mail porque reservou sua vaga na Lista VIP da Trajetta em <a href="https://trajettacompany.com.br" style="color: #8E9499; text-decoration: underline;">trajettacompany.com.br</a>.<br>
                 Privacidade rigorosa: não compartilhamos seus dados com terceiros.
               </p>
             </td>
@@ -332,7 +332,7 @@ export function renderWeeklyReviewEmail(data: {
         <table cellpadding="0" cellspacing="0">
           <tr>
             <td style="background-color: #B8FF00; border-radius: 8px; text-align: center;">
-              <a href="https://trajetta-app.vercel.app" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 700; color: #0D0F10; text-decoration: none; border-radius: 8px;">
+              <a href="https://trajettacompany.com.br/app" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 700; color: #0D0F10; text-decoration: none; border-radius: 8px;">
                 Ver Cartão da Semana →
               </a>
             </td>
@@ -345,6 +345,157 @@ export function renderWeeklyReviewEmail(data: {
         <p style="font-size: 11px; color: #8E9499; margin: 0;">
           Trajetta • Disciplina serena e sustentável.
         </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export function renderProWelcomeEmail(data: {
+  userName: string;
+  email: string;
+  temporaryPassword?: string;
+  planName?: string;
+  isNewUser?: boolean;
+}): string {
+  const planDisplay = data.planName === 'pro_monthly' ? 'Trajetta Pro Mensal' : data.planName === 'founding' ? 'Trajetta Membro Fundador' : 'Trajetta Pro Anual';
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu Acesso ao Trajetta Pro foi Liberado!</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #060709; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F2F1ED; -webkit-font-smoothing: antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #060709; padding: 40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 620px; background-color: #0D1015; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
+          
+          <!-- Cabeçalho -->
+          <tr>
+            <td style="padding: 36px 40px 30px 40px; background-color: #090C10; border-bottom: 1px solid rgba(255, 255, 255, 0.07);">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td align="left" style="vertical-align: middle;">
+                    <table cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td style="width: 32px; height: 32px; background: linear-gradient(135deg, #B8FF00 0%, #8AC400 100%); border-radius: 8px; text-align: center; vertical-align: middle;">
+                          <span style="font-size: 18px; font-weight: 900; color: #060709; line-height: 32px; display: inline-block;">T</span>
+                        </td>
+                        <td style="padding-left: 12px; vertical-align: middle;">
+                          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.6px; color: #FFFFFF; display: block; line-height: 1;">trajetta</span>
+                          <span style="font-size: 10px; font-family: monospace; letter-spacing: 1.5px; text-transform: uppercase; color: #8E9499; display: block; margin-top: 4px;">SISTEMA DE EVOLUÇÃO</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px;">
+                      ● PRO ATIVO
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Corpo -->
+          <tr>
+            <td style="padding: 40px 40px 32px 40px;">
+              <h1 style="font-size: 26px; font-weight: 800; line-height: 1.25; margin: 0 0 14px 0; color: #FFFFFF; letter-spacing: -0.6px;">
+                Seu acesso ao Trajetta Pro está confirmado, <span style="color: #B8FF00;">${data.userName}</span>.
+              </h1>
+              <p style="font-size: 14px; line-height: 1.65; color: #A4ABB3; margin: 0 0 24px 0;">
+                Obrigado por confiar na Trajetta como seu sistema de vida. Seu plano <strong>${planDisplay}</strong> foi ativado com sucesso e você já possui acesso imediato e irrestrito.
+              </p>
+
+              <!-- Bloco de Credenciais / Acesso -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0 0 28px 0; background: linear-gradient(145deg, #13171F 0%, #0B0E13 100%); border: 1.5px solid rgba(184, 255, 0, 0.35); border-radius: 14px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 22px 26px;">
+                    <div style="font-size: 10px; font-family: monospace; color: #B8FF00; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 12px;">
+                      SEUS DADOS DE ACESSO
+                    </div>
+                    <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
+                      <tr>
+                        <td style="color: #8E9499; padding: 4px 0; width: 120px;">E-mail:</td>
+                        <td style="color: #FFFFFF; font-weight: 600; font-family: monospace;">${data.email}</td>
+                      </tr>
+                      ${
+                        data.temporaryPassword
+                          ? `<tr>
+                              <td style="color: #8E9499; padding: 4px 0;">Senha Temporária:</td>
+                              <td style="color: #B8FF00; font-weight: 700; font-family: monospace; letter-spacing: 0.5px;">${data.temporaryPassword}</td>
+                            </tr>`
+                          : `<tr>
+                              <td style="color: #8E9499; padding: 4px 0;">Senha:</td>
+                              <td style="color: #C9CDD1;">A mesma que você definiu no cadastro</td>
+                            </tr>`
+                      }
+                      <tr>
+                        <td style="color: #8E9499; padding: 4px 0;">Status do Plano:</td>
+                        <td style="color: #58D6A7; font-weight: 700;">Ativo e Liberado ✓</td>
+                      </tr>
+                    </table>
+                    ${
+                      data.temporaryPassword
+                        ? `<p style="font-size: 11px; color: #8E9499; margin: 12px 0 0 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+                            Dica: Você pode alterar sua senha a qualquer momento nas configurações do seu perfil.
+                          </p>`
+                        : ''
+                    }
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Botão Principal de Ação -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 28px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://trajettacompany.com.br/app" style="display: block; width: 100%; box-sizing: border-box; background-color: #B8FF00; color: #060709; font-family: monospace; font-size: 14px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 18px 24px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(184,255,0,0.35);">
+                      ACESSAR MEU PAINEL PRO AGORA →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- O Que Você Pode Fazer Agora -->
+              <h2 style="font-size: 12px; font-family: monospace; text-transform: uppercase; letter-spacing: 1.5px; color: #8E9499; margin: 0 0 14px 0;">
+                SEU AMBIENTE DE EVOLUÇÃO
+              </h2>
+              <div style="background-color: #12151B; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; color: #C9CDD1;">
+                <p style="margin: 0 0 8px 0;">✦ <strong>4 Áreas da Vida:</strong> Estruture Corpo, Dinheiro, Carreira e Vida Pessoal com clareza matemática.</p>
+                <p style="margin: 0 0 8px 0;">✦ <strong>Piso Mínimo & Volume Acumulado:</strong> Dias difíceis não quebram sua evolução; o que importa é a consistência sustentável.</p>
+                <p style="margin: 0 0 8px 0;">✦ <strong>Trajetta IA com Memória Longitudinal:</strong> Seu estrategista pessoal que evolui com seu histórico semanal.</p>
+                <p style="margin: 0;">✦ <strong>Instale o Aplicativo:</strong> No iPhone ou Android, adicione o Trajetta à tela de início para acesso rápido diário.</p>
+              </div>
+
+              <!-- Garantia & Governança CDC -->
+              <div style="background-color: #0A0D11; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+                <div style="font-size: 11px; font-weight: 700; color: #F2F1ED; margin-bottom: 4px;">Transparência & Cancelamento em 1 Clique</div>
+                <p style="font-size: 11px; color: #8E9499; margin: 0; line-height: 1.5;">
+                  Você tem garantia incondicional de 7 dias conforme o Código de Defesa do Consumidor. Pode gerenciar faturas ou cancelar sua renovação a qualquer momento diretamente no seu painel em <em>Configurações > Cancelamento em 1 clique</em>.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Rodapé -->
+          <tr>
+            <td style="padding: 28px 40px; background-color: #080A0D; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+              <p style="font-size: 11px; color: #6D747D; margin: 0 0 8px 0; font-family: monospace;">
+                TRAJETTA • DISCIPLINA SUSTENTÁVEL • CONTATO: companytrajetta@gmail.com
+              </p>
+              <p style="font-size: 11px; color: #50565E; margin: 0; line-height: 1.5;">
+                Você está recebendo este e-mail pela confirmação do plano ${planDisplay} em <a href="https://trajettacompany.com.br" style="color: #8E9499; text-decoration: underline;">trajettacompany.com.br</a>.
+              </p>
+            </td>
+          </tr>
+
+        </table>
       </td>
     </tr>
   </table>

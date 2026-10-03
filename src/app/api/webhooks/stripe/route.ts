@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { prisma, ensureDbReady } from '@/lib/db';
-import { sendEmail } from '@/lib/email/emailService';
+import { sendEmail, renderProWelcomeEmail } from '@/lib/email/emailService';
+import { hashPassword } from '@/lib/auth/auth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,15 +35,19 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
-        const customerEmail = session.customer_details?.email || session.customer_email;
+        const customerEmail = (session.customer_details?.email || session.customer_email)?.toLowerCase().trim();
+        const customerName = session.customer_details?.name || 'Membro Trajetta';
         const userId = session.metadata?.userId;
         const planKey = session.metadata?.planKey || 'annual';
+        const subscriptionPlan = session.metadata?.subscriptionPlan || (planKey === 'monthly' ? 'pro_monthly' : planKey === 'founding' ? 'founding' : 'pro_annual');
 
         if (customerEmail) {
           try {
-            const user = await prisma.user.findFirst({
+            let user = await prisma.user.findFirst({
               where: userId ? { id: userId } : { email: customerEmail },
             });
+
+            let temporaryPassword: string | undefined = undefined;
 
             if (user) {
               await prisma.user.update({
@@ -51,30 +56,35 @@ export async function POST(req: NextRequest) {
                   subscriptionStatus: 'active',
                 },
               });
+            } else {
+              // Usuário comprou direto sem criar conta prévia: cria conta automaticamente
+              temporaryPassword = 'Tr-' + Math.random().toString(36).slice(-6) + '!';
+              const passwordHash = await hashPassword(temporaryPassword);
+              user = await prisma.user.create({
+                data: {
+                  email: customerEmail,
+                  name: customerName,
+                  passwordHash,
+                  role: 'USER',
+                  subscriptionStatus: 'active',
+                },
+              });
             }
 
-            // Disparar e-mail comemorativo de boas-vindas ao Pro
+            // Disparar e-mail comemorativo de boas-vindas ao Pro com credenciais completas
             await sendEmail({
               to: customerEmail,
-              subject: 'Sua assinatura Trajetta Pro está confirmada! 🚀',
-              html: `
-                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0D0F10; color: #F2F1ED; padding: 32px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
-                  <div style="margin-bottom: 24px;">
-                    <span style="font-size: 11px; font-weight: 800; color: #B8FF00; text-transform: uppercase; letter-spacing: 0.15em;">TRAJETTA • CONFIRMAÇÃO</span>
-                  </div>
-                  <h1 style="font-size: 24px; font-weight: 800; margin: 0 0 16px 0; color: #F2F1ED;">Bem-vindo ao Trajetta Pro</h1>
-                  <p style="font-size: 14px; line-height: 1.6; color: #8E9499; margin: 0 0 20px 0;">
-                    Sua assinatura foi ativada com sucesso. Você tem acesso irrestrito às 4 áreas da vida, AI Trajetta ilimitada e planejamento semanal de alto impacto.
-                  </p>
-                  <div style="background: #14181F; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 24px;">
-                    <p style="font-size: 12px; color: #C9CDD1; margin: 0 0 6px 0;"><strong>Garantia & Transparência:</strong></p>
-                    <p style="font-size: 12px; color: #8E9499; margin: 0;">Você pode gerenciar faturas ou cancelar sua assinatura a qualquer momento em 1 clique direto no menu do seu perfil, sem nenhum constrangimento.</p>
-                  </div>
-                  <a href="https://trajettacompany.com.br/app" style="display: inline-block; background: #B8FF00; color: #060709; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px;">
-                    Acessar Minha Trajetória →
-                  </a>
-                </div>
-              `,
+              subject: temporaryPassword
+                ? 'Seu acesso ao Trajetta Pro foi liberado! 🚀'
+                : 'Sua assinatura Trajetta Pro está confirmada! 🚀',
+              html: renderProWelcomeEmail({
+                userName: user.name || customerName,
+                email: customerEmail,
+                temporaryPassword,
+                planName: subscriptionPlan,
+                isNewUser: Boolean(temporaryPassword),
+              }),
+              userId: user.id,
             });
           } catch (e) {
             console.error('Error handling checkout.session.completed:', e);
@@ -158,6 +168,25 @@ export async function POST(req: NextRequest) {
         const customerId = sub.customer;
         const status = sub.status;
         console.log(`Assinatura atualizada: ${sub.id}, status: ${status}, cancel_at_period_end: ${sub.cancel_at_period_end}`);
+
+        try {
+          const customer = await stripe.customers.retrieve(customerId as string);
+          const email = (customer as any)?.email?.toLowerCase().trim();
+          if (email) {
+            const mappedStatus = (status === 'active' || status === 'trialing') 
+              ? 'active' 
+              : status === 'past_due' 
+              ? 'past_due' 
+              : 'cancelled';
+
+            await prisma.user.updateMany({
+              where: { email },
+              data: { subscriptionStatus: mappedStatus },
+            });
+          }
+        } catch (subErr) {
+          console.error('Error syncing updated subscription to DB:', subErr);
+        }
         break;
       }
 
@@ -165,6 +194,19 @@ export async function POST(req: NextRequest) {
         const subscription = event.data.object;
         const customerId = subscription.customer;
         console.log(`Assinatura cancelada definitivamente para o cliente: ${customerId}`);
+
+        try {
+          const customer = await stripe.customers.retrieve(customerId as string);
+          const email = (customer as any)?.email?.toLowerCase().trim();
+          if (email) {
+            await prisma.user.updateMany({
+              where: { email },
+              data: { subscriptionStatus: 'cancelled' },
+            });
+          }
+        } catch (subErr) {
+          console.error('Error syncing deleted subscription to DB:', subErr);
+        }
         break;
       }
 

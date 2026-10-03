@@ -55,6 +55,9 @@ export default function TrajettaAppPage() {
               subscriptionPlan: data.plan || 'pro_annual',
               trialDaysRemaining: 365,
             });
+            if (data.user) {
+              login(data.user);
+            }
             setPaymentNotice('Sua assinatura Trajetta Pro foi ativada com sucesso! Aproveite.');
             import('canvas-confetti').then((confettiModule) => {
               const runConfetti = confettiModule.default || confettiModule;
@@ -77,7 +80,7 @@ export default function TrajettaAppPage() {
       window.history.replaceState({}, document.title, window.location.pathname);
       setTimeout(() => setPaymentNotice(null), 5000);
     }
-  }, [setUserProfile]);
+  }, [setUserProfile, login]);
 
   // While checking session: render full Calm Power layout skeleton instead of empty screen
   if (authLoading) {

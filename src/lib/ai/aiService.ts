@@ -53,25 +53,158 @@ Aplique os princípios quando forem úteis, sem repetir seus nomes em toda respo
 
 5. FORMATAÇÃO
 - Use **negrito** com moderação, apenas em informações essenciais. Nunca produza sequências como ****texto****.
-- Não exiba variáveis internas, metadados, tokens isolados ou mensagens técnicas.`;
+- Não exiba variáveis internas, metadados, tokens isolados ou mensagens técnicas.
+
+6. RESTRIÇÕES ABSOLUTAS DE ESCOPO E GUARDRAILS (ESTRITO)
+- Seu escopo é EXCLUSIVAMENTE evolução pessoal, metas, hábitos, planejamento semanal, reflexão e rotina nas suas 4 Áreas da Vida (Corpo, Dinheiro, Carreira e Vida Pessoal).
+- É TERMINANTEMENTE PROIBIDO:
+  • Gerar código de programação ou marcação (HTML, CSS, JavaScript, TypeScript, Python, SQL, C#, PHP, Bash, etc.).
+  • Resolver tarefas acadêmicas, provas, exercícios escolares ou códigos avulsos.
+  • Falar sobre temas aleatórios sem qualquer ligação com desenvolvimento pessoal.
+- Se o usuário pedir para gerar código de programação (como "gere um html simples", "crie um código", "faz um script"), NUNCA gere o código e recuse com calma:
+  "Meu papel na Trajetta é exclusivamente apoiar sua evolução pessoal, planejamento semanal, metas e hábitos nas suas 4 áreas da vida (Corpo, Dinheiro, Carreira e Vida Pessoal). Não gero códigos ou funções técnicas fora desse escopo. Se você tiver uma meta de aprendizado ou rotina de estudos nessa área, posso te ajudar a estruturar sua consistência. Como posso te apoiar nos seus objetivos de vida hoje?"`;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
+export const CALM_OFFTOPIC_REFUSAL = `Meu papel na Trajetta é exclusivamente apoiar sua evolução pessoal, planejamento semanal, metas e hábitos nas suas 4 áreas da vida (Corpo, Dinheiro, Carreira e Vida Pessoal). Não gero códigos ou funções técnicas fora desse escopo.
+
+Se você tiver uma meta de aprendizado ou rotina de estudos nessa área, posso te ajudar a estruturar sua consistência. Como posso te apoiar nos seus objetivos de vida hoje?`;
+
+export function isOffTopicOrCodeRequest(query: string): boolean {
+  if (!query) return false;
+  const q = query.toLowerCase().trim();
+
+  // Expressões diretas solicitando código, HTML ou programação técnica
+  const codeKeywords = [
+    'gere um html',
+    'gere html',
+    'crie um html',
+    'crie html',
+    'html basico',
+    'html básico',
+    'codigo html',
+    'código html',
+    '<!doctype',
+    '<html',
+    'gere um codigo',
+    'gere um código',
+    'crie um codigo',
+    'crie um código',
+    'escreva um codigo',
+    'escreva um código',
+    'faça um codigo',
+    'faça um código',
+    'script python',
+    'script bash',
+    'codigo python',
+    'código python',
+    'funcao javascript',
+    'função javascript',
+    'gere um script',
+    'crie um script',
+    'crie uma api',
+    'gere uma api',
+    'escreva um css',
+    'crie um css',
+    'crie um site',
+    'monte um site',
+    'desenvolva uma pagina',
+    'desenvolva uma página',
+    'me de um exemplo de html',
+    'me dê um exemplo de html',
+    'exemplo de html',
+    'exemplo simples de html',
+  ];
+
+  for (const kw of codeKeywords) {
+    if (q.includes(kw)) return true;
+  }
+
+  // Regex para comandos imperativos de código
+  if (/^(?:gere|crie|escreva|faca|faça|monte|desenvolva)\s+(?:um|uma|o|a)?\s*(?:html|css|javascript|typescript|python|script|codigo|código|sql|algoritmo|regex|bot|endpoint)/i.test(q)) {
+    return true;
+  }
+
+  return false;
+}
+
 export function cleanAiOutput(text: string): string {
   if (!text) return '';
+
+  // Interceptar caso o modelo tenha cuspido blocos de código não autorizados
+  if (
+    text.includes('```html') ||
+    text.includes('<!DOCTYPE') ||
+    text.includes('```python') ||
+    text.includes('```javascript') ||
+    text.includes('```typescript') ||
+    text.includes('```css') ||
+    text.includes('```bash') ||
+    text.includes('```sql')
+  ) {
+    return CALM_OFFTOPIC_REFUSAL;
+  }
+
   let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
-  // Strip chain-of-thought headers if present
+  // Strip chain-of-thought in English
   const lower = cleaned.toLowerCase();
-  if (lower.includes("thinking process") || lower.includes("analyze user input")) {
+  if (
+    lower.includes("thinking process") ||
+    lower.includes("analyze user input") ||
+    lower.includes("identify key constraints") ||
+    lower.includes("determine response strategy") ||
+    lower.startsWith("here's a thinking") ||
+    lower.startsWith("here is a thinking")
+  ) {
+    // 1. Procurar transição explícita para a resposta final
     const splitRegex = /\n\s*(?:Final Answer|Final Response|Conclusion|Resposta Final|Resultado|Refine:?)\s*:?\s*\n?/i;
     const parts = cleaned.split(splitRegex);
-    if (parts.length > 1 && parts[parts.length - 1].trim().length > 15) {
+    if (parts.length > 1 && parts[parts.length - 1].trim().length > 20) {
       cleaned = parts[parts.length - 1].trim();
+    } else {
+      // 2. Procurar o primeiro parágrafo genuíno em português brasileiro
+      const lines = cleaned.split('\n');
+      let firstPtIndex = -1;
+      const ptMarkers = ['você', 'voce', 'para', 'semana', 'hábito', 'habito', 'meta', 'plano', 'hoje', 'piso', 'mínimo', 'minimo', 'área', 'vida', 'calibrar'];
+      for (let i = 0; i < lines.length; i++) {
+        const l = lines[i].toLowerCase().trim();
+        if (
+          !l.startsWith('-') &&
+          !l.startsWith('*') &&
+          !l.includes('user') &&
+          !l.includes('analyze') &&
+          !l.includes('constraints') &&
+          !l.includes('strategy') &&
+          ptMarkers.some(m => l.includes(m))
+        ) {
+          firstPtIndex = i;
+          break;
+        }
+      }
+
+      if (firstPtIndex >= 0) {
+        cleaned = lines.slice(firstPtIndex).join('\n').trim();
+      } else {
+        // O modelo foi truncado enquanto pensava em inglês sem ter gerado a resposta.
+        // Retorna vazio para que a chamada faça failover automático para a engine estratégica calma!
+        return '';
+      }
     }
+  }
+
+  // Se após a limpeza ainda sobrarem resquícios de reflexão em inglês, rejeita
+  const residualLower = cleaned.toLowerCase();
+  if (
+    residualLower.includes("thinking process") ||
+    residualLower.includes("analyze user input") ||
+    residualLower.startsWith("here's a thinking") ||
+    residualLower.startsWith("1. analyze")
+  ) {
+    return '';
   }
 
   // Remove emojis & sparkles
@@ -87,7 +220,7 @@ export function cleanAiOutput(text: string): string {
 }
 
 /**
- * Trajetta AI Engine (Powered exclusively by Google Gemini)
+ * Trajetta AI Engine (Powered exclusively by Google Gemini / NVIDIA NIM)
  * with Calm Power Strategic Failover Synthesizer.
  */
 export async function callTrajettaAI(
@@ -99,7 +232,13 @@ export async function callTrajettaAI(
     contextPack?: ContextPack;
   }
 ): Promise<string> {
-  const maxTokens = options?.maxTokens || 450;
+  const lastMsg = messages[messages.length - 1]?.content || '';
+
+  // Interceptação imediata de pedidos de código e fora de escopo (0ms de latência)
+  if (isOffTopicOrCodeRequest(lastMsg)) {
+    return CALM_OFFTOPIC_REFUSAL;
+  }
+  const maxTokens = options?.maxTokens || 1000;
   const userQuery = messages[messages.length - 1]?.content || '';
 
   let contextSections = '';
@@ -217,6 +356,25 @@ export function getDynamicStrategicResponse(
   const priorText = priorMessages.map(m => m.content).join(' ').toLowerCase();
   const isWeeklyPlanningContext = priorText.includes('semana') || priorText.includes('plano semanal') || priorText.includes('prioridade');
   const isTodayContext = priorText.includes('hoje') || priorText.includes('dia');
+
+  // Case 0: Pedido fora de escopo ou geração de código
+  if (isOffTopicOrCodeRequest(q)) {
+    return CALM_OFFTOPIC_REFUSAL;
+  }
+
+  // Case 0.5: Fechar a semana/domingo com dever cumprido em vez de ansiedade / calibração dos 7 dias
+  if (
+    (qLower.includes('domingo') || qLower.includes('fechar') || qLower.includes('semana') || qLower.includes('7 dias')) &&
+    (qLower.includes('dever cumprido') || qLower.includes('ansiedade') || qLower.includes('calibrar') || qLower.includes('sensação') || qLower.includes('sensacao'))
+  ) {
+    return `Para fechar o próximo domingo com a sensação profunda de dever cumprido em vez de ansiedade, calibre estas três alavancas para os próximos 7 dias:
+
+1. **Defina apenas 3 vitórias reais**: Escolha no máximo três resultados concretos que realmente movem sua vida nesta semana. Todo o resto é manutenção secundária.
+2. **Ative o piso mínimo nos seus hábitos**: Em vez de se cobrar metas ideais e exaustivas, defina a versão reduzida de cada hábito para os dias pesados (ex.: 15 minutos em vez de 1 hora). Isso preserva sua consistência sem gerar culpa.
+3. **Bloqueie a revisão de domingo**: Reserve 15 a 20 minutos no domingo à tarde para registrar suas vitórias, esvaziar a cabeça das pendências e planejar a próxima semana com calma antes de descansar.
+
+Das suas tarefas atuais, quais são as 3 prioridades essenciais que trarão esse alívio no domingo?`;
+  }
 
   // Case 1: "pla", "plano", "planejar"
   if (qLower === 'pla' || qLower === 'plano' || qLower === 'planejar' || qLower === 'pla ') {
