@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Shield } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/context';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Footer() {
+  const { locale, t } = useI18n();
   const [quickEmail, setQuickEmail] = useState('');
   const [quickSubmitted, setQuickSubmitted] = useState(false);
 
@@ -118,10 +121,10 @@ export function Footer() {
                 <li><span className="text-neutral-300">Mobile PWA</span></li>
                 <li className="pt-2">
                   <Link
-                    href="/termos"
+                    href={locale === 'en' ? '/en/terms' : '/termos'}
                     className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
                   >
-                    <span>Termos & Cancelamento</span>
+                    <span>{locale === 'en' ? 'Terms & Refund' : 'Termos & Cancelamento'}</span>
                   </Link>
                 </li>
                 <li>
@@ -138,19 +141,21 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom row: Copyright & Instagram */}
+        {/* Bottom row: Copyright, Terms, Language & Instagram */}
         <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-3 sm:gap-4 text-center sm:text-left">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-wrap justify-center sm:justify-start">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
             <span>Trajetta © {new Date().getFullYear()} — Todos os direitos reservados.</span>
             <span className="text-white/20">•</span>
-            <Link href="/termos" className="hover:text-white transition-colors underline underline-offset-2">
-              Política de Cancelamento
+            <Link href={locale === 'en' ? '/en/terms' : '/termos'} className="hover:text-white transition-colors underline underline-offset-2">
+              {locale === 'en' ? 'Cancellation Policy' : 'Política de Cancelamento'}
             </Link>
           </div>
 
-          {/* Social Icons — Strictly Instagram @trajetta_ */}
-          <div className="flex items-center space-x-3 text-neutral-400">
+          <div className="flex items-center space-x-3">
+            <LanguageSwitcher />
+
+            {/* Social Icons — Strictly Instagram @trajetta_ */}
             <a
               href="https://www.instagram.com/trajetta_/"
               target="_blank"

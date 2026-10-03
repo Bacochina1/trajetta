@@ -3,10 +3,13 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
+import { useI18n } from '@/lib/i18n/context';
 
 export function HeroSection() {
+  const { t, locale } = useI18n();
+
   const handleCtaClick = (ctaName: string) => {
-    trackMarketingEvent('hero_cta_clicked', { location: 'hero', cta_name: ctaName });
+    trackMarketingEvent('hero_cta_clicked', { location: 'hero', cta_name: ctaName, locale });
   };
 
   return (
@@ -49,13 +52,14 @@ export function HeroSection() {
 
           {/* Main Headline */}
           <h1 className="text-[27px] xs:text-[32px] sm:text-5xl md:text-6xl lg:text-[72px] leading-[1.14] sm:leading-[1.06] font-normal tracking-[-0.03em] text-white [text-wrap:balance]">
-            Torne visível quem você<br className="hidden md:inline" />{' '}
-            está se tornando.
+            {t.hero.headlineStart}{' '}
+            <span className="text-[#B8FF00] font-semibold">{t.hero.headlineHighlight}</span>
+            {t.hero.headlineEnd}
           </h1>
 
           {/* Subtitle */}
           <p className="mt-3.5 sm:mt-6 text-[14px] xs:text-[15px] sm:text-lg text-neutral-300/90 font-normal max-w-xl leading-relaxed tracking-tight [text-wrap:pretty]">
-            O sistema pessoal que une direção de longo prazo, ciclos semanais sem punição e clareza silenciosa para as áreas que realmente importam da sua vida.
+            {t.hero.subheadline}
           </p>
 
           {/* CTA Action Buttons — Symmetrical on all screens */}
@@ -65,7 +69,7 @@ export function HeroSection() {
               onClick={() => handleCtaClick('hero_primary_waitlist')}
               className="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-neutral-200 active:scale-95 text-neutral-900 text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 shadow-xl shadow-white/10 text-center cursor-pointer"
             >
-              <span>GARANTIR VAGA NA LISTA VIP</span>
+              <span>{t.hero.ctaPrimary}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-2 flex-shrink-0" />
             </a>
 
@@ -74,7 +78,7 @@ export function HeroSection() {
               onClick={() => handleCtaClick('hero_secondary_method')}
               className="w-full sm:w-auto inline-flex items-center justify-center bg-[#14181f]/85 hover:bg-[#1a212b] active:scale-95 backdrop-blur-md text-white border border-white/20 text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 text-center cursor-pointer"
             >
-              <span>CONHECER O MÉTODO</span>
+              <span>{t.hero.ctaSecondary}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-2 text-neutral-400 flex-shrink-0" />
             </a>
           </div>

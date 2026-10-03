@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
+import { useI18n } from '@/lib/i18n/context';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Sidebar({
   isOpen,
@@ -28,16 +30,17 @@ export function Sidebar({
   onClose: () => void;
 }) {
   const { activeView, setActiveView, user, setIsReviewModalOpen, setIsOnboardingOpen, setIsAuthModalOpen } = useTrajetta();
+  const { t } = useI18n();
 
   const navItems: { id: ActiveView; label: string; icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }> }[] = [
-    { id: 'hoje', label: 'Hoje', icon: Calendar },
-    { id: 'semana', label: 'Minha Semana', icon: CalendarDays },
-    { id: 'metas', label: 'Metas', icon: Crosshair },
-    { id: 'habitos', label: 'Hábitos', icon: Repeat },
-    { id: 'jornadas', label: 'Jornadas', icon: Compass },
-    { id: 'timeline', label: 'Linha do Tempo', icon: History },
-    { id: 'lifescore', label: 'Life Score', icon: Layers },
-    { id: 'voce', label: 'Você & Perfil', icon: User },
+    { id: 'hoje', label: t.app.today, icon: Calendar },
+    { id: 'semana', label: t.app.week, icon: CalendarDays },
+    { id: 'metas', label: t.app.goals, icon: Crosshair },
+    { id: 'habitos', label: t.app.habits, icon: Repeat },
+    { id: 'jornadas', label: t.app.journeys, icon: Compass },
+    { id: 'timeline', label: t.app.timeline, icon: History },
+    { id: 'lifescore', label: t.app.lifescore, icon: Layers },
+    { id: 'voce', label: t.app.profile, icon: User },
   ];
 
   return (
@@ -147,6 +150,12 @@ export function Sidebar({
 
         {/* Bottom Section */}
         <div className="pt-3 border-t border-white/8 space-y-2">
+          {/* Language Switcher */}
+          <div className="flex items-center justify-between px-2 py-1">
+            <span className="text-[10px] uppercase font-mono text-[#8E9499]">{t.app.language}</span>
+            <LanguageSwitcher />
+          </div>
+
           {/* Guided Tour Trigger Button */}
           <button
             onClick={() => {

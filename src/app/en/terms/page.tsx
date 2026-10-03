@@ -4,30 +4,31 @@ import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 import { ArrowLeft, ShieldCheck, CheckCircle2, RotateCcw, Mail } from 'lucide-react';
 
 export const metadata = {
-  title: 'Termos de Uso, Cancelamento & Reembolso | Trajetta',
-  description: 'Conheça a política transparente de cancelamento, direito de arrependimento e termos de serviço do Trajetta.',
+  title: 'Terms of Service, Cancellation & Refund Policy | Trajetta',
+  description:
+    'Learn about Trajetta’s transparent 1-click cancellation policy, 7-day money-back guarantee, and terms of service.',
   alternates: {
-    canonical: 'https://trajettacompany.com.br/termos',
+    canonical: 'https://trajettacompany.com.br/en/terms',
     languages: {
-      'pt-BR': 'https://trajettacompany.com.br/termos',
       en: 'https://trajettacompany.com.br/en/terms',
+      'pt-BR': 'https://trajettacompany.com.br/termos',
       'x-default': 'https://trajettacompany.com.br/termos',
     },
   },
 };
 
-export default function TermosPage() {
+export default function EnglishTermsPage() {
   return (
     <div className="min-h-screen bg-[#060709] text-[#F2F1ED] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Navigation */}
         <div className="flex items-center justify-between pb-6 border-b border-white/8">
           <Link
-            href="/"
+            href="/en"
             className="inline-flex items-center gap-2 text-xs text-[#8E9499] hover:text-[#F2F1ED] transition-colors"
           >
             <ArrowLeft size={14} />
-            <span>Voltar ao início</span>
+            <span>Back to Home</span>
           </Link>
           <TrajettaLogo size={28} showWordmark />
         </div>
@@ -36,13 +37,13 @@ export default function TermosPage() {
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B8FF00]/10 border border-[#B8FF00]/20 text-[#B8FF00] text-xs font-bold">
             <ShieldCheck size={14} />
-            <span>Transparência Total & Código de Defesa do Consumidor</span>
+            <span>Complete Transparency & Consumer Rights</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#F2F1ED]">
-            Termos de Uso, Cancelamento & Reembolso
+            Terms of Service, Cancellation & Refund Policy
           </h1>
           <p className="text-sm text-[#8E9499]">
-            Última atualização: Outubro de 2026 • Trajetta Company
+            Last updated: October 2026 • Trajetta Company
           </p>
         </div>
 
@@ -51,30 +52,30 @@ export default function TermosPage() {
           <div className="p-4 rounded-xl bg-[#0D0F10] border border-white/8 space-y-1.5">
             <div className="text-[#B8FF00] font-bold text-xs flex items-center gap-1.5">
               <CheckCircle2 size={14} />
-              <span>Cancelamento em 1 Clique</span>
+              <span>1-Click Cancellation</span>
             </div>
             <p className="text-xs text-[#8E9499] leading-relaxed">
-              Direto no seu painel em Configurações. Sem retenções forçadas ou ligações.
+              Directly in your dashboard under Settings. No phone calls, no retention friction.
             </p>
           </div>
 
           <div className="p-4 rounded-xl bg-[#0D0F10] border border-white/8 space-y-1.5">
             <div className="text-[#B8FF00] font-bold text-xs flex items-center gap-1.5">
               <RotateCcw size={14} />
-              <span>7 Dias de Arrependimento</span>
+              <span>7-Day Money-Back Guarantee</span>
             </div>
             <p className="text-xs text-[#8E9499] leading-relaxed">
-              Reembolso integral e imediato nos primeiros 7 dias após a cobrança, conforme o CDC.
+              Full and unconditional refund within 7 days of any charge upon request.
             </p>
           </div>
 
           <div className="p-4 rounded-xl bg-[#0D0F10] border border-white/8 space-y-1.5">
             <div className="text-[#B8FF00] font-bold text-xs flex items-center gap-1.5">
               <Mail size={14} />
-              <span>Recibos Automáticos</span>
+              <span>Automated Invoices & Receipts</span>
             </div>
             <p className="text-xs text-[#8E9499] leading-relaxed">
-              Fatura oficial e recibo em PDF emitidos via Stripe e enviados ao seu e-mail a cada ciclo.
+              Official Stripe PDF invoices and receipts delivered to your email address each cycle.
             </p>
           </div>
         </div>
@@ -83,51 +84,51 @@ export default function TermosPage() {
         <div className="prose prose-invert max-w-none space-y-6 text-sm text-[#C9CDD1] leading-relaxed">
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              1. Política de Cancelamento de Assinatura
+              1. Subscription Cancellation Policy
             </h2>
             <p>
-              No Trajetta, acreditamos em relações de longo prazo baseadas na confiança e no valor real entregue à sua vida. Você tem total autonomia para gerenciar ou cancelar sua assinatura a qualquer momento.
+              At Trajetta, we believe in building long-term relationships based on genuine value. You retain full autonomy to manage or cancel your subscription at any time.
             </p>
             <ul className="list-disc pl-5 space-y-1 text-xs text-[#8E9499]">
-              <li><strong>Como cancelar:</strong> Acesse seu aplicativo, vá em <em>Configurações (Você) &gt; Assinatura & Faturamento &gt; Cancelar Assinatura</em>, ou utilize o <em>Portal Stripe</em> integrado.</li>
-              <li><strong>Efeito do cancelamento:</strong> Nenhuma nova renovação ou cobrança será efetuada em seu cartão de crédito.</li>
-              <li><strong>Manutenção do acesso:</strong> Ao cancelar, seu acesso ao Trajetta Pro continuará plenamente ativo até o término do ciclo já contratado (final do mês ou do ano vigente).</li>
-              <li><strong>Seus dados continuam seus:</strong> Ao término do plano, seu histórico de metas, hábitos e reflexões não é excluído. Você pode exportar seus dados em JSON/CSV a qualquer instante.</li>
+              <li><strong>How to cancel:</strong> Go to <em>Settings (You) &gt; Subscription & Billing &gt; Cancel Subscription</em>, or use the embedded <em>Stripe Billing Portal</em>.</li>
+              <li><strong>Cancellation effect:</strong> No future automatic renewals or charges will occur on your card.</li>
+              <li><strong>Access retention:</strong> Your access to Trajetta Pro remains fully active until the end of the paid billing cycle.</li>
+              <li><strong>Data ownership:</strong> Your goals, habits, and reflections are never deleted. You can export your full data in JSON/CSV at any time.</li>
             </ul>
           </section>
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              2. Direito de Arrependimento e Reembolso (CDC art. 49)
+              2. 7-Day Money-Back Guarantee
             </h2>
             <p>
-              Em total conformidade com o artigo 49 do Código de Defesa do Consumidor brasileiro e o Decreto do Comércio Eletrônico (Decreto nº 7.962/2013), você tem até <strong>7 (sete) dias corridos</strong> a partir da data de qualquer cobrança para solicitar o cancelamento com <strong>estorno de 100% do valor pago</strong>.
+              You have up to <strong>7 calendar days</strong> from the date of any initial subscription charge to request a <strong>100% full refund</strong>.
             </p>
             <p className="text-xs text-[#8E9499]">
-              Para solicitar o estorno nos primeiros 7 dias, basta enviar uma mensagem com seu e-mail cadastrado para <strong>contato@trajettacompany.com.br</strong> ou abrir o Portal do Assinante no app. O reembolso é estornado diretamente na fatura do cartão utilizado via Stripe.
+              To claim your refund, email <strong>contato@trajettacompany.com.br</strong> with your account email address. Refunds are returned directly to the payment method used via Stripe.
             </p>
           </section>
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              3. Período de Teste Gratuito (Trial de 14 Dias)
+              3. 14-Day Free Trial
             </h2>
             <p>
-              Os planos com período de teste concedem 14 dias de experiência completa do Trajetta Pro sem cobrança antecipada. Você pode experimentar todas as funcionalidades sem risco. Caso cancele antes do 14º dia, nada será debitado.
+              Trial plans include 14 days of unrestricted access to Trajetta Pro without upfront payment. If you cancel before day 14, zero charges apply.
             </p>
           </section>
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              4. Contato & Suporte Oficial
+              4. Official Support
             </h2>
             <p>
-              Dúvidas sobre faturamento, solicitações de segunda via de recibo ou suporte operacional podem ser encaminhadas diretamente ao nosso time:
+              Billing inquiries, second-copy invoices, or technical questions can be directed to:
             </p>
             <div className="p-4 rounded-xl bg-[#14181F] border border-white/8 text-xs space-y-1">
               <p><strong>Trajetta Company</strong></p>
-              <p>E-mail: <a href="mailto:contato@trajettacompany.com.br" className="text-[#B8FF00] hover:underline">contato@trajettacompany.com.br</a></p>
-              <p>Plataforma de Pagamentos: Stripe Payments Brasil Ltda.</p>
+              <p>Email: <a href="mailto:contato@trajettacompany.com.br" className="text-[#B8FF00] hover:underline">contato@trajettacompany.com.br</a></p>
+              <p>Payment Processor: Stripe Payments Brasil Ltda. / Stripe Inc.</p>
             </div>
           </section>
         </div>
@@ -138,7 +139,7 @@ export default function TermosPage() {
             href="/app"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#B8FF00] text-[#060709] font-bold text-xs hover:bg-[#c6ff24] transition-all"
           >
-            <span>Acessar o Trajetta App</span>
+            <span>Open Trajetta App</span>
           </Link>
         </div>
       </div>

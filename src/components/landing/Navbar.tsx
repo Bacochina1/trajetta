@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -43,8 +44,10 @@ export function Navbar() {
             <a className="hover:text-[#B8FF00] transition-colors duration-200" href="#waitlist">Lista VIP</a>
           </nav>
 
-          {/* Right Action: CTA & Mobile Hamburger */}
+          {/* Right Action: CTA, Language & Mobile Hamburger */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+            <LanguageSwitcher />
+
             {/* Waitlist Signup CTA Button */}
             <a
               href="#waitlist"

@@ -24,8 +24,12 @@ import {
   ExternalLink,
   Receipt,
   XCircle,
+  Smartphone,
 } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
+import { useI18n } from '@/lib/i18n/context';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
+import { triggerPwaInstall } from '@/components/pwa/PwaManager';
 
 interface ProfileViewProps {
   onOpenPaywall: () => void;
@@ -49,6 +53,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
     setActiveView,
     logout,
   } = useTrajetta();
+  const { t, locale, setLocale, formatDate } = useI18n();
 
   const [notifications, setNotifications] = useState({
     weeklyPlanning: true,
@@ -307,6 +312,45 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           <p className="text-xs text-[#F2F1ED] italic leading-relaxed">
             &ldquo;{user.target12Months}&rdquo;
           </p>
+        </div>
+      </div>
+
+      {/* Language & PWA Preferences Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Language Selection */}
+        <div className="trajetta-card p-5 border border-white/8 space-y-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/20 flex items-center justify-center text-[#B8FF00]">
+              <Globe size={16} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#F2F1ED]">{t.app.language}</h3>
+              <p className="text-[11px] text-[#8E9499]">Português (Brasil) ou English (US).</p>
+            </div>
+          </div>
+          <LanguageSwitcher variant="full" />
+        </div>
+
+        {/* PWA Mobile Installation */}
+        <div className="trajetta-card p-5 border border-white/8 space-y-3 flex flex-col justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/20 flex items-center justify-center text-[#B8FF00]">
+              <Smartphone size={16} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#F2F1ED]">{t.app.installApp}</h3>
+              <p className="text-[11px] text-[#8E9499]">{t.app.installAppDesc}</p>
+            </div>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={triggerPwaInstall}
+            className="text-xs w-full justify-center"
+          >
+            <Download size={13} className="text-[#B8FF00]" />
+            <span>{t.pwa.installButton}</span>
+          </Button>
         </div>
       </div>
 

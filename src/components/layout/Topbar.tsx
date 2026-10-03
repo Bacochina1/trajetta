@@ -6,10 +6,13 @@ import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut, Compass } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
+import { useI18n } from '@/lib/i18n/context';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const { weeklyPlan, user, setIsReviewModalOpen, setIsNewGoalModalOpen, resetToDemoData, setIsAuthModalOpen, logout } = useTrajetta();
-  const dateFormatted = getCurrentDateFormatted();
+  const { t, formatDate } = useI18n();
+  const dateFormatted = formatDate(new Date(), { weekday: 'short', day: 'numeric', month: 'short' });
 
   return (
     <header className="sticky top-0 z-30 h-14 sm:h-16 bg-[#0D0F10]/95 backdrop-blur-md border-b border-white/8 px-2.5 sm:px-8 flex items-center justify-between">
@@ -34,6 +37,9 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0" data-tour="topbar-user">
+        {/* Language Switcher */}
+        <LanguageSwitcher />
+
         {/* Tour Guiado */}
         <button
           onClick={startGuidedTour}
