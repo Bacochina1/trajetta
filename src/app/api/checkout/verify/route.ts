@@ -77,6 +77,19 @@ export async function GET(req: NextRequest) {
           where: { id: dbUser.id },
           data: { subscriptionStatus: 'active' },
         });
+
+        // Enviar e-mail de confirmação de assinatura ativa
+        sendEmail({
+          to: customerEmail,
+          subject: 'Sua assinatura Trajetta Pro está confirmada! 🚀',
+          html: renderProWelcomeEmail({
+            userName: dbUser.name,
+            email: customerEmail,
+            planName: subscriptionPlan,
+            isNewUser: false,
+          }),
+          userId: dbUser.id,
+        }).catch((err) => console.warn('Could not dispatch upgrade confirmation email:', err));
       }
 
       resolvedUser = {
@@ -94,6 +107,20 @@ export async function GET(req: NextRequest) {
         where: { id: resolvedUser.id },
         data: { subscriptionStatus: 'active' },
       });
+
+      if (customerEmail) {
+        sendEmail({
+          to: customerEmail,
+          subject: 'Sua assinatura Trajetta Pro está confirmada! 🚀',
+          html: renderProWelcomeEmail({
+            userName: resolvedUser.name,
+            email: customerEmail,
+            planName: subscriptionPlan,
+            isNewUser: false,
+          }),
+          userId: resolvedUser.id,
+        }).catch((err) => console.warn('Could not dispatch logged-in user upgrade email:', err));
+      }
     }
 
     const response = NextResponse.json({
