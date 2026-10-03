@@ -83,7 +83,7 @@ export function PricingSection() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14181F] border border-[#B8FF00]/30 shadow-[0_0_15px_rgba(184,255,0,0.1)]">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B8FF00]">
-              {isEn ? 'Investment in Your Trajectory' : 'Investimento na Sua Trajetória'}
+              {isEn ? 'Investment in Your Trajectory • 3-Day Free Trial' : 'Investimento na Sua Trajetória • 3 Dias de Teste Grátis'}
             </span>
           </div>
 
@@ -94,8 +94,8 @@ export function PricingSection() {
 
           <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-xl mx-auto font-light [text-wrap:pretty]">
             {isEn
-              ? 'Unrestricted access to every tool. Plan your week, test Trajetta AI, and experience true mental clarity. Cancel with 1 click anytime.'
-              : 'Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e viva a clareza mental do seu sistema de vida. Cancele com 1 clique a qualquer momento.'}
+              ? 'Unrestricted access to every tool. Plan your week, test Trajetta AI, and experience true mental clarity. Try 3 days free — cancel anytime in 1 click.'
+              : 'Comece agora com 3 dias de degustação gratuita. Acesso irrestrito a todas as ferramentas: teste a Trajetta AI, planeje sua semana e sinta a clareza mental antes de qualquer cobrança. Cancele com 1 clique a qualquer momento.'}
           </p>
         </div>
 
@@ -105,7 +105,7 @@ export function PricingSection() {
             {/* Top Monumental Badge */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-[0_0_15px_rgba(184,255,0,0.4)] whitespace-nowrap flex items-center gap-1.5">
               <Zap size={13} className="fill-[#060709] text-[#060709]" />
-              <span>{isEn ? 'Instant Access • Full Unlocked' : 'Liberação Imediata • Acesso Completo'}</span>
+              <span>{isEn ? '3 Days Free Trial • Full Access' : '3 Dias de Degustação Grátis • Acesso Completo'}</span>
             </div>
 
             {/* Plan Header & Pricing */}
@@ -139,7 +139,7 @@ export function PricingSection() {
                     <span className="text-xs font-mono text-[#8E9499]">{isEn ? '/mo' : '/mês'}</span>
                   </div>
                   <p className="text-[11px] text-[#B8FF00] font-semibold mt-1">
-                    {isEn ? '✓ Immediate access unlocked upon confirmation' : '✓ Acesso imediato liberado logo após confirmação'}
+                    {isEn ? '✓ 3 days free • R$ 0.00 charged today' : '✓ 3 dias de degustação gratuita • R$ 0,00 cobrado hoje'}
                   </p>
                 </div>
 
@@ -186,7 +186,7 @@ export function PricingSection() {
                   </span>
                 ) : (
                   <>
-                    <span>{isEn ? 'Get Trajetta Pro Now' : 'Assinar Trajetta Pro Agora'}</span>
+                    <span>{isEn ? 'Start 3-Day Free Trial • Get Pro' : 'Começar 3 Dias Grátis • Assinar Pro'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -198,8 +198,8 @@ export function PricingSection() {
                   className="text-xs text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-4"
                 >
                   {isEn
-                    ? 'Prefer to sign up without a card first? Create quick account'
-                    : 'Ou prefere se cadastrar sem cartão primeiro? Criar conta rápida'}
+                    ? 'Prefer quick registration first? Start free in 10 seconds'
+                    : 'Prefere criar sua conta direta sem cartão primeiro? Cadastre-se em 10s'}
                 </Link>
               </div>
 

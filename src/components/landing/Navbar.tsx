@@ -70,7 +70,7 @@ export function Navbar() {
               onClick={() => handleCtaClick('navbar_pro')}
               className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#060709] text-[11px] sm:text-[12px] font-extrabold tracking-wider uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-[0_0_15px_rgba(184,255,0,0.25)] flex-shrink-0"
             >
-              <span>{isEn ? 'GET PRO' : 'ASSINAR PRO'}</span>
+              <span>{isEn ? 'START 3 DAYS FREE' : 'TESTAR 3 DIAS GRÁTIS'}</span>
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </a>
 
