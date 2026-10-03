@@ -579,23 +579,26 @@ export function renderNewsletterWelcomeEmail(email: string): string {
                 Obrigado por se inscrever na newsletter da Trajetta. Enviamos apenas atualizações relevantes sobre novos recursos de inteligência artificial, metodologias de consistência real e lançamentos do ecossistema.
               </p>
 
-              <!-- Box Informativo -->
-              <div style="background-color: #12151B; border-left: 3px solid #B8FF00; padding: 18px 20px; border-radius: 8px; margin-bottom: 26px;">
-                <p style="font-size: 13px; line-height: 1.6; color: #F2F1ED; margin: 0;">
-                  “Clareza não é sobre fazer mais coisas por dia. É sobre saber exatamente o que importa e voltar ao seu ritmo com serenidade sempre que a rotina pesar.”
+              <!-- Box Informativo com Oferta de 3 Dias Grátis -->
+              <div style="background-color: #12151B; border-left: 3px solid #B8FF00; padding: 18px 20px; border-radius: 8px; margin-bottom: 24px;">
+                <p style="font-size: 13px; line-height: 1.6; color: #F2F1ED; margin: 0 0 8px 0; font-weight: 600;">
+                  🎁 Presente de Boas-Vindas: 3 Dias de Degustação Gratuita
+                </p>
+                <p style="font-size: 12px; line-height: 1.6; color: #8E9499; margin: 0;">
+                  Como você se inscreveu para acompanhar a Trajetta, liberamos um acesso imediato com <strong>3 dias de teste gratuito</strong> sem cobrança hoje. Teste a Trajetta AI, organize suas 4 áreas e sinta a clareza mental do sistema.
                 </p>
               </div>
 
-              <!-- Destaque do App -->
-              <p style="font-size: 13px; color: #8E9499; margin: 0 0 20px 0; line-height: 1.5;">
-                Quer conhecer o sistema completo e evoluir suas semanas? Acesse a plataforma oficial:
+              <!-- Destaque do App com Botão de 3 Dias Grátis -->
+              <p style="font-size: 13px; color: #8E9499; margin: 0 0 16px 0; line-height: 1.5; text-align: center;">
+                Ative seu teste gratuito de 3 dias sem burocracia:
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 24px;">
                 <tr>
                   <td align="center">
-                    <a href="https://trajettacompany.com.br/#planos" style="display: inline-block; background-color: #B8FF00; color: #060709; font-family: monospace; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 15px 32px; border-radius: 100px; box-shadow: 0 8px 20px rgba(184,255,0,0.25);">
-                      CONHECER TRAJETTA PRO →
+                    <a href="https://trajettacompany.com.br/#planos" style="display: inline-block; background-color: #B8FF00; color: #060709; font-family: monospace; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 14px 28px; border-radius: 100px; box-shadow: 0 8px 20px rgba(184,255,0,0.25);">
+                      COMEÇAR 3 DIAS GRÁTIS →
                     </a>
                   </td>
                 </tr>
