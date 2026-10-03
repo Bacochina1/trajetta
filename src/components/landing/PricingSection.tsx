@@ -8,9 +8,31 @@ import { Check, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 export function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
 
-  const handlePlanClick = (planName: string) => {
-    trackMarketingEvent('plan_selected', { plan: planName, billing: billingCycle });
-    trackMarketingEvent('trial_started', { plan: planName });
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handlePlanClick = async (planKey: 'monthly' | 'annual' | 'founding') => {
+    trackMarketingEvent('plan_selected', { plan: planKey, billing: billingCycle });
+    trackMarketingEvent('trial_started', { plan: planKey });
+
+    try {
+      setLoadingPlan(planKey);
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: planKey }),
+      });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      window.location.href = appendUtmToUrl('/register');
+    } catch (e) {
+      console.warn('Checkout redirection fallback:', e);
+      window.location.href = appendUtmToUrl('/register');
+    } finally {
+      setLoadingPlan(null);
+    }
   };
 
   const proFeatures = [
@@ -100,17 +122,38 @@ export function PricingSection() {
               ))}
             </ul>
 
-            <Link
-              href={appendUtmToUrl('/register')}
-              onClick={() => handlePlanClick('Pro Mensal')}
-              className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all"
-            >
-              <span>Começar 3 dias grátis</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="space-y-2 pt-2">
+              <button
+                type="button"
+                disabled={loadingPlan !== null}
+                onClick={() => handlePlanClick('monthly')}
+                className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all disabled:opacity-50"
+              >
+                {loadingPlan === 'monthly' ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-3.5 h-3.5 rounded-full border-2 border-[#B8FF00] border-t-transparent animate-spin" />
+                    Abrindo checkout seguro...
+                  </span>
+                ) : (
+                  <>
+                    <span>Começar 3 dias grátis</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+
+              <div className="text-center">
+                <Link
+                  href={appendUtmToUrl('/register')}
+                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-2"
+                >
+                  Ou cadastrar sem cartão primeiro
+                </Link>
+              </div>
+            </div>
           </div>
 
-          {/* Plan: Trajetta Pro Anual (Highlighted as requested) */}
+          {/* Plan: Trajetta Pro Anual (Highlighted) */}
           <div className="p-5 sm:p-8 rounded-3xl bg-[#0D0F10] border-2 border-[#B8FF00]/60 relative flex flex-col justify-between space-y-6 shadow-[0_0_50px_rgba(184,255,0,0.12)]">
             {/* Top Badge */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-md whitespace-nowrap">
@@ -146,18 +189,39 @@ export function PricingSection() {
               ))}
             </ul>
 
-            <Link
-              href={appendUtmToUrl('/register')}
-              onClick={() => handlePlanClick('Pro Anual')}
-              className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_25px_rgba(184,255,0,0.35)] transition-all transform active:scale-95"
-            >
-              <span>Começar 3 dias grátis</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="space-y-2 pt-2">
+              <button
+                type="button"
+                disabled={loadingPlan !== null}
+                onClick={() => handlePlanClick('annual')}
+                className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_25px_rgba(184,255,0,0.35)] transition-all transform active:scale-95 disabled:opacity-50"
+              >
+                {loadingPlan === 'annual' ? (
+                  <span className="flex items-center gap-2 text-[#060709]">
+                    <span className="w-4 h-4 rounded-full border-2 border-[#060709] border-t-transparent animate-spin" />
+                    Abrindo checkout seguro...
+                  </span>
+                ) : (
+                  <>
+                    <span>Começar 3 dias grátis</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              <div className="text-center">
+                <Link
+                  href={appendUtmToUrl('/register')}
+                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-2"
+                >
+                  Ou cadastrar sem cartão primeiro
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Temporary Founding Members Section */}
+        {/* Founding Members Section */}
         <div className="mt-14 max-w-4xl mx-auto p-6 sm:p-7 rounded-2xl bg-[#0D0F10] border border-white/8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2">
@@ -170,16 +234,17 @@ export function PricingSection() {
               Faça parte dos primeiros usuários da Trajetta.
             </h4>
             <p className="text-xs text-[#8E9499]">
-              Garante prioridade nos novos recursos, canal direto com os fundadores e suporte VIP vitalício.
+              Garante prioridade nos novos recursos, canal direto com os fundadores e suporte VIP vitalício por R$ 149/ano.
             </p>
           </div>
-          <Link
-            href={appendUtmToUrl('/register')}
-            onClick={() => handlePlanClick('Founding Member')}
-            className="flex-shrink-0 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/15 hover:border-[#B8FF00]/40 transition-all"
+          <button
+            type="button"
+            disabled={loadingPlan !== null}
+            onClick={() => handlePlanClick('founding')}
+            className="flex-shrink-0 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/15 hover:border-[#B8FF00]/40 transition-all disabled:opacity-50"
           >
-            Entrar como Fundador
-          </Link>
+            {loadingPlan === 'founding' ? 'Carregando...' : 'Entrar como Fundador'}
+          </button>
         </div>
       </div>
     </section>
