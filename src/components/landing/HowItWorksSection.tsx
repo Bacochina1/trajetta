@@ -48,16 +48,16 @@ export function HowItWorksSection() {
       {/* Split layout: Input Preview Left, Step Process Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Real App Mockup with Floating Prompt Card */}
-        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[340px] sm:min-h-[480px] p-3 xs:p-4 sm:p-6 flex items-end justify-center shadow-2xl group">
+        <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[380px] sm:min-h-[520px] p-3 xs:p-4 sm:p-6 flex items-end justify-center shadow-2xl group">
           {/* Real App Screens Mockup Background */}
           <img
             src="/trajetta-real-app-mockup.jpg"
-            alt={isEn ? "Authentic Trajetta Pro application screens with Life Score and Trajetta AI" : "Telas reais do aplicativo Trajetta Pro com Life Score e Trajetta AI"}
-            className="absolute inset-0 w-full h-full object-cover object-[center_20%] sm:object-center opacity-85 group-hover:scale-[1.02] transition-transform duration-700 pointer-events-none"
+            alt={isEn ? "Authentic Trajetta Pro MacBook interface on dark stone" : "Interface real do Trajetta Pro no MacBook em ardósia negra"}
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-95 group-hover:scale-[1.02] transition-transform duration-700 pointer-events-none"
           />
 
-          {/* Directional scrim gradient for optimal text readability and contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-[#060709]/75 to-transparent pointer-events-none" />
+          {/* Directional scrim gradient for optimal text readability without hiding the MacBook */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-[#060709]/40 to-transparent pointer-events-none" />
 
           {/* Top Pill: Indicador de Telas Reais */}
           <div className="absolute top-4 left-4 z-10 hidden xs:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#060709]/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-neutral-300">
