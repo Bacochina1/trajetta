@@ -1,8 +1,7 @@
-// Trajetta Service Worker v1.0.0
-const CACHE_NAME = 'trajetta-static-v1';
+// Trajetta Service Worker v1.0.3
+const CACHE_NAME = 'trajetta-static-v3';
 
 const STATIC_ASSETS = [
-  '/',
   '/favicon.ico',
   '/favicon.svg',
   '/icon.png',

@@ -41,20 +41,21 @@ export function Navbar() {
             <a className="hover:text-white transition-colors duration-200" href="#ciclos">Ciclos</a>
             <a className="hover:text-white transition-colors duration-200" href="#areas">4 Áreas</a>
             <a className="hover:text-white transition-colors duration-200" href="#metodo">O Método</a>
-            <a className="hover:text-[#B8FF00] transition-colors duration-200" href="#waitlist">Lista VIP</a>
+            <a className="hover:text-[#B8FF00] font-semibold transition-colors duration-200" href="#planos">Planos (3 Dias Grátis)</a>
+            <a className="hover:text-white transition-colors duration-200" href="#waitlist">Lista VIP</a>
           </nav>
 
           {/* Right Action: CTA, Language & Mobile Hamburger */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <LanguageSwitcher />
 
-            {/* Waitlist Signup CTA Button */}
+            {/* 3-Day Trial CTA Button */}
             <a
-              href="#waitlist"
-              onClick={() => handleCtaClick('navbar_waitlist')}
-              className="bg-white hover:bg-neutral-100 active:scale-95 text-black text-[11px] sm:text-[12px] font-bold tracking-wider uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-lg shadow-white/5 flex-shrink-0"
+              href="#planos"
+              onClick={() => handleCtaClick('navbar_trial')}
+              className="bg-[#B8FF00] hover:bg-[#a5e600] active:scale-95 text-[#060709] text-[11px] sm:text-[12px] font-extrabold tracking-wider uppercase px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 shadow-[0_0_15px_rgba(184,255,0,0.25)] flex-shrink-0"
             >
-              <span>LISTA VIP</span>
+              <span>TESTAR 3 DIAS</span>
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </a>
 
@@ -106,21 +107,29 @@ export function Navbar() {
             <span className="text-xs font-mono text-neutral-500">04</span>
           </a>
           <a
+            href="#planos"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-semibold text-[#B8FF00] hover:text-white py-2 border-b border-white/5 flex items-center justify-between transition-colors"
+          >
+            <span>Planos & Degustação (3 Dias Grátis)</span>
+            <span className="text-xs font-mono text-[#B8FF00]">05</span>
+          </a>
+          <a
             href="#faq"
             onClick={() => setMobileMenuOpen(false)}
             className="text-sm font-medium text-neutral-300 hover:text-white py-2 flex items-center justify-between transition-colors"
           >
             <span>Perguntas Frequentes</span>
-            <span className="text-xs font-mono text-neutral-500">05</span>
+            <span className="text-xs font-mono text-neutral-500">06</span>
           </a>
 
           <div className="pt-2 pb-2">
             <a
-              href="#waitlist"
+              href="#planos"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center bg-white hover:bg-neutral-100 text-black font-bold text-xs uppercase py-3.5 rounded-full flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+              className="w-full text-center bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] font-extrabold text-xs uppercase py-3.5 rounded-full flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(184,255,0,0.3)] active:scale-95 transition-all"
             >
-              <span>GARANTIR VAGA NA LISTA VIP</span>
+              <span>TESTAR 3 DIAS GRÁTIS</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>

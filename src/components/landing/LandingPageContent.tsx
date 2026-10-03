@@ -11,6 +11,7 @@ import { SubHeaderSection } from '@/components/landing/SubHeaderSection';
 import { FeatureCardsGrid } from '@/components/landing/FeatureCardsGrid';
 import { LifeAreasSection } from '@/components/landing/LifeAreasSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
+import { PricingSection } from '@/components/landing/PricingSection';
 import { WaitlistSection } from '@/components/landing/WaitlistSection';
 import { FaqSection } from '@/components/landing/FaqSection';
 import { Footer } from '@/components/landing/Footer';
@@ -64,7 +65,10 @@ function InnerLandingContent() {
         {/* 6. Como Funciona */}
         <HowItWorksSection />
 
-        {/* 7. Lista VIP */}
+        {/* 7. Card de Venda com 3 Dias de Degustação Gratuita (Trial) */}
+        <PricingSection />
+
+        {/* 8. Lista VIP & Acesso Antecipado */}
         <WaitlistSection />
 
         {/* 8. Perguntas Frequentes */}

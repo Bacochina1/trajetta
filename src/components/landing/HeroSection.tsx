@@ -65,9 +65,9 @@ export function HeroSection() {
           {/* CTA Action Buttons — Symmetrical on all screens */}
           <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-none">
             <a
-              href="#waitlist"
-              onClick={() => handleCtaClick('hero_primary_waitlist')}
-              className="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-neutral-200 active:scale-95 text-neutral-900 text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 shadow-xl shadow-white/10 text-center cursor-pointer"
+              href="#planos"
+              onClick={() => handleCtaClick('hero_primary_planos')}
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-[#B8FF00] hover:bg-[#a6e600] active:scale-95 text-[#060709] text-[11.5px] sm:text-[12.5px] font-extrabold tracking-[0.08em] uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-150 shadow-xl shadow-[0_0_20px_rgba(184,255,0,0.3)] text-center cursor-pointer"
             >
               <span>{t.hero.ctaPrimary}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-2 flex-shrink-0" />
