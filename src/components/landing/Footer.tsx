@@ -118,6 +118,14 @@ export function Footer() {
                 <li><span className="text-neutral-300">Mobile PWA</span></li>
                 <li className="pt-2">
                   <Link
+                    href="/termos"
+                    className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
+                  >
+                    <span>Termos & Cancelamento</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/admin/login"
                     className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
                   >
@@ -135,6 +143,10 @@ export function Footer() {
           <div className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
             <span>Trajetta © {new Date().getFullYear()} — Todos os direitos reservados.</span>
+            <span className="text-white/20">•</span>
+            <Link href="/termos" className="hover:text-white transition-colors underline underline-offset-2">
+              Política de Cancelamento
+            </Link>
           </div>
 
           {/* Social Icons — Strictly Instagram @trajetta_ */}

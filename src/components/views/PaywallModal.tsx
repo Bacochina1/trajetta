@@ -230,9 +230,12 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
           </div>
         </div>
 
-        {/* Privacy and Terms Footnote */}
-        <div className="text-[10px] text-center text-[#8E9499]/60 leading-tight">
-          Assinatura com renovação automática. Cancele facilmente a qualquer momento nas configurações do seu perfil. Seus dados continuam seus mesmo após o término.
+        {/* Privacy, Cancellation and Terms Footnote */}
+        <div className="text-[10px] text-center text-[#8E9499] leading-relaxed pt-1">
+          Garantia de 7 dias (reembolso integral CDC) e 14 dias grátis. Cancelamento em 1 clique a qualquer momento no seu perfil. Conheça nossa{' '}
+          <a href="/termos" target="_blank" className="text-[#B8FF00] underline underline-offset-2 hover:text-[#c6ff24]">
+            Política de Cancelamento & Reembolso
+          </a>.
         </div>
       </div>
     </Modal>

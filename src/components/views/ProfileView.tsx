@@ -21,6 +21,9 @@ import {
   Brain,
   Plus,
   Sparkles,
+  ExternalLink,
+  Receipt,
+  XCircle,
 } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
 
@@ -56,6 +59,83 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   const [exportSuccess, setExportSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
+
+  // Subscription & Billing Governance State
+  const [subDetails, setSubDetails] = useState<{
+    status?: string;
+    cancelAtPeriodEnd?: boolean;
+    formattedPeriodEnd?: string | null;
+    formattedTrialEnd?: string | null;
+    recentInvoices?: Array<{
+      id: string;
+      number: string;
+      amount: number;
+      date: string;
+      pdfUrl?: string;
+      hostedUrl?: string;
+    }>;
+  }>({});
+  const [loadingPortal, setLoadingPortal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelFeedback, setCancelFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/subscription/status')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setSubDetails(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleOpenPortal = async () => {
+    try {
+      setLoadingPortal(true);
+      const res = await fetch('/api/customer-portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      alert(data.error || 'Nenhuma assinatura ativa vinculada encontrada.');
+    } catch {
+      alert('Erro ao conectar ao portal de faturamento.');
+    } finally {
+      setLoadingPortal(false);
+    }
+  };
+
+  const handleConfirmCancel = async () => {
+    try {
+      setCancelLoading(true);
+      const res = await fetch('/api/subscription/cancel', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) {
+        setCancelFeedback(
+          data.formattedDate
+            ? `Assinatura cancelada. Seu acesso Pro continua ativo até ${data.formattedDate}.`
+            : 'Assinatura cancelada com sucesso. Não haverá novas cobranças.'
+        );
+        setSubDetails((prev) => ({
+          ...prev,
+          cancelAtPeriodEnd: true,
+        }));
+        setTimeout(() => {
+          setShowCancelModal(false);
+          setCancelFeedback(null);
+        }, 3500);
+      } else {
+        alert(data.error || 'Não foi possível processar o cancelamento.');
+      }
+    } catch {
+      alert('Erro ao conectar ao serviço de cancelamento.');
+    } finally {
+      setCancelLoading(false);
+    }
+  };
 
   // Memory Engine State
   const [memories, setMemories] = useState<Array<{ id: string; memoryType: string; content: string; importance: number; confidence: number; source?: string }>>([]);
@@ -231,50 +311,184 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
       </div>
 
       {/* Subscription & Paywall Card */}
-      <div className="trajetta-card p-6 border border-white/8 space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="trajetta-card p-6 border border-white/8 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/20 flex items-center justify-center text-[#B8FF00]">
               <CreditCard size={16} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#F2F1ED]">Assinatura & Plano</h3>
-              <p className="text-xs text-[#8E9499]">Modelo transparente, sem bloqueios no histórico.</p>
+              <h3 className="text-sm font-bold text-[#F2F1ED]">Assinatura & Faturamento</h3>
+              <p className="text-xs text-[#8E9499]">Governança clara, recibos automáticos e cancelamento em 1 clique.</p>
             </div>
           </div>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onOpenPaywall}
-            className="text-xs bg-[#B8FF00] text-[#0D0F10] font-bold"
-          >
-            <Zap size={13} />
-            <span>Gerenciar Plano</span>
-          </Button>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={loadingPortal}
+              onClick={handleOpenPortal}
+              className="text-xs"
+            >
+              <ExternalLink size={13} className="text-[#B8FF00]" />
+              <span>{loadingPortal ? 'Carregando...' : 'Portal Stripe (Faturas & Cartão)'}</span>
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onOpenPaywall}
+              className="text-xs bg-[#B8FF00] text-[#0D0F10] font-bold"
+            >
+              <Zap size={13} />
+              <span>Alterar Plano</span>
+            </Button>
+          </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#111315] border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#F2F1ED]">
-                {user.subscriptionPlan === 'pro_annual'
-                  ? 'Trajetta Pro Anual (Ativo)'
-                  : user.subscriptionPlan === 'founding'
-                  ? 'Membro Fundador (Ativo)'
-                  : 'Trial Pro (14 Dias Gratuitos)'}
-              </span>
-              <span className="w-2 h-2 rounded-full bg-[#B8FF00]" />
+        <div className="p-4 rounded-xl bg-[#111315] border border-white/5 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#F2F1ED]">
+                  {user.subscriptionPlan === 'pro_annual'
+                    ? 'Trajetta Pro Anual'
+                    : user.subscriptionPlan === 'founding'
+                    ? 'Membro Fundador'
+                    : user.subscriptionPlan === 'pro_monthly'
+                    ? 'Trajetta Pro Mensal'
+                    : 'Período de Experiência (Trial)'}
+                </span>
+                <span className={`w-2 h-2 rounded-full ${subDetails.cancelAtPeriodEnd ? 'bg-amber-400' : 'bg-[#B8FF00]'}`} />
+                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-white/5 text-[#8E9499]">
+                  {subDetails.cancelAtPeriodEnd ? 'Cancelamento Agendado' : 'Ativo'}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#8E9499] mt-1">
+                {subDetails.cancelAtPeriodEnd
+                  ? `Seu acesso Pro permanecerá ativo até ${subDetails.formattedPeriodEnd || 'o fim do período'}. Nenhuma nova cobrança será realizada.`
+                  : subDetails.formattedPeriodEnd
+                  ? `Próxima renovação automática: ${subDetails.formattedPeriodEnd}.`
+                  : 'Acesso sem restrições liberado. Gerencie quando quiser sem pegadinhas.'}
+              </p>
             </div>
-            <p className="text-[11px] text-[#8E9499] mt-0.5">
-              11 dias restantes no seu período de experiência gratuito.
-            </p>
+            
+            <div className="flex items-center gap-2">
+              {!subDetails.cancelAtPeriodEnd && (
+                <button
+                  type="button"
+                  onClick={() => setShowCancelModal(true)}
+                  className="text-xs text-rose-400/80 hover:text-rose-300 underline underline-offset-4 transition-colors"
+                >
+                  Cancelar Assinatura
+                </button>
+              )}
+            </div>
           </div>
-          <div className="text-right">
-            <span className="text-xs font-semibold text-[#B8FF00]">R$ 0,00</span>
-            <span className="text-[10px] text-[#8E9499] block">próxima cobrança opcional</span>
-          </div>
+
+          {/* Histórico recente de faturas e recibos */}
+          {subDetails.recentInvoices && subDetails.recentInvoices.length > 0 && (
+            <div className="pt-3 border-t border-white/5 space-y-2">
+              <span className="text-[10px] font-bold text-[#8E9499] uppercase tracking-wider block">
+                Recibos Recentes:
+              </span>
+              <div className="space-y-1.5">
+                {subDetails.recentInvoices.map((inv) => (
+                  <div key={inv.id} className="flex items-center justify-between text-xs py-1 px-2.5 rounded bg-white/3 border border-white/5">
+                    <div className="flex items-center gap-2 text-[#8E9499]">
+                      <Receipt size={13} className="text-[#B8FF00]" />
+                      <span>{inv.date}</span>
+                      <span className="text-white/40">•</span>
+                      <span className="text-[#F2F1ED] font-mono">{inv.amount > 0 ? `R$ ${inv.amount.toFixed(2)}` : 'R$ 0,00 (Trial)'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {inv.pdfUrl && (
+                        <a
+                          href={inv.pdfUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[11px] text-[#B8FF00] hover:underline"
+                        >
+                          Baixar PDF
+                        </a>
+                      )}
+                      {inv.hostedUrl && (
+                        <a
+                          href={inv.hostedUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[11px] text-[#8E9499] hover:text-white"
+                        >
+                          Ver Online
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Modal Transparente de Cancelamento (Código de Defesa do Consumidor) */}
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#111315] border border-white/10 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-fade-in">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 flex-shrink-0">
+                <XCircle size={20} />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-[#F2F1ED]">Cancelar assinatura do Trajetta Pro?</h3>
+                <p className="text-xs text-[#8E9499] leading-relaxed">
+                  Sentiremos sua falta, mas respeitamos totalmente seu momento. Sem perguntas chatas ou burocracia.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-white/3 border border-white/6 space-y-2 text-xs text-[#8E9499]">
+              <div className="flex items-start gap-2">
+                <Check size={14} className="text-[#B8FF00] flex-shrink-0 mt-0.5" />
+                <span><strong>Zero cobranças futuras:</strong> nenhuma nova cobrança será realizada no seu cartão.</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <Check size={14} className="text-[#B8FF00] flex-shrink-0 mt-0.5" />
+                <span><strong>Acesso mantido:</strong> você continuará com o Pro até o término do ciclo atual já contratado.</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <Check size={14} className="text-[#B8FF00] flex-shrink-0 mt-0.5" />
+                <span><strong>Seus dados continuam seus:</strong> suas metas, hábitos e histórico nunca serão deletados.</span>
+              </div>
+            </div>
+
+            {cancelFeedback && (
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold text-center">
+                {cancelFeedback}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-white/8">
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={cancelLoading}
+                onClick={() => setShowCancelModal(false)}
+                className="text-xs"
+              >
+                Voltar
+              </Button>
+              <button
+                type="button"
+                disabled={cancelLoading}
+                onClick={handleConfirmCancel}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30 transition-all disabled:opacity-50"
+              >
+                {cancelLoading ? 'Cancelando...' : 'Confirmar Cancelamento'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Notification Preferences */}
       <div className="trajetta-card p-6 border border-white/8 space-y-4">

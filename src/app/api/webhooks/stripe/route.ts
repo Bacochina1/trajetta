@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Assinatura inválida' }, { status: 400 });
       }
     } else {
-      // Direct JSON parsing if webhook secret is not yet registered
+      // Direct JSON parsing if webhook secret is not yet configured
       try {
         event = JSON.parse(rawBody);
       } catch (err) {
@@ -37,8 +37,6 @@ export async function POST(req: NextRequest) {
         const customerEmail = session.customer_details?.email || session.customer_email;
         const userId = session.metadata?.userId;
         const planKey = session.metadata?.planKey || 'annual';
-        const subscriptionPlan =
-          session.metadata?.subscriptionPlan || (planKey === 'monthly' ? 'pro_monthly' : planKey === 'founding' ? 'founding' : 'pro_annual');
 
         if (customerEmail) {
           try {
@@ -60,11 +58,21 @@ export async function POST(req: NextRequest) {
               to: customerEmail,
               subject: 'Sua assinatura Trajetta Pro está confirmada! 🚀',
               html: `
-                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
-                  <h1 style="color: #060709;">Bem-vindo ao Trajetta Pro!</h1>
-                  <p>Sua assinatura foi ativada com sucesso.</p>
-                  <p>Agora você tem acesso irrestrito às 4 áreas da vida, AI Trajetta ilimitada e planejamento semanal de alta performance.</p>
-                  <p><a href="https://trajettacompany.com.br/app" style="display: inline-block; background-color: #B8FF00; color: #060709; font-weight: bold; padding: 12px 24px; text-decoration: none; border-radius: 8px;">Acessar Minha Trajetória</a></p>
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0D0F10; color: #F2F1ED; padding: 32px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="margin-bottom: 24px;">
+                    <span style="font-size: 11px; font-weight: 800; color: #B8FF00; text-transform: uppercase; letter-spacing: 0.15em;">TRAJETTA • CONFIRMAÇÃO</span>
+                  </div>
+                  <h1 style="font-size: 24px; font-weight: 800; margin: 0 0 16px 0; color: #F2F1ED;">Bem-vindo ao Trajetta Pro</h1>
+                  <p style="font-size: 14px; line-height: 1.6; color: #8E9499; margin: 0 0 20px 0;">
+                    Sua assinatura foi ativada com sucesso. Você tem acesso irrestrito às 4 áreas da vida, AI Trajetta ilimitada e planejamento semanal de alto impacto.
+                  </p>
+                  <div style="background: #14181F; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 24px;">
+                    <p style="font-size: 12px; color: #C9CDD1; margin: 0 0 6px 0;"><strong>Garantia & Transparência:</strong></p>
+                    <p style="font-size: 12px; color: #8E9499; margin: 0;">Você pode gerenciar faturas ou cancelar sua assinatura a qualquer momento em 1 clique direto no menu do seu perfil, sem nenhum constrangimento.</p>
+                  </div>
+                  <a href="https://trajettacompany.com.br/app" style="display: inline-block; background: #B8FF00; color: #060709; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px;">
+                    Acessar Minha Trajetória →
+                  </a>
                 </div>
               `,
             });
@@ -75,10 +83,88 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      // NOVO: Envio automático de Recibo / Fatura detalhada com link do PDF oficial
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object;
+        const customerEmail = invoice.customer_email;
+        const invoicePdf = invoice.invoice_pdf;
+        const hostedInvoiceUrl = invoice.hosted_invoice_url;
+        const amountPaid = ((invoice.amount_paid || 0) / 100).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: invoice.currency?.toUpperCase() || 'BRL',
+        });
+        const invoiceNumber = invoice.number || invoice.id;
+
+        if (customerEmail) {
+          try {
+            await sendEmail({
+              to: customerEmail,
+              subject: `Recibo de Pagamento Trajetta #${invoiceNumber}`,
+              html: `
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0D0F10; color: #F2F1ED; padding: 32px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="margin-bottom: 20px;">
+                    <span style="font-size: 11px; font-weight: 800; color: #B8FF00; text-transform: uppercase; letter-spacing: 0.15em;">TRAJETTA • RECIBO OFICIAL</span>
+                  </div>
+                  <h1 style="font-size: 22px; font-weight: 800; margin: 0 0 12px 0; color: #F2F1ED;">Pagamento Confirmado</h1>
+                  <p style="font-size: 14px; line-height: 1.6; color: #8E9499; margin: 0 0 20px 0;">
+                    Confirmamos o recebimento do seu pagamento referente à sua assinatura no Trajetta.
+                  </p>
+
+                  <div style="background: #14181F; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 24px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                      <tr>
+                        <td style="color: #8E9499; padding: 6px 0;">Fatura:</td>
+                        <td style="color: #F2F1ED; font-weight: 600; text-align: right; font-family: monospace;">${invoiceNumber}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #8E9499; padding: 6px 0;">Valor Pago:</td>
+                        <td style="color: #B8FF00; font-weight: 800; text-align: right; font-size: 15px;">${amountPaid}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #8E9499; padding: 6px 0;">Status:</td>
+                        <td style="color: #38EF7D; font-weight: 600; text-align: right;">Pago com Sucesso ✓</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                    ${
+                      invoicePdf
+                        ? `<a href="${invoicePdf}" style="display: inline-block; background: #1F2328; color: #F2F1ED; font-weight: 600; font-size: 12px; padding: 12px 20px; text-decoration: none; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-right: 10px;">Baixar Fatura em PDF</a>`
+                        : ''
+                    }
+                    ${
+                      hostedInvoiceUrl
+                        ? `<a href="${hostedInvoiceUrl}" style="display: inline-block; background: #B8FF00; color: #060709; font-weight: 700; font-size: 12px; padding: 12px 20px; text-decoration: none; border-radius: 8px;">Visualizar Recibo Online</a>`
+                        : ''
+                    }
+                  </div>
+
+                  <p style="font-size: 11px; color: #8E9499; line-height: 1.5; margin: 20px 0 0 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
+                    Você pode alterar seu método de pagamento ou cancelar sua assinatura a qualquer momento através do seu painel no aplicativo em Configurações > Assinatura.
+                  </p>
+                </div>
+              `,
+            });
+          } catch (e) {
+            console.error('Error sending invoice receipt email:', e);
+          }
+        }
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const sub = event.data.object;
+        const customerId = sub.customer;
+        const status = sub.status;
+        console.log(`Assinatura atualizada: ${sub.id}, status: ${status}, cancel_at_period_end: ${sub.cancel_at_period_end}`);
+        break;
+      }
+
       case 'customer.subscription.deleted': {
         const subscription = event.data.object;
         const customerId = subscription.customer;
-        console.log(`Assinatura cancelada para o cliente: ${customerId}`);
+        console.log(`Assinatura cancelada definitivamente para o cliente: ${customerId}`);
         break;
       }
 
