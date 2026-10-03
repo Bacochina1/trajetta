@@ -41,7 +41,7 @@ export function Footer() {
               <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
                 <img
                   src="/trajetta-logo-transparent.png"
-                  alt="Trajetta Logo"
+                  alt="Trajetta — Sistema Pessoal de Evolução e Hábitos"
                   className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.25)]"
                 />
               </div>

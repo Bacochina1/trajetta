@@ -26,7 +26,7 @@ export function Navbar() {
             <span className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white group-hover:scale-105 transition-transform flex-shrink-0">
               <img
                 src="/trajetta-logo-transparent.png"
-                alt="Trajetta Logo"
+                alt="Trajetta — Aplicativo de Metas e Hábitos"
                 className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
               />
             </span>

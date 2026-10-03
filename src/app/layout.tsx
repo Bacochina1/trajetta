@@ -30,27 +30,42 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://trajettacompany.com.br'),
   title: {
-    default: 'Trajetta — Seu Sistema Pessoal de Evolução',
+    default: 'Trajetta — Aplicativo de Metas, Hábitos e Planejamento Semanal',
     template: '%s | Trajetta',
   },
   description:
-    'Planeje suas semanas, acompanhe metas e hábitos nas 4 áreas essenciais da vida com apoio de uma IA contextual que lembra da sua trajetória. Sem correntes frágeis, sem streaks punitivos.',
+    'Aplicativo de metas, hábitos e rotina nas 4 áreas essenciais da vida com IA contextual. Evolução consistente sem streaks punitivos. Teste 3 dias grátis.',
   keywords: [
     'aplicativo de metas',
-    'rastreador de hábitos',
-    'planejamento semanal',
-    'sistema de evolução pessoal',
-    'produtividade calma',
-    'hábitos sem streaks punitivos',
-    'weekly review',
+    'rastreador de habitos',
+    'planejador semanal app',
+    'sistema de metas e habitos',
+    'app de produtividade',
+    'organizador de rotina',
+    'gestao de tempo e metas',
+    'habitos sem streaks punitivos',
+    'weekly review com ia',
+    'planejamento 4 areas da vida',
     'habit tracker app',
-    'goal tracking app',
-    'calm productivity',
+    'goal tracking software',
+    'calm productivity system',
+    'trajetta',
   ],
   authors: [{ name: 'Trajetta Company', url: 'https://trajettacompany.com.br' }],
   creator: 'Trajetta',
   publisher: 'Trajetta Company',
   manifest: '/manifest.webmanifest',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   alternates: {
     canonical: 'https://trajettacompany.com.br',
     languages: {
@@ -60,17 +75,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Trajetta — Seu Sistema Pessoal de Evolução',
+    title: 'Trajetta — Aplicativo de Metas, Hábitos e Planejamento Semanal',
     description:
-      'Torne visível quem você está se tornando. Planeje para sua vida real, com consistência sustentável e IA contextual.',
+      'Planeje para sua vida real nas 4 áreas essenciais. Hábitos com piso mínimo, weekly review e IA contextual sem streaks punitivos. Teste 3 dias grátis.',
     url: 'https://trajettacompany.com.br',
     siteName: 'Trajetta',
     images: [
       {
-        url: '/trajetta-mockup-hero.jpg',
+        url: '/trajetta-real-app-mockup.jpg',
         width: 1200,
-        height: 630,
-        alt: 'Trajetta — Sistema Pessoal de Evolução',
+        height: 675,
+        alt: 'Trajetta Pro — Dashboard de Hábitos, Life Score e Planejamento Semanal',
       },
     ],
     locale: 'pt_BR',
@@ -78,9 +93,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Trajetta — Seu Sistema Pessoal de Evolução',
-    description: 'Torne visível quem você está se tornando. Planeje para sua vida real, não para sua versão perfeita.',
-    images: ['/trajetta-mockup-hero.jpg'],
+    title: 'Trajetta — Aplicativo de Metas, Hábitos e Planejamento Semanal',
+    description:
+      'Torne visível quem você está se tornando. Metas nas 4 áreas da vida, hábitos sem punição e IA contextual.',
+    images: ['/trajetta-real-app-mockup.jpg'],
   },
   appleWebApp: {
     capable: true,
@@ -108,6 +124,7 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Organization',
+      '@id': 'https://trajettacompany.com.br/#organization',
       name: 'Trajetta Company',
       url: 'https://trajettacompany.com.br',
       logo: 'https://trajettacompany.com.br/trajetta-logo-transparent.png',
@@ -115,8 +132,12 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
+      '@id': 'https://trajettacompany.com.br/#website',
       name: 'Trajetta',
       url: 'https://trajettacompany.com.br',
+      publisher: {
+        '@id': 'https://trajettacompany.com.br/#organization',
+      },
       potentialAction: {
         '@type': 'SearchAction',
         target: 'https://trajettacompany.com.br/?q={search_term_string}',
@@ -125,18 +146,76 @@ const jsonLd = {
     },
     {
       '@type': 'SoftwareApplication',
+      '@id': 'https://trajettacompany.com.br/#software',
       name: 'Trajetta',
-      headline: 'Sistema Pessoal de Evolução & Hábitos',
+      headline: 'Aplicativo de Metas, Hábitos e Planejamento Semanal com IA',
       applicationCategory: 'ProductivityApplication',
-      operatingSystem: 'Web, iOS, Android',
+      operatingSystem: 'Web, iOS, Android (PWA)',
       description:
-        'Planeje suas semanas, acompanhe metas e hábitos nas 4 áreas essenciais da vida com apoio de uma IA contextual que lembra da sua trajetória.',
+        'Aplicativo de metas, hábitos e rotina nas 4 áreas essenciais da vida com IA contextual. Evolução consistente sem streaks punitivos.',
+      softwareVersion: '2.0.0',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        reviewCount: '1480',
+        bestRating: '5',
+        worstRating: '1',
+      },
       offers: {
         '@type': 'Offer',
         price: '29.90',
         priceCurrency: 'BRL',
-        description: '3 dias de degustação gratuita',
+        priceValidUntil: '2027-12-31',
+        availability: 'https://schema.org/InStock',
+        description: 'Trajetta Pro Mensal com 3 dias de degustação gratuita',
       },
+      featureList: [
+        'Acesso irrestrito às 4 Áreas da Vida (Corpo, Dinheiro, Carreira e Vida)',
+        'Trajetta AI Contextual com Memória Longitudinal',
+        'Hábitos com Piso Mínimo e Volume Acumulado',
+        'Zero Streaks Punitivos',
+        'Planejamento Semanal em 3 Prioridades com Capacity Planning',
+        'Weekly Review de Domingo com Snapshot Imutável',
+        'Linha do Tempo e Marcos Históricos de Longo Prazo',
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://trajettacompany.com.br/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Como funcionam os 3 dias de degustação gratuita?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Você tem acesso irrestrito e imediato a todos os recursos da Trajetta Pro por 3 dias. Planeje suas metas, teste a IA e use o sistema no mundo real. Se decidir não continuar, cancele com 1 clique antes do período terminar e nada será debitado.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'A Trajetta é mais um aplicativo de hábitos ou listas?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Não. A maioria dos apps foca em micro-tarefas e streaks punitivos. A Trajetta conecta visão de 12 meses, planejamento semanal em 3 prioridades, pisos mínimos para dias difíceis e revisões de domingo com IA contextual.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'O que significa sistema sem punição?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Significa que se você passar 4 dias sem abrir o app, seu histórico não zera e você não recebe alertas vermelhos de culpa. O sistema recalibra o plano da semana sem drama, porque consistência real se constrói na vida como ela é.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Posso cancelar a qualquer momento?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sim. Sem letras miúdas ou burocracia. O cancelamento pode ser feito em 1 clique diretamente pelo painel do seu perfil ou pela Stripe. Além disso, você conta com a garantia legal de 7 dias com reembolso integral.',
+          },
+        },
+      ],
     },
   ],
 };

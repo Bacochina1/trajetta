@@ -26,7 +26,9 @@ export function HeroSection() {
         {/* 4K Rendered Monumental Portal & Trajectory Backdrop */}
         <img
           src="/trajetta-hero-bg-4k.jpg"
-          alt="Trajetta Portal Monumental"
+          alt="Trajetta — Aplicativo de Metas, Hábitos e Planejamento Semanal com IA"
+          loading="eager"
+          fetchPriority="high"
           className="absolute inset-0 w-full h-full object-cover object-[78%_center] sm:object-center opacity-90 pointer-events-none"
         />
 
