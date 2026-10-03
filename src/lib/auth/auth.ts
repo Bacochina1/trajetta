@@ -57,7 +57,7 @@ export async function getSessionUser() {
 
     try {
       await ensureDbReady();
-      let user = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: payload.userId },
         select: {
           id: true,
@@ -70,41 +70,17 @@ export async function getSessionUser() {
         },
       });
 
-      if (!user && payload.email) {
-        user = await prisma.user.create({
-          data: {
-            id: payload.userId,
-            email: payload.email,
-            name: payload.name || 'Membro',
-            passwordHash: '$2b$10$ppLmRuMDdS4U/0jKVwao2uQctVGLP/8sQgfQGnLpHdWqdBjqA6CKq',
-            role: payload.role || 'USER',
-          },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            role: true,
-            avatar: true,
-            subscriptionStatus: true,
-            createdAt: true,
-          },
-        });
+      // If user exists and email matches the cryptographically signed JWT email
+      if (user && user.email.toLowerCase() === payload.email.toLowerCase()) {
+        return user;
       }
 
-      if (user) return user;
+      // If user not found in DB or email mismatch, token is invalid/revoked
+      return null;
     } catch (dbErr) {
-      console.warn('[Auth Session] Database check notice:', dbErr);
+      console.warn('[Auth Session] Database check error:', dbErr);
+      return null;
     }
-
-    // Fallback: Use verified and cryptographically signed JWT payload
-    return {
-      id: payload.userId,
-      email: payload.email,
-      name: payload.name,
-      role: payload.role,
-      avatar: null,
-      createdAt: new Date(),
-    };
   } catch {
     return null;
   }

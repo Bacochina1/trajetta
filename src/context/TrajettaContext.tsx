@@ -228,6 +228,22 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         if (data?.ok && data.user) {
           setIsAuthenticated(true);
           localStorage.setItem('trajetta_auth_session', 'true');
+
+          // Check if local cache belongs to another user
+          const currentStored = localStorage.getItem('trajetta_store_v2');
+          if (currentStored) {
+            try {
+              const parsed = JSON.parse(currentStored);
+              if (parsed.user?.email && parsed.user.email.toLowerCase() !== data.user.email.toLowerCase()) {
+                localStorage.removeItem('trajetta_store_v2');
+                setGoals([]);
+                setHabits([]);
+                setJourneys([]);
+                setTimeline([]);
+              }
+            } catch {}
+          }
+
           setUser((prev) => ({
             ...prev,
             name: data.user.name || prev.name,
@@ -241,14 +257,14 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         } else {
           // Backend expressly rejected or has no active session: strictly lock out!
           localStorage.removeItem('trajetta_auth_session');
+          localStorage.removeItem('trajetta_store_v2');
           setIsAuthenticated(false);
+          setUser(INITIAL_USER);
         }
       })
       .catch(() => {
         if (!isMounted) return;
-        // In case of network error, only allow if previously verified
-        const localAuth = localStorage.getItem('trajetta_auth_session');
-        setIsAuthenticated(localAuth === 'true');
+        setIsAuthenticated(false);
       })
       .finally(() => {
         if (isMounted) {
@@ -263,6 +279,21 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
 
   const login = (userData?: any) => {
     if (userData) {
+      // If logging in as a different user than cached in localStorage, clear cached client data
+      const currentStored = localStorage.getItem('trajetta_store_v2');
+      if (currentStored) {
+        try {
+          const parsed = JSON.parse(currentStored);
+          if (parsed.user?.email && parsed.user.email.toLowerCase() !== (userData.email || '').toLowerCase()) {
+            localStorage.removeItem('trajetta_store_v2');
+            setGoals([]);
+            setHabits([]);
+            setJourneys([]);
+            setTimeline([]);
+          }
+        } catch {}
+      }
+
       setUser((prev) => ({
         ...prev,
         name: userData.name || prev.name,
@@ -274,6 +305,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     }
     localStorage.setItem('trajetta_auth_session', 'true');
     setIsAuthenticated(true);
+    loadBackendData();
   };
 
   const logout = async () => {
@@ -283,7 +315,13 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
     localStorage.removeItem('trajetta_auth_session');
+    localStorage.removeItem('trajetta_store_v2');
     setIsAuthenticated(false);
+    setUser(INITIAL_USER);
+    setGoals([]);
+    setHabits([]);
+    setJourneys([]);
+    setTimeline([]);
   };
 
   // Load from LocalStorage on mount

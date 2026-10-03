@@ -32,7 +32,8 @@ export async function sendEmail({ to, subject, html, userId }: SendEmailOptions)
         const err = await res.text();
         console.warn(`[Resend Email Warning for ${to}]: ${err}`);
 
-        // If domain is unverified, fallback to onboarding@resend.dev
+        // If domain is unverified, attempt fallback to onboarding@resend.dev
+        let lastErr = err;
         if (fromEmail !== 'Trajetta <onboarding@resend.dev>' && (err.includes('domain is not verified') || err.includes('not have permission') || err.includes('domain'))) {
           const retryRes = await fetch('https://api.resend.com/emails', {
             method: 'POST',
@@ -51,13 +52,14 @@ export async function sendEmail({ to, subject, html, userId }: SendEmailOptions)
             const rData = await retryRes.json();
             return { success: true, id: rData.id };
           }
+          lastErr = await retryRes.text();
         }
 
-        // In Resend sandbox mode, if the recipient is external, Resend rejects with "only send testing emails".
-        // Forward the actual email to the verified owner (companytrajetta@gmail.com) so the founder receives the real email!
-        if (err.includes('only send testing emails') || err.includes('validation_error')) {
+        // In Resend sandbox mode, if the domain is not verified, Resend only allows sending to the account owner (companytrajetta@gmail.com).
+        // Forward the actual email to the verified owner so the founder always receives the notification and lead details!
+        if (lastErr.includes('only send testing emails') || lastErr.includes('validation_error') || lastErr.includes('domain is not verified')) {
           const ownerEmail = 'companytrajetta@gmail.com';
-          const sandboxSubject = `[SANDBOX PARA: ${to}] ${subject}`;
+          const sandboxSubject = `[TRAJETTA NOTIFICAÇÃO: ${to}] ${subject}`;
           const sandboxHtml = `
             <div style="background-color: #B8FF00; color: #0D0F10; padding: 12px 16px; font-family: monospace; font-size: 11px; font-weight: bold; border-radius: 8px; margin-bottom: 20px;">
               ⚡ AVISO RESEND SANDBOX: Este e-mail foi entregue à conta titular (${ownerEmail}) porque o domínio oficial ainda está aguardando verificação de DNS no Resend. Destinatário original: ${to}
@@ -72,7 +74,7 @@ export async function sendEmail({ to, subject, html, userId }: SendEmailOptions)
               Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-              from: fromEmail,
+              from: 'Trajetta <onboarding@resend.dev>',
               to: [ownerEmail],
               subject: sandboxSubject,
               html: sandboxHtml,
