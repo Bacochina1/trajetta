@@ -7,7 +7,7 @@ import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 export function FinalCtaSection() {
   const handleCta = () => {
-    trackMarketingEvent('hero_cta_clicked', { location: 'final_cta', text: 'Começar 14 dias grátis' });
+    trackMarketingEvent('hero_cta_clicked', { location: 'final_cta', text: 'Começar 3 dias grátis' });
   };
 
   return (
@@ -30,13 +30,13 @@ export function FinalCtaSection() {
             onClick={handleCta}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_35px_rgba(184,255,0,0.35)] transition-all transform active:scale-95"
           >
-            <span>Começar 14 dias grátis</span>
+            <span>Começar 3 dias grátis</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="pt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#8E9499]">
-          <span>14 dias de teste completo</span>
+          <span>3 dias de degustação gratuita</span>
           <span>•</span>
           <span>Sem cartão no início</span>
           <span>•</span>

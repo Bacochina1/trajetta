@@ -88,7 +88,7 @@ export function TimelineSection() {
             onClick={() => trackMarketingEvent('hero_cta_clicked', { location: 'timeline_section' })}
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#B8FF00] hover:underline"
           >
-            <span>Comece a registrar sua linha do tempo com 14 dias grátis</span>
+            <span>Comece a registrar sua linha do tempo com 3 dias grátis</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

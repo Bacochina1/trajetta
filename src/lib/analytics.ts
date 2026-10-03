@@ -109,6 +109,8 @@ export type MarketingEventName =
   | 'pricing_viewed'
   | 'plan_selected'
   | 'trial_started'
+  | 'trial_register_attempt'
+  | 'trial_register_success'
   | 'signup_started'
   | 'signup_completed'
   | 'waitlist_submit_attempt'

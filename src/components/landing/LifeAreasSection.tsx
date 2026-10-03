@@ -301,10 +301,10 @@ export function LifeAreasSection() {
           </div>
 
           <a
-            href="#waitlist"
-            className="w-full inline-flex items-center justify-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5 text-center"
+            href="#planos"
+            className="w-full inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>ENTRAR NA LISTA VIP</span>
+            <span>TESTAR 3 DIAS GRÁTIS</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -415,10 +415,10 @@ export function LifeAreasSection() {
             </div>
 
             <a
-              href="#waitlist"
-              className="inline-flex items-center justify-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5 text-center"
+              href="#planos"
+              className="inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
             >
-              <span>ENTRAR NA LISTA VIP</span>
+              <span>TESTAR 3 DIAS GRÁTIS</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>

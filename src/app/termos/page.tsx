@@ -110,10 +110,10 @@ export default function TermosPage() {
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              3. Período de Teste Gratuito (Trial de 14 Dias)
+              3. Período de Degustação Gratuita (3 Dias de Teste)
             </h2>
             <p>
-              Os planos com período de teste concedem 14 dias de experiência completa do Trajetta Pro sem cobrança antecipada. Você pode experimentar todas as funcionalidades sem risco. Caso cancele antes do 14º dia, nada será debitado.
+              Os planos com período de degustação concedem 3 dias de experiência completa do Trajetta Pro sem cobrança antecipada. Você pode experimentar todas as funcionalidades sem risco. Caso cancele antes do 3º dia, nada será debitado.
             </p>
           </section>
 

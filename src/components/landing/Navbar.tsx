@@ -42,7 +42,7 @@ export function Navbar() {
             <a className="hover:text-white transition-colors duration-200" href="#areas">4 Áreas</a>
             <a className="hover:text-white transition-colors duration-200" href="#metodo">O Método</a>
             <a className="hover:text-[#B8FF00] font-semibold transition-colors duration-200" href="#planos">Planos (3 Dias Grátis)</a>
-            <a className="hover:text-white transition-colors duration-200" href="#waitlist">Lista VIP</a>
+            <a className="hover:text-white transition-colors duration-200" href="#faq">Dúvidas Frequentes</a>
           </nav>
 
           {/* Right Action: CTA, Language & Mobile Hamburger */}

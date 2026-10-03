@@ -135,7 +135,7 @@ const jsonLd = {
         '@type': 'Offer',
         price: '29.90',
         priceCurrency: 'BRL',
-        description: '14 dias de teste grátis',
+        description: '3 dias de degustação gratuita',
       },
     },
   ],

@@ -68,7 +68,7 @@ function InnerLandingContent() {
         {/* 7. Card de Venda com 3 Dias de Degustação Gratuita (Trial) */}
         <PricingSection />
 
-        {/* 8. Lista VIP & Acesso Antecipado */}
+        {/* 8. Formulário de Ativação Rápida com 3 Dias Grátis */}
         <WaitlistSection />
 
         {/* 8. Perguntas Frequentes */}

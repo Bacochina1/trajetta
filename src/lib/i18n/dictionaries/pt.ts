@@ -23,7 +23,7 @@ export const pt: Dictionary = {
     pricing: 'Planos',
     faq: 'FAQ',
     accessApp: 'Acessar App',
-    startTrial: 'Testar 14 Dias Grátis',
+    startTrial: 'Testar 3 Dias Grátis',
   },
   hero: {
     badge: 'MÉTODO DE EVOLUÇÃO NÃO-PUNITIVO',
@@ -31,7 +31,7 @@ export const pt: Dictionary = {
     headlineHighlight: 'se tornando.',
     headlineEnd: '',
     subheadline: 'O sistema pessoal de metas, hábitos e reflexão que planeja para sua vida real — sem correntes frágeis, sem streaks punitivos e com apoio de uma IA que aprende com seus ciclos.',
-    ctaPrimary: 'Começar 14 dias grátis',
+    ctaPrimary: 'Começar 3 dias grátis',
     ctaSecondary: 'Ver como funciona',
     pill1: 'Piso Mínimo em dias difíceis',
     pill2: 'Retomada sem culpa nem zerar',
@@ -83,7 +83,7 @@ export const pt: Dictionary = {
   },
   pricing: {
     badge: 'INVESTIMENTO NA SUA EVOLUÇÃO',
-    title: 'Comece agora com 14 dias grátis.',
+    title: 'Comece agora com 3 dias de degustação gratuita.',
     subtitle: 'Experimente a experiência completa sem fricção. Cancele quando quiser diretamente no painel.',
     monthly: 'Mensal',
     annual: 'Anual',
@@ -94,7 +94,7 @@ export const pt: Dictionary = {
     annualPlanDesc: 'Um ano inteiro de evolução contínua pelo melhor custo-benefício.',
     foundingTitle: 'Programa de Membros Fundadores',
     foundingSubtitle: 'Condição histórica para exploradores pioneiros.',
-    ctaTrial: 'Começar 14 dias grátis',
+    ctaTrial: 'Começar 3 dias grátis',
     guaranteeNotice: 'Garantia incondicional de 7 dias (CDC) e cancelamento em 1 clique a qualquer momento.',
   },
   app: {

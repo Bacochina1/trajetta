@@ -111,10 +111,10 @@ export default function EnglishTermsPage() {
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              3. 14-Day Free Trial
+              3. 3-Day Free Trial
             </h2>
             <p>
-              Trial plans include 14 days of unrestricted access to Trajetta Pro without upfront payment. If you cancel before day 14, zero charges apply.
+              Trial plans include 3 days of unrestricted access to Trajetta Pro without upfront payment. If you cancel before day 3, zero charges apply.
             </p>
           </section>
 

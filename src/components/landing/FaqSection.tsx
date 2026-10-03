@@ -9,8 +9,8 @@ export function FaqSection() {
 
   const faqs = [
     {
-      q: 'Quando vou receber meu convite de acesso?',
-      a: 'Liberamos novos acessos em pequenos lotes graduais. Ao se cadastrar na Lista VIP, sua posição fica registrada e você receberá um e-mail com seu link exclusivo assim que a próxima turma abrir.',
+      q: 'Como funcionam os 3 dias de degustação gratuita?',
+      a: 'Você tem acesso irrestrito e imediato a todos os recursos da Trajetta Pro por 3 dias. Planeje suas metas, teste a IA e use o sistema no mundo real. Se decidir não continuar, cancele com 1 clique antes do período terminar e nada será debitado.',
     },
     {
       q: 'A Trajetta é mais um aplicativo de hábitos ou listas?',
@@ -21,12 +21,12 @@ export function FaqSection() {
       a: 'Significa que se você passar 4 dias sem abrir o app, seu histórico não zera e você não recebe alertas vermelhos de culpa. O sistema recalibra o plano da semana sem drama, porque consistência real se constrói na vida como ela é.',
     },
     {
-      q: 'Quem entrar na Lista VIP terá condições especiais?',
-      a: 'Sim. Os membros cadastrados na lista de espera terão prioridade na fila e acesso à condição vitalícia de Membro Fundador, com valor de assinatura protegido contra reajustes futuros.',
+      q: 'Posso cancelar a qualquer momento?',
+      a: 'Sim. Sem letras miúdas ou burocracia. O cancelamento pode ser feito em 1 clique diretamente pelo painel do seu perfil ou pela Stripe. Além disso, você conta com a garantia legal de 7 dias com reembolso integral.',
     },
     {
       q: 'Como funciona a Trajetta AI?',
-      a: 'A Trajetta AI utiliza tecnologia Google Gemini Flash combinada com um motor de memória que aprende o seu histórico. Ela não cospe clichês motivacionais; ela lê seus ciclos e sugere ajustes objetivos no ritmo da sua rotina.',
+      a: 'A Trajetta AI utiliza tecnologia de ponta combinada com um motor de memória que aprende o seu histórico. Ela não cospe clichês motivacionais; ela lê seus ciclos e sugere ajustes objetivos no ritmo da sua rotina.',
     },
     {
       q: 'Meus dados e reflexões pessoais são privados?',
@@ -57,14 +57,14 @@ export function FaqSection() {
             Tudo o que você <span className="text-neutral-500">precisa saber</span>
           </h2>
           <p className="text-xs xs:text-sm text-neutral-400 font-light leading-relaxed mb-6 sm:mb-8">
-            Dúvidas claras e diretas sobre o funcionamento da lista VIP, a metodologia sem punição e a segurança dos seus dados.
+            Dúvidas claras e diretas sobre o funcionamento dos 3 dias de degustação, a metodologia sem punição e a segurança dos seus dados.
           </p>
 
           <a
-            href="#waitlist"
-            className="w-full xs:w-auto inline-flex items-center justify-center space-x-2 bg-white hover:bg-neutral-100 text-black text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition-all active:scale-95 shadow-lg shadow-white/5 text-center"
+            href="#planos"
+            className="w-full xs:w-auto inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>ENTRAR NA LISTA VIP</span>
+            <span>COMEÇAR 3 DIAS GRÁTIS</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>

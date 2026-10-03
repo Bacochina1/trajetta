@@ -15,13 +15,18 @@ export function Footer() {
     e.preventDefault();
     if (!quickEmail || !quickEmail.includes('@')) return;
     try {
-      await fetch('/api/waitlist', {
+      setQuickSubmitted(true);
+      fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: quickEmail, name: 'Lead Rodapé' }),
-      });
-      setQuickSubmitted(true);
-    } catch {}
+      }).catch(() => {});
+      setTimeout(() => {
+        window.location.href = `/register?email=${encodeURIComponent(quickEmail)}`;
+      }, 700);
+    } catch {
+      window.location.href = '/register';
+    }
   };
 
   return (
@@ -47,18 +52,18 @@ export function Footer() {
               Seu sistema pessoal de evolução. Direção clara de longo prazo, ciclos semanais sem punição e acompanhamento lúcido.
             </p>
 
-            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest mb-2">
-              RECEBER AVISOS DO PRÓXIMO LOTE
+            <span className="font-mono text-[10px] text-[#B8FF00] uppercase tracking-widest mb-2 font-bold">
+              EXPERIMENTAR 3 DIAS GRÁTIS
             </span>
 
             {/* Subscribe Form */}
             {quickSubmitted ? (
               <div className="flex items-center gap-2 text-xs font-mono text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/20 rounded-lg px-3 py-2 w-full max-w-sm">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                <span>E-mail cadastrado na Lista VIP!</span>
+                <span>Redirecionando para seu teste gratuito...</span>
               </div>
             ) : (
-              <form onSubmit={handleQuickSubmit} className="flex items-center bg-[#0d1015] border border-white/15 rounded-lg p-1 w-full max-w-sm focus-within:border-white/40 transition-colors">
+              <form onSubmit={handleQuickSubmit} className="flex items-center bg-[#0d1015] border border-white/15 rounded-lg p-1 w-full max-w-sm focus-within:border-[#B8FF00]/60 transition-colors">
                 <input
                   type="email"
                   required
@@ -69,9 +74,9 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="bg-white hover:bg-neutral-200 text-black text-[10px] font-bold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
+                  className="bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-[10px] font-extrabold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
                 >
-                  CADASTRAR
+                  TESTAR AGORA
                 </button>
               </form>
             )}
@@ -89,7 +94,7 @@ export function Footer() {
                 <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos Semanais</a></li>
                 <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas da Vida</a></li>
                 <li><a className="hover:text-white transition-colors" href="#metodo">O Método</a></li>
-                <li><a className="hover:text-[#B8FF00] transition-colors" href="#waitlist">Lista VIP</a></li>
+                <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">Planos & Degustação (3 Dias)</a></li>
                 <li><a className="hover:text-white transition-colors" href="#faq">Perguntas Frequentes</a></li>
               </ul>
             </div>

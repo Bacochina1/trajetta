@@ -23,7 +23,7 @@ export const en: Dictionary = {
     pricing: 'Pricing',
     faq: 'FAQ',
     accessApp: 'Open App',
-    startTrial: 'Start 14-Day Free Trial',
+    startTrial: 'Start 3-Day Free Trial',
   },
   hero: {
     badge: 'NON-PUNITIVE GROWTH FRAMEWORK',
@@ -31,7 +31,7 @@ export const en: Dictionary = {
     headlineHighlight: 'becoming.',
     headlineEnd: '',
     subheadline: 'The personal system for goals, habits, and weekly reflection built for real life — no fragile streaks, no guilt trips, and powered by an AI that learns from your trajectory.',
-    ctaPrimary: 'Start 14-Day Free Trial',
+    ctaPrimary: 'Start 3-Day Free Trial',
     ctaSecondary: 'How it works',
     pill1: 'Minimum Floor on tough days',
     pill2: 'Guilt-free reset without losing progress',
@@ -83,7 +83,7 @@ export const en: Dictionary = {
   },
   pricing: {
     badge: 'INVESTMENT IN YOUR TRAJECTORY',
-    title: 'Start today with a 14-day free trial.',
+    title: 'Start today with a 3-day free trial.',
     subtitle: 'Experience the full ecosystem risk-free. Cancel with 1 click directly in your settings.',
     monthly: 'Monthly',
     annual: 'Annual',
@@ -94,7 +94,7 @@ export const en: Dictionary = {
     annualPlanDesc: 'A full year of deliberate compounding at our best daily rate.',
     foundingTitle: 'Founding Member Program',
     foundingSubtitle: 'Exclusive lifetime privilege for early pioneers.',
-    ctaTrial: 'Start 14-Day Free Trial',
+    ctaTrial: 'Start 3-Day Free Trial',
     guaranteeNotice: 'Full 7-day money-back guarantee and 1-click cancellation anytime in your dashboard.',
   },
   app: {

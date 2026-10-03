@@ -125,11 +125,11 @@ export async function GET(request: NextRequest) {
       try {
         sendEmail({
           to: email,
-          subject: 'Bem-vindo à Trajetta — Seu período de 14 dias começou',
+          subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou',
           html: `<div style="font-family:sans-serif; background:#060709; color:#F2F1ED; padding:32px; border-radius:12px;">
             <h2 style="color:#B8FF00;">Olá, ${name}!</h2>
             <p>Sua conta na Trajetta foi criada com sucesso via Google.</p>
-            <p>Você tem 14 dias de acesso completo ao Sistema Pessoal de Evolução.</p>
+            <p>Você tem 3 dias de degustação gratuita com acesso completo ao Sistema Pessoal de Evolução.</p>
             <p><a href="${protocol}://${host}/app" style="background:#B8FF00; color:#060709; padding:12px 24px; text-decoration:none; font-weight:bold; border-radius:8px; display:inline-block;">Acessar Meu Painel</a></p>
           </div>`,
         }).catch(() => {});
