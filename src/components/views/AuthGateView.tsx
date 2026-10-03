@@ -206,7 +206,7 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               disabled={loading}
               className="w-full h-11 mt-2 bg-[#B8FF00] hover:bg-[#a3e600] active:scale-[0.99] text-[#0D0F10] font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(184,255,0,0.2)] disabled:opacity-50"
             >
-              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Começar 3 Dias Grátis'}</span>
+              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Criar Conta no Sistema'}</span>
               <ArrowRight size={14} />
             </button>
 
@@ -216,7 +216,7 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               </div>
             ) : (
               <div className="pt-2 text-center text-[11px] text-[#8E9499] font-mono">
-                ✓ 3 dias de degustação sem necessidade de cartão de crédito
+                ✓ Cadastro rápido e sem necessidade de cartão
               </div>
             )}
           </form>

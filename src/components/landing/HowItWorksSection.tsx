@@ -151,7 +151,7 @@ export function HowItWorksSection() {
               href="#planos"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-extrabold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(184,255,0,0.25)] active:scale-95"
             >
-              <span>Testar 3 dias grátis agora</span>
+              <span>Começar no Trajetta Pro</span>
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>

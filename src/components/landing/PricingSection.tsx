@@ -63,11 +63,11 @@ export function PricingSection() {
           </div>
 
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#F2F1ED] tracking-tight [text-wrap:balance]">
-            Comece agora com 3 dias de <span className="text-[#B8FF00]">degustação gratuita</span>.
+            Invista na sua evolução com o <span className="text-[#B8FF00]">Trajetta Pro</span>.
           </h2>
 
           <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-xl mx-auto font-light [text-wrap:pretty]">
-            Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e sinta a clareza mental antes de qualquer cobrança. Cancele com 1 clique a qualquer momento.
+            Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e viva a clareza mental do seu sistema de vida. Cancele com 1 clique a qualquer momento.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export function PricingSection() {
             {/* Top Monumental Badge */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-[0_0_15px_rgba(184,255,0,0.4)] whitespace-nowrap flex items-center gap-1.5">
               <Sparkles size={13} className="fill-[#060709]" />
-              <span>3 Dias de Teste Gratuito Inclusos</span>
+              <span>Liberação Imediata • Acesso Completo</span>
             </div>
 
             {/* Plan Header & Pricing */}
@@ -111,7 +111,7 @@ export function PricingSection() {
                     <span className="text-xs font-mono text-[#8E9499]">/mês</span>
                   </div>
                   <p className="text-[11px] text-[#B8FF00] font-semibold mt-1">
-                    ✓ R$ 0,00 cobrado hoje • Cobrança somente no 4º dia se você amar
+                    ✓ Acesso imediato liberado logo após confirmação
                   </p>
                 </div>
 
@@ -158,7 +158,7 @@ export function PricingSection() {
                   </span>
                 ) : (
                   <>
-                    <span>Começar 3 dias grátis agora</span>
+                    <span>Assinar Trajetta Pro Agora</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

@@ -9,8 +9,8 @@ export function FaqSection() {
 
   const faqs = [
     {
-      q: 'Como funcionam os 3 dias de degustação gratuita?',
-      a: 'Você tem acesso irrestrito e imediato a todos os recursos da Trajetta Pro por 3 dias. Planeje suas metas, teste a IA e use o sistema no mundo real. Se decidir não continuar, cancele com 1 clique antes do período terminar e nada será debitado.',
+      q: 'Como funciona a ativação e liberação do Trajetta Pro?',
+      a: 'A liberação é instantânea. Assim que o pagamento de R$ 29,90/mês é confirmado com segurança via Stripe, você recebe suas credenciais e tem acesso imediato a todas as 4 áreas da vida, metas, hábitos com piso mínimo e IA ilimitada. Você conta com garantia legal incondicional de 7 dias com reembolso total se não amar.',
     },
     {
       q: 'A Trajetta é mais um aplicativo de hábitos ou listas?',
@@ -57,14 +57,14 @@ export function FaqSection() {
             Tudo o que você <span className="text-neutral-500">precisa saber</span>
           </h2>
           <p className="text-xs xs:text-sm text-neutral-400 font-light leading-relaxed mb-6 sm:mb-8">
-            Dúvidas claras e diretas sobre o funcionamento dos 3 dias de degustação, a metodologia sem punição e a segurança dos seus dados.
+            Dúvidas claras e diretas sobre o funcionamento do Trajetta Pro, a metodologia sem punição e a segurança dos seus dados.
           </p>
 
           <a
             href="#planos"
             className="w-full xs:w-auto inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>COMEÇAR 3 DIAS GRÁTIS</span>
+            <span>ASSINAR TRAJETTA PRO</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>

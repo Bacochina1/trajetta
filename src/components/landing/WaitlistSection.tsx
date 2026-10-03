@@ -79,7 +79,7 @@ export function WaitlistSection() {
         }).catch(() => {});
 
         trackMarketingEvent('trial_register_success', { email });
-        setSuccessMessage('Conta ativada com sucesso! Liberando seus 3 dias de degustação...');
+        setSuccessMessage('Conta ativada com sucesso! Liberando seu acesso ao sistema...');
 
         setTimeout(() => {
           window.location.href = '/app';
@@ -106,7 +106,7 @@ export function WaitlistSection() {
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse"></span>
-        <span className="text-[#B8FF00] font-semibold">Liberado • Degustação Gratuita de 3 Dias</span>
+        <span className="text-[#B8FF00] font-semibold">Liberado • Criação Imediata de Conta</span>
       </div>
 
       {/* Section Heading */}
@@ -115,7 +115,7 @@ export function WaitlistSection() {
           Comece agora mesmo <span className="text-[#B8FF00]">sem burocracia</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed">
-          Crie seu acesso imediato em 10 segundos para testar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental antes de qualquer compromisso financeiro.
+          Crie seu acesso imediato em 10 segundos para explorar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental e serenidade.
         </p>
       </div>
 
@@ -241,18 +241,18 @@ export function WaitlistSection() {
                   {loading ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 rounded-full border-2 border-[#060709] border-t-transparent animate-spin" />
-                      LIBERANDO SEU ACESSO...
+                      CRIANDO SUA CONTA...
                     </span>
                   ) : (
                     <>
-                      <span>COMEÇAR 3 DIAS GRÁTIS AGORA</span>
+                      <span>CRIAR MINHA CONTA AGORA</span>
                       <ArrowRight className="w-4 h-4 flex-shrink-0" />
                     </>
                   )}
                 </button>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-400 pt-1 gap-2">
-                  <span>✓ Sem necessidade de cartão agora</span>
+                  <span>✓ Cadastro seguro e instantâneo</span>
                   <span>
                     Já tem conta?{' '}
                     <Link href="/login" className="text-[#B8FF00] hover:underline font-semibold">
@@ -268,10 +268,10 @@ export function WaitlistSection() {
           <div className="lg:col-span-5 bg-[#0f131a] border border-white/10 rounded-2xl p-4 xs:p-5 sm:p-7 space-y-4">
             <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-white/10">
               <span className="font-mono text-xs text-neutral-300 uppercase tracking-wider font-semibold">
-                Degustação Pro Inclusa
+                Recursos do Sistema
               </span>
               <span className="text-[10px] font-mono text-[#B8FF00] bg-[#B8FF00]/15 px-2 py-0.5 rounded font-bold">
-                3 Dias Liberados
+                Acesso Liberado
               </span>
             </div>
 
@@ -312,9 +312,9 @@ export function WaitlistSection() {
         <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/20 transition-all">
           <div>
             <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">Garantia 01</span>
-            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">3 Dias de Teste Real</h3>
+            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">Consistência na Prática</h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Use na sua rotina real de segunda a domingo. Sinta o alívio de uma mente organizada e sem sobrecarga antes de qualquer cobrança.
+              Use na sua rotina real de segunda a domingo. Sinta o alívio de uma mente organizada e sem sobrecarga com foco na vida como ela é.
             </p>
           </div>
           <div className="pt-4 sm:pt-6 mt-3 sm:mt-4 border-t border-white/5 text-[11px] sm:text-xs font-mono text-neutral-500">

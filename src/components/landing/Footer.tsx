@@ -102,7 +102,7 @@ export function Footer() {
                 <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos Semanais</a></li>
                 <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas da Vida</a></li>
                 <li><a className="hover:text-white transition-colors" href="#metodo">O Método</a></li>
-                <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">Planos & Degustação (3 Dias)</a></li>
+                <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">Planos & Assinatura Pro</a></li>
                 <li><a className="hover:text-white transition-colors" href="#faq">Perguntas Frequentes</a></li>
               </ul>
             </div>

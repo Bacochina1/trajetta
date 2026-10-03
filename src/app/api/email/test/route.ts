@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         });
         break;
       case 'trial':
-        subject = 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou 🚀';
+        subject = 'Bem-vindo à Trajetta — Sua conta foi criada com sucesso 🚀';
         html = renderTrialWelcomeEmail({
           userName,
           email: recipient,

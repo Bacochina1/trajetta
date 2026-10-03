@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     // Send trial welcome email with access instructions
     sendEmail({
       to: cleanEmail,
-      subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou 🚀',
+      subject: 'Bem-vindo à Trajetta — Sua conta foi criada com sucesso 🚀',
       html: renderTrialWelcomeEmail({
         userName: user.name,
         email: cleanEmail,

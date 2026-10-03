@@ -586,14 +586,14 @@ export function renderNewsletterWelcomeEmail(email: string): string {
 
               <!-- Destaque do App -->
               <p style="font-size: 13px; color: #8E9499; margin: 0 0 20px 0; line-height: 1.5;">
-                Quer experimentar a plataforma completa agora mesmo? Você pode iniciar um teste gratuito de 3 dias sem compromisso:
+                Quer conhecer o sistema completo e evoluir suas semanas? Acesse a plataforma oficial:
               </p>
 
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 20px;">
                 <tr>
                   <td align="center">
                     <a href="https://trajettacompany.com.br/#planos" style="display: inline-block; background-color: #B8FF00; color: #060709; font-family: monospace; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; padding: 15px 32px; border-radius: 100px; box-shadow: 0 8px 20px rgba(184,255,0,0.25);">
-                      CONHECER TRAJETTA PRO (3 DIAS GRÁTIS) →
+                      CONHECER TRAJETTA PRO →
                     </a>
                   </td>
                 </tr>
@@ -630,7 +630,7 @@ export function renderTrialWelcomeEmail(data: {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bem-vindo à Trajetta — Degustação de 3 Dias Ativa</title>
+  <title>Bem-vindo à Trajetta — Sua Conta foi Criada com Sucesso</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #060709; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F2F1ED; -webkit-font-smoothing: antialiased;">
   <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #060709; padding: 40px 16px;">
@@ -658,7 +658,7 @@ export function renderTrialWelcomeEmail(data: {
                   </td>
                   <td align="right" style="vertical-align: middle;">
                     <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px;">
-                      ● 3 DIAS GRÁTIS
+                      ● CONTA ATIVA
                     </span>
                   </td>
                 </tr>
@@ -673,7 +673,7 @@ export function renderTrialWelcomeEmail(data: {
                 Sua conta está criada, <span style="color: #B8FF00;">${data.userName}</span>.
               </h1>
               <p style="font-size: 14px; line-height: 1.65; color: #A4ABB3; margin: 0 0 24px 0;">
-                Seu período de degustação gratuita de 3 dias já começou. Você tem acesso irrestrito aos módulos de metas nas 4 Áreas da Vida, hábitos sustentáveis com Piso Mínimo e ao motor de IA Trajetta.
+                Seu ambiente na Trajetta já está liberado. Você tem acesso para estruturar suas metas nas 4 Áreas da Vida, fixar hábitos sustentáveis com Piso Mínimo e experimentar o motor de inteligência artificial da Trajetta.
               </p>
 
               <!-- Dados de Acesso -->
@@ -689,8 +689,8 @@ export function renderTrialWelcomeEmail(data: {
                         <td style="color: #FFFFFF; font-weight: 600; font-family: monospace;">${data.email}</td>
                       </tr>
                       <tr>
-                        <td style="color: #8E9499; padding: 4px 0;">Degustação:</td>
-                        <td style="color: #58D6A7; font-weight: 700;">3 dias de acesso completo sem compromisso</td>
+                        <td style="color: #8E9499; padding: 4px 0;">Status:</td>
+                        <td style="color: #58D6A7; font-weight: 700;">Conta Criada & Acesso Liberado ✓</td>
                       </tr>
                     </table>
                   </td>

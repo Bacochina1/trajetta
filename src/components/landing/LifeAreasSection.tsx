@@ -304,7 +304,7 @@ export function LifeAreasSection() {
             href="#planos"
             className="w-full inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>TESTAR 3 DIAS GRÁTIS</span>
+            <span>COMEÇAR NO TRAJETTA PRO</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -418,7 +418,7 @@ export function LifeAreasSection() {
               href="#planos"
               className="inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
             >
-              <span>TESTAR 3 DIAS GRÁTIS</span>
+              <span>COMEÇAR NO TRAJETTA PRO</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>

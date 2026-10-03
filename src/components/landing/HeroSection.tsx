@@ -46,10 +46,10 @@ export function HeroSection() {
         data-purpose="hero-content"
       >
         <div className="max-w-3xl">
-          {/* Free Trial Status Pill */}
+          {/* Pro Status Pill */}
           <div className="inline-flex items-center space-x-2 text-[10px] xs:text-[11px] sm:text-xs font-mono tracking-wide text-neutral-300 bg-[#1e2329]/85 backdrop-blur-md px-3 xs:px-4 py-1.5 rounded-full border border-white/10 mb-4 sm:mb-6 shadow-xl max-w-full">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse flex-shrink-0" />
-            <span className="truncate">Liberado • 3 Dias de Degustação Gratuita</span>
+            <span className="truncate">Liberado • Acesso Imediato ao Trajetta Pro</span>
           </div>
 
           {/* Main Headline */}

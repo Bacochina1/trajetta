@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     template: '%s | Trajetta',
   },
   description:
-    'Aplicativo de metas, hábitos e rotina nas 4 áreas essenciais da vida com IA contextual. Evolução consistente sem streaks punitivos. Teste 3 dias grátis.',
+    'Aplicativo de metas, hábitos e rotina nas 4 áreas essenciais da vida com IA contextual. Evolução consistente sem streaks punitivos. Comece agora no Trajetta.',
   keywords: [
     'aplicativo de metas',
     'rastreador de habitos',
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trajetta — Aplicativo de Metas, Hábitos e Planejamento Semanal',
     description:
-      'Planeje para sua vida real nas 4 áreas essenciais. Hábitos com piso mínimo, weekly review e IA contextual sem streaks punitivos. Teste 3 dias grátis.',
+      'Planeje para sua vida real nas 4 áreas essenciais. Hábitos com piso mínimo, weekly review e IA contextual sem streaks punitivos.',
     url: 'https://trajettacompany.com.br',
     siteName: 'Trajetta',
     images: [
@@ -167,7 +167,7 @@ const jsonLd = {
         priceCurrency: 'BRL',
         priceValidUntil: '2027-12-31',
         availability: 'https://schema.org/InStock',
-        description: 'Trajetta Pro Mensal com 3 dias de degustação gratuita',
+        description: 'Trajetta Pro Mensal — Acesso completo e irrestrito',
       },
       featureList: [
         'Acesso irrestrito às 4 Áreas da Vida (Corpo, Dinheiro, Carreira e Vida)',
@@ -185,10 +185,10 @@ const jsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'Como funcionam os 3 dias de degustação gratuita?',
+          name: 'Como funciona a ativação do Trajetta Pro?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Você tem acesso irrestrito e imediato a todos os recursos da Trajetta Pro por 3 dias. Planeje suas metas, teste a IA e use o sistema no mundo real. Se decidir não continuar, cancele com 1 clique antes do período terminar e nada será debitado.',
+            text: 'A liberação é instantânea após a confirmação do pagamento via Stripe. Você recebe acesso imediato a todas as funcionalidades e conta com garantia legal incondicional de 7 dias com reembolso total pelo CDC.',
           },
         },
         {

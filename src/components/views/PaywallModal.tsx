@@ -89,10 +89,10 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
           </div>
           <div className="space-y-1">
             <h4 className="text-sm font-bold text-[#F2F1ED]">
-              Degustação gratuita de 3 dias ativa
+              Evolua com o Trajetta Pro
             </h4>
             <p className="text-xs text-[#8E9499] leading-relaxed">
-              Você tem acesso irrestrito para planejar semanas, registrar hábitos, conduzir weekly reviews com IA e acumular sua linha do tempo. Sem surpresas ou cobranças automáticas involuntárias.
+              Tenha acesso irrestrito para planejar semanas, registrar hábitos com piso mínimo, conduzir weekly reviews com IA e acumular sua linha do tempo permanente.
             </p>
           </div>
         </div>
@@ -232,7 +232,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
 
         {/* Privacy, Cancellation and Terms Footnote */}
         <div className="text-[10px] text-center text-[#8E9499] leading-relaxed pt-1">
-          Garantia legal de 7 dias (reembolso integral CDC) e 3 dias de degustação gratuita. Cancelamento em 1 clique a qualquer momento no seu perfil. Conheça nossa{' '}
+          Garantia legal de 7 dias (reembolso integral CDC). Cancelamento em 1 clique a qualquer momento no seu perfil. Conheça nossa{' '}
           <a href="/termos" target="_blank" className="text-[#B8FF00] underline underline-offset-2 hover:text-[#c6ff24]">
             Política de Cancelamento & Reembolso
           </a>.

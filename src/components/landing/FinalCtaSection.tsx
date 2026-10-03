@@ -25,22 +25,22 @@ export function FinalCtaSection() {
         </p>
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href={appendUtmToUrl('/register')}
+          <a
+            href="#planos"
             onClick={handleCta}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_35px_rgba(184,255,0,0.35)] transition-all transform active:scale-95"
           >
-            <span>Começar 3 dias grátis</span>
+            <span>Assinar Trajetta Pro Agora</span>
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </a>
         </div>
 
         <div className="pt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#8E9499]">
-          <span>3 dias de degustação gratuita</span>
+          <span>Acesso Imediato</span>
           <span>•</span>
-          <span>Sem cartão no início</span>
+          <span>Garantia de 7 dias CDC</span>
           <span>•</span>
-          <span>Cancele quando quiser</span>
+          <span>Cancelamento em 1 clique</span>
         </div>
       </div>
     </section>

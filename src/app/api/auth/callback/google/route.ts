@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
       try {
         sendEmail({
           to: email,
-          subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou 🚀',
+          subject: 'Bem-vindo à Trajetta — Sua conta foi criada com sucesso 🚀',
           html: renderTrialWelcomeEmail({
             userName: name,
             email,

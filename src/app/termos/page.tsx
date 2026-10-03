@@ -110,10 +110,10 @@ export default function TermosPage() {
 
           <section className="space-y-3 p-6 rounded-2xl bg-[#0D0F10] border border-white/6">
             <h2 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
-              3. Período de Degustação Gratuita (3 Dias de Teste)
+              3. Ativação Imediata & Garantia Incondicional
             </h2>
             <p>
-              Os planos com período de degustação concedem 3 dias de experiência completa do Trajetta Pro sem cobrança antecipada. Você pode experimentar todas as funcionalidades sem risco. Caso cancele antes do 3º dia, nada será debitado.
+              A ativação da sua assinatura Trajetta Pro é realizada imediatamente após a confirmação do pagamento via Stripe. Você recebe credenciais de acesso completas e conta com a garantia de 7 dias do Código de Defesa do Consumidor, com possibilidade de cancelamento com 1 clique a qualquer momento no seu perfil.
             </p>
           </section>
 
