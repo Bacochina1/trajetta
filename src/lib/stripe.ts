@@ -11,7 +11,7 @@ export const STRIPE_PLANS = {
     priceId: process.env.STRIPE_PRICE_MONTHLY || 'price_1UMKvSEEJcnNYjeXXDRH9QoK',
     amount: 2990, // R$ 29,90
     interval: 'month' as const,
-    trialDays: 14,
+    trialDays: 3,
     subscriptionPlanKey: 'pro_monthly' as const,
   },
   annual: {
@@ -20,7 +20,7 @@ export const STRIPE_PLANS = {
     priceId: process.env.STRIPE_PRICE_ANNUAL || 'price_1UMKvTEEJcnNYjeXTIlMynOF',
     amount: 23990, // R$ 239,90
     interval: 'year' as const,
-    trialDays: 14,
+    trialDays: 3,
     subscriptionPlanKey: 'pro_annual' as const,
   },
   founding: {

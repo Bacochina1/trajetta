@@ -109,10 +109,10 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Column 3: Sistema & Admin */}
+            {/* Column 3: Sistema & Infraestrutura */}
             <div className="col-span-2 sm:col-span-1">
               <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
-                SISTEMA & CRM
+                SISTEMA & APP
               </span>
               <ul className="space-y-2 text-xs text-neutral-400">
                 <li><span className="text-neutral-300">Trajetta Engine</span></li>
@@ -125,15 +125,6 @@ export function Footer() {
                     className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
                   >
                     <span>{locale === 'en' ? 'Terms & Refund' : 'Termos & Cancelamento'}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/admin/login"
-                    className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#B8FF00] font-mono text-[11px] transition-colors"
-                  >
-                    <Shield className="w-3 h-3 text-[#B8FF00]" />
-                    <span>Acesso Admin CRM</span>
                   </Link>
                 </li>
               </ul>

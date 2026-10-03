@@ -31,10 +31,10 @@ export function PricingSection() {
             Investimento na Sua Trajetória
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight">
-            Comece agora com 14 dias grátis.
+            Comece agora com 3 dias de degustação gratuita.
           </h2>
-          <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed">
-            Experimente a experiência completa sem fricção. Cancele quando quiser diretamente no painel.
+          <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-2xl mx-auto">
+            Acesso irrestrito a todos os recursos. Teste a Trajetta AI, planeje sua semana e sinta a clareza mental antes de qualquer cobrança. Cancele com 1 clique.
           </p>
 
           {/* Billing Switcher */}
@@ -87,7 +87,7 @@ export function PricingSection() {
                 <span className="text-xs text-[#8E9499]">/mês</span>
               </div>
               <div className="text-[11px] text-[#B8FF00] font-semibold">
-                ✓ 14 dias de teste gratuito inclusos
+                ✓ 3 dias de teste gratuito inclusos
               </div>
             </div>
 
@@ -105,7 +105,7 @@ export function PricingSection() {
               onClick={() => handlePlanClick('Pro Mensal')}
               className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all"
             >
-              <span>Começar 14 dias grátis</span>
+              <span>Começar 3 dias grátis</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -133,7 +133,7 @@ export function PricingSection() {
                 <span className="text-xs text-[#8E9499]">/mês equivalente</span>
               </div>
               <div className="text-[11px] text-[#8E9499]">
-                Cobrado anualmente: <strong className="text-[#F2F1ED]">R$ 239,90/ano</strong> após os 14 dias de teste grátis.
+                Cobrado anualmente: <strong className="text-[#F2F1ED]">R$ 239,90/ano</strong> após os 3 dias de degustação grátis.
               </div>
             </div>
 
@@ -151,7 +151,7 @@ export function PricingSection() {
               onClick={() => handlePlanClick('Pro Anual')}
               className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_25px_rgba(184,255,0,0.35)] transition-all transform active:scale-95"
             >
-              <span>Começar 14 dias grátis</span>
+              <span>Começar 3 dias grátis</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

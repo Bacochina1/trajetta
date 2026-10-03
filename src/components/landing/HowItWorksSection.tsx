@@ -21,7 +21,14 @@ export function HowItWorksSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Prompt Bar inside Dark atmospheric scenery */}
         <div className="lg:col-span-7 rounded-2xl bg-[#090d12] border border-white/10 relative overflow-hidden min-h-[280px] sm:min-h-[420px] p-3 xs:p-4 sm:p-6 flex items-end justify-center shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-[#0c1017] to-[#141a24] opacity-90"></div>
+          {/* Atmospheric background scenery image */}
+          <img
+            src="/trajetta-mockup-feature.jpg"
+            alt="Trajetta Atmospheric Scenery"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-40 pointer-events-none"
+          />
+          {/* Directional scrim gradient for maximum contrast & luxury depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-[#090d12]/80 to-transparent pointer-events-none"></div>
 
           {/* Floating prompt input box matching reference */}
           <div className="relative z-10 w-full bg-[#0d1015]/95 border border-white/15 rounded-xl p-3.5 xs:p-4 sm:p-5 shadow-2xl mb-1 sm:mb-2 backdrop-blur-md">

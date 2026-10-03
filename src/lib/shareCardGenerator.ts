@@ -176,11 +176,11 @@ export async function generateShareCardCanvas(
 
     ctx.fillStyle = '#8E9499';
     ctx.font = '600 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText('SEQUÊNCIA ATIVA', margin + 84, metricBoxY + 44);
+    ctx.fillText('DIAS EM ATIVIDADE', margin + 84, metricBoxY + 44);
 
     ctx.fillStyle = '#F2F1ED';
     ctx.font = '800 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText(`${data.streakDays} dias seguidos`, margin + 84, metricBoxY + 100);
+    ctx.fillText(`${data.streakDays} dias ativos`, margin + 84, metricBoxY + 100);
 
     // Metric 2: Consistency
     drawRoundedRect(ctx, margin + 54 + halfW + 24, metricBoxY, halfW, 140, 24);
@@ -313,7 +313,7 @@ export async function generateShareCardCanvas(
 
     ctx.fillStyle = '#58D6A7';
     ctx.font = '600 20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText(`🔥 ${data.streakDays} dias de streak`, margin + 84, contentTop + 355);
+    ctx.fillText(`⚡ ${data.streakDays} dias de consistência ativa`, margin + 84, contentTop + 355);
 
     ctx.fillStyle = '#8E9499';
     ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';

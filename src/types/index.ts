@@ -34,6 +34,7 @@ export type Goal = {
   title: string;
   description: string;
   lifeArea: LifeArea;
+  secondaryAreas?: LifeArea[];
   status: GoalStatus;
   startDate: string;
   targetDate: string;

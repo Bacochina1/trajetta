@@ -15,6 +15,7 @@ export function NewGoalModal() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [lifeArea, setLifeArea] = useState<LifeArea>('corpo');
+  const [secondaryAreas, setSecondaryAreas] = useState<LifeArea[]>([]);
   const [targetDate, setTargetDate] = useState('2026-12-31');
   const [whyItMatters, setWhyItMatters] = useState('');
   const [milestones, setMilestones] = useState<{ id: string; title: string; targetValue?: string; completed: boolean; order: number }[]>([
@@ -48,6 +49,7 @@ export function NewGoalModal() {
       title: title.trim(),
       description: description.trim(),
       lifeArea,
+      secondaryAreas,
       targetDate,
       whyItMatters: whyItMatters.trim() || 'Porque faz parte da trajetória que quero construir.',
       milestones: milestones.filter(m => m.title.trim().length > 0),
@@ -57,6 +59,7 @@ export function NewGoalModal() {
     setTitle('');
     setDescription('');
     setWhyItMatters('');
+    setSecondaryAreas([]);
   };
 
   return (
@@ -83,11 +86,15 @@ export function NewGoalModal() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label htmlFor="goal-area" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">Área da Vida</label>
+            <label htmlFor="goal-area" className="block text-xs font-semibold text-[#F2F1ED] mb-1.5">Área Principal</label>
             <select
               id="goal-area"
               value={lifeArea}
-              onChange={e => setLifeArea(e.target.value as LifeArea)}
+              onChange={e => {
+                const newArea = e.target.value as LifeArea;
+                setLifeArea(newArea);
+                setSecondaryAreas(prev => prev.filter(a => a !== newArea));
+              }}
               className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
             >
               <option value="corpo">Corpo</option>
@@ -106,6 +113,40 @@ export function NewGoalModal() {
               onChange={e => setTargetDate(e.target.value)}
               className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
             />
+          </div>
+        </div>
+
+        {/* Optional secondary areas tags */}
+        <div>
+          <span className="block text-xs font-semibold text-[#8E9499] mb-1.5">
+            Áreas Secundárias / Intersecções (Opcional)
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {(['corpo', 'dinheiro', 'carreira', 'vida'] as LifeArea[])
+              .filter(a => a !== lifeArea)
+              .map(a => {
+                const isSelected = secondaryAreas.includes(a);
+                const conf = LIFE_AREAS[a];
+                return (
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={() => {
+                      setSecondaryAreas(prev =>
+                        prev.includes(a) ? prev.filter(item => item !== a) : [...prev, a]
+                      );
+                    }}
+                    className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
+                      isSelected
+                        ? 'bg-white/15 text-[#F2F1ED] border-white/30 font-semibold shadow-sm'
+                        : 'bg-[#111315] text-[#8E9499] border-white/8 hover:border-white/15'
+                    }`}
+                  >
+                    {isSelected ? '✓ ' : '+ '}
+                    {conf.label}
+                  </button>
+                );
+              })}
           </div>
         </div>
 
