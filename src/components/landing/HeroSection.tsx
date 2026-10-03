@@ -49,7 +49,9 @@ export function HeroSection() {
           {/* Pro Status Pill */}
           <div className="inline-flex items-center space-x-2 text-[10px] xs:text-[11px] sm:text-xs font-mono tracking-wide text-neutral-300 bg-[#1e2329]/85 backdrop-blur-md px-3 xs:px-4 py-1.5 rounded-full border border-white/10 mb-4 sm:mb-6 shadow-xl max-w-full">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse flex-shrink-0" />
-            <span className="truncate">Liberado • Acesso Imediato ao Trajetta Pro</span>
+            <span className="truncate">
+              {locale === 'en' ? 'Active • Instant Access to Trajetta Pro' : 'Liberado • Acesso Imediato ao Trajetta Pro'}
+            </span>
           </div>
 
           {/* Main Headline */}
@@ -92,19 +94,31 @@ export function HeroSection() {
           data-purpose="social-proof"
         >
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-normal text-[11px] xs:text-[12px] sm:text-[13px]">
-            <span className="text-neutral-500 font-normal mr-0.5">Pilares:</span>
-            <span className="text-neutral-200 font-medium">Direção Pessoal</span>
+            <span className="text-neutral-500 font-normal mr-0.5">
+              {locale === 'en' ? 'Core Pillars:' : 'Pilares:'}
+            </span>
+            <span className="text-neutral-200 font-medium">
+              {locale === 'en' ? 'Personal Direction' : 'Direção Pessoal'}
+            </span>
             <span className="text-neutral-600 hidden xs:inline">•</span>
-            <span className="text-neutral-200 font-medium">4 Áreas da Vida</span>
+            <span className="text-neutral-200 font-medium">
+              {locale === 'en' ? '4 Life Areas' : '4 Áreas da Vida'}
+            </span>
             <span className="text-neutral-600 hidden xs:inline">•</span>
-            <span className="text-neutral-200 font-medium">Ciclos Sem Punição</span>
+            <span className="text-neutral-200 font-medium">
+              {locale === 'en' ? 'Guilt-Free Cycles' : 'Ciclos Sem Punição'}
+            </span>
             <span className="text-neutral-600 hidden xs:inline">•</span>
-            <span className="text-neutral-200 font-medium">IA Contextual</span>
+            <span className="text-neutral-200 font-medium">
+              {locale === 'en' ? 'Contextual AI' : 'IA Contextual'}
+            </span>
           </div>
 
           <div className="flex items-center space-x-2 text-neutral-400 font-mono text-[10px] xs:text-[11px] sm:text-[11.5px]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0" />
-            <span>Sem streaks punitivos • Foco na vida real</span>
+            <span>
+              {locale === 'en' ? 'Zero punitive streaks • Built for real life' : 'Sem streaks punitivos • Foco na vida real'}
+            </span>
           </div>
         </div>
       </div>

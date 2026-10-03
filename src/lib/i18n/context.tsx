@@ -20,14 +20,20 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({
   children,
-  initialLocale = 'pt',
+  initialLocale,
 }: {
   children: React.ReactNode;
   initialLocale?: Locale;
 }) {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const [locale, setLocaleState] = useState<Locale>(initialLocale || 'pt');
 
   useEffect(() => {
+    // If an explicit initialLocale was provided (e.g. forcedLocale on /en or /), respect it directly!
+    if (initialLocale) {
+      setLocaleState(initialLocale);
+      return;
+    }
+
     // Check localStorage preference first
     const saved = localStorage.getItem('trajetta_locale') as Locale | null;
     if (saved && (saved === 'pt' || saved === 'en')) {
@@ -42,7 +48,7 @@ export function I18nProvider({
         setLocaleState('en');
       }
     }
-  }, []);
+  }, [initialLocale]);
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);

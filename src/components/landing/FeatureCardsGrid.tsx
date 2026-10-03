@@ -2,23 +2,20 @@
 
 import React from 'react';
 import { 
-  Calendar, 
   Target, 
   ShieldCheck, 
   RefreshCw, 
   Copy, 
   Bookmark, 
-  Sparkles, 
-  Flame, 
-  Check, 
-  Compass, 
-  Sliders, 
   RotateCcw, 
   Zap, 
-  ArrowRight 
 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/context';
 
 export function FeatureCardsGrid() {
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
+
   return (
     <section className="relative z-20 max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 pb-20 sm:pb-32" data-purpose="feature-cards" id="ciclos">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -37,7 +34,7 @@ export function FeatureCardsGrid() {
               {/* Node 1: Domingo Planejamento */}
               <div className="bg-[#181c22]/90 border border-white/10 text-[10.5px] xs:text-[11px] font-mono text-neutral-200 px-3 xs:px-3.5 py-1.5 rounded-md shadow-lg flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
-                <span>Domingo: Planejamento Leve</span>
+                <span>{isEn ? 'Sunday: Calm Planning' : 'Domingo: Planejamento Leve'}</span>
               </div>
 
               {/* Connector Line */}
@@ -46,7 +43,7 @@ export function FeatureCardsGrid() {
               {/* Node 2: 3 Prioridades Reais */}
               <div className="w-full bg-[#161a20]/90 border border-white/10 px-2.5 xs:px-3 py-1.5 xs:py-2 rounded-md flex items-center space-x-2 text-[10.5px] xs:text-[11px] font-mono text-neutral-300 shadow-lg">
                 <Target className="w-3.5 h-3.5 text-[#B8FF00] flex-shrink-0" />
-                <span className="truncate">3 Prioridades Reais da Semana</span>
+                <span className="truncate">{isEn ? '3 Real Weekly Priorities' : '3 Prioridades Reais da Semana'}</span>
               </div>
 
               {/* Connector Line */}
@@ -55,7 +52,7 @@ export function FeatureCardsGrid() {
               {/* Node 3: Piso Mínimo do Dia */}
               <div className="w-full bg-[#161a20]/90 border border-white/10 px-2.5 xs:px-3 py-1.5 xs:py-2 rounded-md flex items-center space-x-2 text-[10.5px] xs:text-[11px] font-mono text-neutral-300 shadow-lg">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
-                <span className="truncate">Piso Mínimo para Dias Difíceis</span>
+                <span className="truncate">{isEn ? 'Minimum Floor for Tough Days' : 'Piso Mínimo para Dias Difíceis'}</span>
               </div>
 
               {/* Connector Line */}
@@ -64,16 +61,20 @@ export function FeatureCardsGrid() {
               {/* Node 4: Reflexão Sem Julgamento */}
               <div className="w-full bg-[#161a20]/90 border border-white/10 px-2.5 xs:px-3 py-1.5 xs:py-2 rounded-md flex items-center space-x-2 text-[10.5px] xs:text-[11px] font-mono text-neutral-300 shadow-lg">
                 <RotateCcw className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
-                <span className="truncate">Reflexão & Recalibração Silenciosa</span>
+                <span className="truncate">{isEn ? 'Reflection & Quiet Reset' : 'Reflexão & Recalibração Silenciosa'}</span>
               </div>
             </div>
           </div>
 
           {/* Description Content */}
           <div className="mt-5 sm:mt-6">
-            <h3 className="text-base font-medium font-mono text-white tracking-wide">Ciclo da Semana</h3>
+            <h3 className="text-base font-medium font-mono text-white tracking-wide">
+              {isEn ? 'Weekly Cycles' : 'Ciclo da Semana'}
+            </h3>
             <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed">
-              Planejamento que sobrevive à vida real. Não zera streaks nem cobra perfeição. Se a semana pesar, o sistema recalcula sem culpa.
+              {isEn 
+                ? 'Planning built to survive real life. Zero wiped streaks, no guilt. If a rough week hits, the framework recalibrates with serenity.'
+                : 'Planejamento que sobrevive à vida real. Não zera streaks nem cobra perfeição. Se a semana pesar, o sistema recalcula sem culpa.'}
             </p>
           </div>
         </div>
@@ -96,43 +97,53 @@ export function FeatureCardsGrid() {
                   <span className="text-xs font-mono font-medium text-neutral-200">Trajetta AI</span>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-neutral-300">
-                  Memória Ativa
+                  {isEn ? 'Active Memory' : 'Memória Ativa'}
                 </span>
               </div>
 
               {/* Chat Content Body */}
               <div className="pt-2.5 pb-2.5 text-[10.5px] xs:text-[11px] leading-relaxed text-neutral-300 font-sans space-y-2">
                 <p className="text-neutral-200 font-normal">
-                  Identifiquei que sua meta de Carreira avançou 100%, mas o sono ficou abaixo de 6h em 4 dias.
+                  {isEn 
+                    ? 'I noticed your Career goal moved 100%, but sleep was below 6h on 4 days.'
+                    : 'Identifiquei que sua meta de Carreira avançou 100%, mas o sono ficou abaixo de 6h em 4 dias.'}
                 </p>
                 <p className="text-neutral-400 text-[10px] xs:text-[10.5px] leading-relaxed">
-                  Vamos calibrar o piso mínimo de descanso antes de acelerar os novos projetos? Consistência é ritmo sustentável.
+                  {isEn
+                    ? 'Shall we calibrate your minimum rest floor before taking on new projects? Consistency is sustainable rhythm.'
+                    : 'Vamos calibrar o piso mínimo de descanso antes de acelerar os novos projetos? Consistência é ritmo sustentável.'}
                 </p>
               </div>
 
               {/* Chat Actions Toolbar Footer */}
               <div className="flex items-center justify-between pt-2 border-t border-white/5 text-neutral-400 text-[11px]">
                 <div className="flex items-center space-x-2.5 sm:space-x-3">
-                  <button className="hover:text-white transition-colors p-0.5" title="Regenerar">
+                  <button className="hover:text-white transition-colors p-0.5" title={isEn ? 'Regenerate' : 'Regenerar'}>
                     <RefreshCw className="w-3.5 h-3.5" />
                   </button>
-                  <button className="hover:text-white transition-colors p-0.5" title="Copiar">
+                  <button className="hover:text-white transition-colors p-0.5" title={isEn ? 'Copy' : 'Copiar'}>
                     <Copy className="w-3.5 h-3.5" />
                   </button>
-                  <button className="hover:text-white transition-colors p-0.5" title="Salvar">
+                  <button className="hover:text-white transition-colors p-0.5" title={isEn ? 'Save' : 'Salvar'}>
                     <Bookmark className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                <span className="text-[10px] font-mono text-[#B8FF00]">Ajustar Plano</span>
+                <span className="text-[10px] font-mono text-[#B8FF00]">
+                  {isEn ? 'Adjust Plan' : 'Ajustar Plano'}
+                </span>
               </div>
             </div>
           </div>
 
           {/* Description Content */}
           <div className="mt-5 sm:mt-6">
-            <h3 className="text-base font-medium font-mono text-white tracking-wide">Inteligência com Memória</h3>
+            <h3 className="text-base font-medium font-mono text-white tracking-wide">
+              {isEn ? 'Intelligence with Memory' : 'Inteligência com Memória'}
+            </h3>
             <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed">
-              Uma IA que conhece seu contexto e objetivos. Não cospe conselhos motivacionais genéricos; ela lê seus ciclos e aponta o próximo passo lúcido.
+              {isEn
+                ? 'An AI that genuinely remembers your context and goals. Zero generic motivational clichés; it reads your execution patterns and guides your next lucid step.'
+                : 'Uma IA que conhece seu contexto e objetivos. Não cospe conselhos motivacionais genéricos; ela lê seus ciclos e aponta o próximo passo lúcido.'}
             </p>
           </div>
         </div>
@@ -153,10 +164,10 @@ export function FeatureCardsGrid() {
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
                   <RotateCcw className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
-                  <span className="truncate">Retomada sem culpa após pausa</span>
+                  <span className="truncate">{isEn ? 'Guilt-free reset after pause' : 'Retomada sem culpa após pausa'}</span>
                 </div>
                 <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  Recalcular
+                  {isEn ? 'Recalculate' : 'Recalcular'}
                 </button>
               </div>
 
@@ -164,10 +175,10 @@ export function FeatureCardsGrid() {
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
                   <ShieldCheck className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
-                  <span className="truncate">Ativar piso mínimo de treino</span>
+                  <span className="truncate">{isEn ? 'Activate workout minimum floor' : 'Ativar piso mínimo de treino'}</span>
                 </div>
                 <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  Ativar
+                  {isEn ? 'Activate' : 'Ativar'}
                 </button>
               </div>
 
@@ -175,10 +186,10 @@ export function FeatureCardsGrid() {
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
                   <Zap className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
-                  <span className="truncate">Registrar vitória silenciosa</span>
+                  <span className="truncate">{isEn ? 'Log quiet victory' : 'Registrar vitória silenciosa'}</span>
                 </div>
                 <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  Registrar
+                  {isEn ? 'Log' : 'Registrar'}
                 </button>
               </div>
             </div>
@@ -186,9 +197,13 @@ export function FeatureCardsGrid() {
 
           {/* Description Content */}
           <div className="mt-6">
-            <h3 className="text-base font-medium font-mono text-white tracking-wide">Guia Silencioso</h3>
+            <h3 className="text-base font-medium font-mono text-white tracking-wide">
+              {isEn ? 'Quiet Companion' : 'Guia Silencioso'}
+            </h3>
             <p className="mt-2 text-sm text-neutral-400 font-light leading-relaxed">
-              Sempre presente para manter você centrado. Sem notificações agressivas, sem contadores vermelhos. Apenas clareza no momento certo.
+              {isEn
+                ? 'Always present to keep you centered. Zero aggressive notifications, no red countdowns. Just clarity at the exact right moment.'
+                : 'Sempre presente para manter você centrado. Sem notificações agressivas, sem contadores vermelhos. Apenas clareza no momento certo.'}
             </p>
           </div>
         </div>

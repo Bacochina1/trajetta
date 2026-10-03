@@ -3,11 +3,14 @@
 import React, { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
+import { useI18n } from '@/lib/i18n/context';
 
 export function FaqSection() {
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
-  const faqs = [
+  const faqsPt = [
     {
       q: 'Como funciona a ativação e liberação do Trajetta Pro?',
       a: 'A liberação é instantânea. Assim que o pagamento de R$ 29,90/mês é confirmado com segurança via Stripe, você recebe suas credenciais e tem acesso imediato a todas as 4 áreas da vida, metas, hábitos com piso mínimo e IA ilimitada. Você conta com garantia legal incondicional de 7 dias com reembolso total se não amar.',
@@ -34,11 +37,40 @@ export function FaqSection() {
     },
   ];
 
+  const faqsEn = [
+    {
+      q: 'How does Trajetta Pro activation work?',
+      a: 'Activation is instant. As soon as your payment is confirmed securely via Stripe, your account is unlocked immediately with full access to all 4 life areas, habits with minimum floor, weekly planning, and unlimited Trajetta AI. You also have an unconditional 7-day money-back guarantee.',
+    },
+    {
+      q: 'Is Trajetta just another habit tracker or todo app?',
+      a: 'No. Most apps focus on micro-tasks and fragile punitive streaks that collapse on busy days. Trajetta bridges a 12-month North Star vision, 3-priority weekly capacity planning, minimum floors for difficult days, and Sunday debriefs with longitudinal AI.',
+    },
+    {
+      q: 'What does "non-punitive system" mean?',
+      a: 'It means if you spend 4 days without opening the app, your history does not reset to zero, and you receive no red shame notifications. The framework recalibrates your plan calmly, because true consistency compounds in real life.',
+    },
+    {
+      q: 'Can I cancel anytime?',
+      a: 'Yes. With zero bureaucracy. You can cancel with 1 click directly in your dashboard or via Stripe. Furthermore, you are backed by our 7-day unconditional money-back guarantee.',
+    },
+    {
+      q: 'How does Trajetta AI work?',
+      a: 'Trajetta AI combines frontier intelligence with a longitudinal memory engine that learns your unique execution patterns. It never spits generic self-help clichés; it analyzes your cycles and surfaces objective, lucid adjustments.',
+    },
+    {
+      q: 'Are my personal reflections and data private?',
+      a: 'Yes, with absolute sovereignty. Your reflections and data are encrypted, never sold to advertisers, and never used to train public language models. You can export everything in JSON/CSV or delete your account anytime.',
+    },
+  ];
+
+  const faqs = isEn ? faqsEn : faqsPt;
+
   const toggleFaq = (idx: number) => {
     const next = openIdx === idx ? null : idx;
     setOpenIdx(next);
     if (next !== null) {
-      trackMarketingEvent('faq_opened', { question_index: idx, question: faqs[idx].q });
+      trackMarketingEvent('faq_opened', { question_index: idx, question: faqs[idx].q, locale });
     }
   };
 
@@ -47,24 +79,27 @@ export function FaqSection() {
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
-        <span>Perguntas Frequentes</span>
+        <span>{isEn ? 'Frequently Asked Questions' : 'Perguntas Frequentes'}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
         {/* Left Col: Heading & CTA */}
         <div className="lg:col-span-5">
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4 [text-wrap:balance]">
-            Tudo o que você <span className="text-neutral-500">precisa saber</span>
+            {isEn ? 'Everything you ' : 'Tudo o que você '}
+            <span className="text-neutral-500">{isEn ? 'need to know' : 'precisa saber'}</span>
           </h2>
           <p className="text-xs xs:text-sm text-neutral-400 font-light leading-relaxed mb-6 sm:mb-8">
-            Dúvidas claras e diretas sobre o funcionamento do Trajetta Pro, a metodologia sem punição e a segurança dos seus dados.
+            {isEn
+              ? 'Clear and direct answers regarding Trajetta Pro, our non-punitive methodology, and rigorous data privacy.'
+              : 'Dúvidas claras e diretas sobre o funcionamento do Trajetta Pro, a metodologia sem punição e a segurança dos seus dados.'}
           </p>
 
           <a
             href="#planos"
             className="w-full xs:w-auto inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>ASSINAR TRAJETTA PRO</span>
+            <span>{isEn ? 'GET TRAJETTA PRO' : 'ASSINAR TRAJETTA PRO'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -80,7 +115,7 @@ export function FaqSection() {
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full text-left px-4 xs:px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4 focus:outline-none"
+                  className="w-full text-left px-4 xs:px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4 focus:outline-none cursor-pointer"
                 >
                   <span className="text-xs xs:text-sm sm:text-base font-normal text-white">
                     {item.q}

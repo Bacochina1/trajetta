@@ -14,8 +14,11 @@ import {
   EyeOff
 } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
+import { useI18n } from '@/lib/i18n/context';
 
 export function WaitlistSection() {
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,24 +45,24 @@ export function WaitlistSection() {
     setErrorMessage('');
 
     if (!name.trim()) {
-      setErrorMessage('Por favor, informe seu nome.');
+      setErrorMessage(isEn ? 'Please enter your name.' : 'Por favor, informe seu nome.');
       return;
     }
 
     if (!email || !email.includes('@')) {
-      setErrorMessage('Por favor, informe um e-mail válido.');
+      setErrorMessage(isEn ? 'Please enter a valid email address.' : 'Por favor, informe um e-mail válido.');
       return;
     }
 
     if (!password || password.length < 6) {
-      setErrorMessage('A senha deve ter no mínimo 6 caracteres.');
+      setErrorMessage(isEn ? 'Password must be at least 6 characters.' : 'A senha deve ter no mínimo 6 caracteres.');
       return;
     }
 
     setLoading(true);
 
     try {
-      trackMarketingEvent('trial_register_attempt', { email, name });
+      trackMarketingEvent('trial_register_attempt', { email, name, locale });
 
       // 1. Criar a conta oficial do usuário
       const res = await fetch('/api/auth/register', {
@@ -78,24 +81,38 @@ export function WaitlistSection() {
           body: JSON.stringify({ email, name, phone }),
         }).catch(() => {});
 
-        trackMarketingEvent('trial_register_success', { email });
-        setSuccessMessage('Conta ativada com sucesso! Liberando seu acesso ao sistema...');
+        trackMarketingEvent('trial_register_success', { email, locale });
+        setSuccessMessage(
+          isEn 
+            ? 'Account activated successfully! Unlocking your system access...'
+            : 'Conta ativada com sucesso! Liberando seu acesso ao sistema...'
+        );
 
         setTimeout(() => {
           window.location.href = '/app';
         }, 1000);
       } else {
         if (data.error && data.error.includes('já está cadastrado')) {
-          setErrorMessage('Este e-mail já possui cadastro. Redirecionando para login...');
+          setErrorMessage(
+            isEn 
+              ? 'This email is already registered. Redirecting to login...'
+              : 'Este e-mail já possui cadastro. Redirecionando para login...'
+          );
           setTimeout(() => {
             window.location.href = `/login?email=${encodeURIComponent(email)}`;
           }, 1500);
         } else {
-          setErrorMessage(data.error || 'Erro ao inicializar seu teste gratuito. Tente novamente.');
+          setErrorMessage(
+            data.error || (isEn ? 'Error initializing account. Please try again.' : 'Erro ao inicializar seu teste gratuito. Tente novamente.')
+          );
         }
       }
     } catch {
-      setErrorMessage('Erro de conexão com o servidor. Verifique sua internet e tente novamente.');
+      setErrorMessage(
+        isEn
+          ? 'Network connection error. Check your internet and try again.'
+          : 'Erro de conexão com o servidor. Verifique sua internet e tente novamente.'
+      );
     } finally {
       setLoading(false);
     }
@@ -106,16 +123,21 @@ export function WaitlistSection() {
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse"></span>
-        <span className="text-[#B8FF00] font-semibold">Liberado • Criação Imediata de Conta</span>
+        <span className="text-[#B8FF00] font-semibold">
+          {isEn ? 'Unlocked • Instant Account Creation' : 'Liberado • Criação Imediata de Conta'}
+        </span>
       </div>
 
       {/* Section Heading */}
       <div className="max-w-3xl mb-12">
         <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4 [text-wrap:balance]">
-          Comece agora mesmo <span className="text-[#B8FF00]">sem burocracia</span>
+          {isEn ? 'Get started immediately ' : 'Comece agora mesmo '}
+          <span className="text-[#B8FF00]">{isEn ? 'without friction' : 'sem burocracia'}</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed">
-          Crie seu acesso imediato em 10 segundos para explorar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental e serenidade.
+          {isEn
+            ? 'Set up immediate access in 10 seconds to explore Trajetta AI, align your goals across 4 areas, and plan your week with serene mental clarity.'
+            : 'Crie seu acesso imediato em 10 segundos para explorar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental e serenidade.'}
         </p>
       </div>
 
@@ -136,13 +158,13 @@ export function WaitlistSection() {
 
                 <div>
                   <span className="text-xs font-mono uppercase tracking-widest text-[#B8FF00] font-bold">
-                    Acesso Liberado
+                    {isEn ? 'Access Unlocked' : 'Acesso Liberado'}
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white mt-1">
                     {successMessage}
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-300 mt-2 leading-relaxed">
-                    Você será redirecionado para o seu painel em instantes.
+                    {isEn ? 'You will be redirected to your dashboard in a moment.' : 'Você será redirecionado para o seu painel em instantes.'}
                   </p>
                 </div>
 
@@ -156,33 +178,37 @@ export function WaitlistSection() {
               <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
                 <div className="flex items-center gap-2 text-[11px] xs:text-xs font-mono text-neutral-300 mb-1 sm:mb-2">
                   <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
-                  <span>Mais de {activeUsersCount.toLocaleString('pt-BR')} trajetórias ativas</span>
+                  <span>
+                    {isEn
+                      ? `Over ${activeUsersCount.toLocaleString('en-US')} active trajectories`
+                      : `Mais de ${activeUsersCount.toLocaleString('pt-BR')} trajetórias ativas`}
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-3.5">
                   <div>
                     <label className="block text-[11px] xs:text-xs font-mono text-neutral-400 mb-1">
-                      Seu Nome Completo <span className="text-[#B8FF00]">*</span>
+                      {isEn ? 'Full Name' : 'Seu Nome Completo'} <span className="text-[#B8FF00]">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Ex.: Lucas Moreira"
+                      placeholder={isEn ? "e.g. Alex Morgan" : "Ex.: Lucas Moreira"}
                       className="w-full bg-[#12161f] border border-white/15 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]/60 transition-colors font-sans"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[11px] xs:text-xs font-mono text-neutral-400 mb-1">
-                      WhatsApp com DDD (Opcional)
+                      {isEn ? 'Phone / WhatsApp (Optional)' : 'WhatsApp com DDD (Opcional)'}
                     </label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="(11) 98765-4321"
+                      placeholder={isEn ? "+1 (555) 000-0000" : "(11) 98765-4321"}
                       className="w-full bg-[#12161f] border border-white/15 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]/60 transition-colors font-sans"
                     />
                   </div>
@@ -190,21 +216,22 @@ export function WaitlistSection() {
 
                 <div>
                   <label className="block text-[11px] xs:text-xs font-mono text-neutral-400 mb-1">
-                    Seu Melhor E-mail <span className="text-[#B8FF00]">*</span>
+                    {isEn ? 'Your Best Email' : 'Seu Melhor E-mail'} <span className="text-[#B8FF00]">*</span>
                   </label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu.email@exemplo.com"
+                    placeholder={isEn ? "you@example.com" : "seu.email@exemplo.com"}
                     className="w-full bg-[#12161f] border border-white/15 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#B8FF00]/60 transition-colors font-sans"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[11px] xs:text-xs font-mono text-neutral-400 mb-1">
-                    Defina sua Senha de Acesso <span className="text-[#B8FF00]">* (Mínimo 6 caracteres)</span>
+                    {isEn ? 'Password' : 'Defina sua Senha de Acesso'}{' '}
+                    <span className="text-[#B8FF00]">{isEn ? '* (Min 6 characters)' : '* (Mínimo 6 caracteres)'}</span>
                   </label>
                   <div className="relative">
                     <input
@@ -219,7 +246,7 @@ export function WaitlistSection() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
-                      aria-label={showPassword ? 'Ocultar senha' : 'Exibir senha'}
+                      aria-label={showPassword ? (isEn ? 'Hide password' : 'Ocultar senha') : (isEn ? 'Show password' : 'Exibir senha')}
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -241,22 +268,22 @@ export function WaitlistSection() {
                   {loading ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 rounded-full border-2 border-[#060709] border-t-transparent animate-spin" />
-                      CRIANDO SUA CONTA...
+                      {isEn ? 'CREATING YOUR ACCOUNT...' : 'CRIANDO SUA CONTA...'}
                     </span>
                   ) : (
                     <>
-                      <span>CRIAR MINHA CONTA AGORA</span>
+                      <span>{isEn ? 'CREATE MY ACCOUNT NOW' : 'CRIAR MINHA CONTA AGORA'}</span>
                       <ArrowRight className="w-4 h-4 flex-shrink-0" />
                     </>
                   )}
                 </button>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-400 pt-1 gap-2">
-                  <span>✓ Cadastro seguro e instantâneo</span>
+                  <span>{isEn ? '✓ Secure & instant signup' : '✓ Cadastro seguro e instantâneo'}</span>
                   <span>
-                    Já tem conta?{' '}
+                    {isEn ? 'Already have an account? ' : 'Já tem conta? '}
                     <Link href="/login" className="text-[#B8FF00] hover:underline font-semibold">
-                      Fazer Login
+                      {isEn ? 'Log in' : 'Fazer Login'}
                     </Link>
                   </span>
                 </div>
@@ -268,29 +295,47 @@ export function WaitlistSection() {
           <div className="lg:col-span-5 bg-[#0f131a] border border-white/10 rounded-2xl p-4 xs:p-5 sm:p-7 space-y-4">
             <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-white/10">
               <span className="font-mono text-xs text-neutral-300 uppercase tracking-wider font-semibold">
-                Recursos do Sistema
+                {isEn ? 'System Features' : 'Recursos do Sistema'}
               </span>
               <span className="text-[10px] font-mono text-[#B8FF00] bg-[#B8FF00]/15 px-2 py-0.5 rounded font-bold">
-                Acesso Liberado
+                {isEn ? 'Access Active' : 'Acesso Liberado'}
               </span>
             </div>
 
             <div className="space-y-3 font-sans text-xs text-neutral-300 leading-relaxed">
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                <span><strong>Acesso total às 4 Áreas:</strong> Corpo, Dinheiro, Carreira e Vida Pessoal sem bloqueios.</span>
+                <span>
+                  <strong>{isEn ? 'Full Access to 4 Areas:' : 'Acesso total às 4 Áreas:'}</strong>{' '}
+                  {isEn
+                    ? 'Body, Money, Career, and Inner Life without barriers.'
+                    : 'Corpo, Dinheiro, Carreira e Vida Pessoal sem bloqueios.'}
+                </span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                <span><strong>Trajetta AI ilimitada:</strong> Assistente de clareza com memória longitudinal de contexto.</span>
+                <span>
+                  <strong>{isEn ? 'Unlimited Trajetta AI:' : 'Trajetta AI ilimitada:'}</strong>{' '}
+                  {isEn
+                    ? 'Clarity coach with longitudinal contextual memory.'
+                    : 'Assistente de clareza com memória longitudinal de contexto.'}
+                </span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                <span><strong>Sem correntes nem punição:</strong> Metodologia de piso mínimo para vida real.</span>
+                <span>
+                  <strong>{isEn ? 'Zero streaks or guilt:' : 'Sem correntes nem punição:'}</strong>{' '}
+                  {isEn
+                    ? 'Minimum floor framework engineered for real life.'
+                    : 'Metodologia de piso mínimo para vida real.'}
+                </span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                <span><strong>Cancelamento instantâneo:</strong> Zero burocracia ou cobranças surpresa.</span>
+                <span>
+                  <strong>{isEn ? 'Instant cancellation:' : 'Cancelamento instantâneo:'}</strong>{' '}
+                  {isEn ? 'Zero bureaucracy or surprise charges.' : 'Zero burocracia ou cobranças surpresa.'}
+                </span>
               </div>
             </div>
 
@@ -299,7 +344,11 @@ export function WaitlistSection() {
                 href="#planos"
                 className="inline-flex items-center gap-1.5 text-xs text-[#B8FF00] hover:underline font-semibold"
               >
-                <span>Prefere checkout direto no cartão com garantia legal? Ver Planos</span>
+                <span>
+                  {isEn
+                    ? 'Prefer direct card checkout with legal guarantee? View Plans'
+                    : 'Prefere checkout direto no cartão com garantia legal? Ver Planos'}
+                </span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -311,40 +360,58 @@ export function WaitlistSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/20 transition-all">
           <div>
-            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">Garantia 01</span>
-            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">Consistência na Prática</h3>
+            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">
+              {isEn ? 'Pillar 01' : 'Garantia 01'}
+            </span>
+            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">
+              {isEn ? 'Consistency in Practice' : 'Consistência na Prática'}
+            </h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Use na sua rotina real de segunda a domingo. Sinta o alívio de uma mente organizada e sem sobrecarga com foco na vida como ela é.
+              {isEn
+                ? 'Use it in your real routine Monday through Sunday. Feel the quiet relief of an organized mind focused on life as it truly is.'
+                : 'Use na sua rotina real de segunda a domingo. Sinta o alívio de uma mente organizada e sem sobrecarga com foco na vida como ela é.'}
             </p>
           </div>
           <div className="pt-4 sm:pt-6 mt-3 sm:mt-4 border-t border-white/5 text-[11px] sm:text-xs font-mono text-neutral-500">
-            Acesso irrestrito a todos os recursos
+            {isEn ? 'Unrestricted access to all tools' : 'Acesso irrestrito a todos os recursos'}
           </div>
         </div>
 
         <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/20 transition-all">
           <div>
-            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">Garantia 02</span>
-            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">Onboarding da Estrela-Guia</h3>
+            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">
+              {isEn ? 'Pillar 02' : 'Garantia 02'}
+            </span>
+            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">
+              {isEn ? 'North Star Onboarding' : 'Onboarding da Estrela-Guia'}
+            </h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Roteiro assistido para estruturar seus objetivos de 12 meses nas 4 áreas essenciais e calibrar seus pisos mínimos de segurança.
+              {isEn
+                ? 'Assisted walkthrough to structure your 12-month trajectory across the 4 core areas and calibrate your baseline safety floors.'
+                : 'Roteiro assistido para estruturar seus objetivos de 12 meses nas 4 áreas essenciais e calibrar seus pisos mínimos de segurança.'}
             </p>
           </div>
           <div className="pt-4 sm:pt-6 mt-3 sm:mt-4 border-t border-white/5 text-[11px] sm:text-xs font-mono text-neutral-500">
-            Passo a passo nos primeiros minutos
+            {isEn ? 'Step-by-step in your first minutes' : 'Passo a passo nos primeiros minutos'}
           </div>
         </div>
 
         <div className="rounded-2xl bg-[#090c10] border border-white/10 p-5 sm:p-7 flex flex-col justify-between hover:border-white/20 transition-all">
           <div>
-            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">Garantia 03</span>
-            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">IA com Memória Expandida</h3>
+            <span className="text-xs font-mono text-[#B8FF00] uppercase tracking-wider font-semibold">
+              {isEn ? 'Pillar 03' : 'Garantia 03'}
+            </span>
+            <h3 className="text-base sm:text-lg font-medium text-white mt-1.5 sm:mt-2 mb-2 sm:mb-3">
+              {isEn ? 'Expanded AI Memory' : 'IA com Memória Expandida'}
+            </h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Acesso exclusivo ao motor de IA que conecta seus reviews semanais e entende seu ritmo e capacidade ao longo do tempo.
+              {isEn
+                ? 'Exclusive access to our longitudinal AI engine that links weekly reviews and understands your personal capacity over time.'
+                : 'Acesso exclusivo ao motor de IA que conecta seus reviews semanais e entende seu ritmo e capacidade ao longo do tempo.'}
             </p>
           </div>
           <div className="pt-4 sm:pt-6 mt-3 sm:mt-4 border-t border-white/5 text-[11px] sm:text-xs font-mono text-neutral-500">
-            Inteligência contextual sem fórmulas prontas
+            {isEn ? 'Contextual intelligence without formulas' : 'Inteligência contextual sem fórmulas prontas'}
           </div>
         </div>
       </div>

@@ -56,25 +56,31 @@ export function Footer() {
             </div>
 
             <p className="text-xs text-neutral-400 leading-relaxed mb-5 sm:mb-6 max-w-sm">
-              Seu sistema pessoal de evolução. Direção clara de longo prazo, ciclos semanais sem punição e acompanhamento lúcido.
+              {locale === 'en'
+                ? 'Your personal growth system. Clear long-term direction, guilt-free weekly cycles, and lucid reflection.'
+                : 'Seu sistema pessoal de evolução. Direção clara de longo prazo, ciclos semanais sem punição e acompanhamento lúcido.'}
             </p>
 
             <span className="font-mono text-[10px] text-[#B8FF00] uppercase tracking-widest mb-2 font-bold">
-              RECEBER NOVIDADES DA TRAJETTA
+              {locale === 'en' ? 'RECEIVE TRAJETTA UPDATES' : 'RECEBER NOVIDADES DA TRAJETTA'}
             </span>
 
             {/* Subscribe Form strictly for updates/novidades */}
             {quickSubmitted ? (
               <div className="flex items-center gap-2 text-xs font-mono text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/20 rounded-lg px-3.5 py-3 w-full max-w-sm">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#B8FF00]" />
-                <span className="leading-snug">Inscrição confirmada! Você receberá novidades e atualizações por e-mail.</span>
+                <span className="leading-snug">
+                  {locale === 'en'
+                    ? 'Subscription confirmed! You will receive product updates via email.'
+                    : 'Inscrição confirmada! Você receberá novidades e atualizações por e-mail.'}
+                </span>
               </div>
             ) : (
               <form onSubmit={handleQuickSubmit} className="flex items-center bg-[#0d1015] border border-white/15 rounded-lg p-1 w-full max-w-sm focus-within:border-[#B8FF00]/60 transition-colors">
                 <input
                   type="email"
                   required
-                  placeholder="Seu e-mail para novidades..."
+                  placeholder={locale === 'en' ? "Your email for updates..." : "Seu e-mail para novidades..."}
                   value={quickEmail}
                   onChange={(e) => setQuickEmail(e.target.value)}
                   className="bg-transparent border-none text-xs text-white placeholder-neutral-500 px-3 py-2 focus:outline-none flex-1 min-w-0"
@@ -84,7 +90,9 @@ export function Footer() {
                   disabled={isSubmitting}
                   className="bg-[#B8FF00] hover:bg-[#a6e600] disabled:opacity-60 text-[#060709] text-[10px] font-extrabold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
                 >
-                  {isSubmitting ? 'ENVIANDO...' : 'INSCREVER-SE'}
+                  {isSubmitting
+                    ? (locale === 'en' ? 'SENDING...' : 'ENVIANDO...')
+                    : (locale === 'en' ? 'SUBSCRIBE' : 'INSCREVER-SE')}
                 </button>
               </form>
             )}
@@ -95,29 +103,29 @@ export function Footer() {
             {/* Column 1: Navegação */}
             <div>
               <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
-                NAVEGAÇÃO
+                {locale === 'en' ? 'NAVIGATION' : 'NAVEGAÇÃO'}
               </span>
               <ul className="space-y-2 text-xs text-neutral-400">
-                <li><a className="hover:text-white transition-colors" href="#visao">Visão de Longo Prazo</a></li>
-                <li><a className="hover:text-white transition-colors" href="#ciclos">Ciclos Semanais</a></li>
-                <li><a className="hover:text-white transition-colors" href="#areas">4 Áreas da Vida</a></li>
-                <li><a className="hover:text-white transition-colors" href="#metodo">O Método</a></li>
-                <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">Planos & Assinatura Pro</a></li>
-                <li><a className="hover:text-white transition-colors" href="#faq">Perguntas Frequentes</a></li>
+                <li><a className="hover:text-white transition-colors" href="#visao">{locale === 'en' ? 'Long-Term Vision' : 'Visão de Longo Prazo'}</a></li>
+                <li><a className="hover:text-white transition-colors" href="#ciclos">{locale === 'en' ? 'Weekly Cycles' : 'Ciclos Semanais'}</a></li>
+                <li><a className="hover:text-white transition-colors" href="#areas">{locale === 'en' ? '4 Life Areas' : '4 Áreas da Vida'}</a></li>
+                <li><a className="hover:text-white transition-colors" href="#metodo">{locale === 'en' ? 'The Method' : 'O Método'}</a></li>
+                <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">{locale === 'en' ? 'Plans & Pro Membership' : 'Planos & Assinatura Pro'}</a></li>
+                <li><a className="hover:text-white transition-colors" href="#faq">{locale === 'en' ? 'Frequently Asked Questions' : 'Perguntas Frequentes'}</a></li>
               </ul>
             </div>
 
             {/* Column 2: Metodologia */}
             <div>
               <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
-                METODOLOGIA
+                {locale === 'en' ? 'METHODOLOGY' : 'METODOLOGIA'}
               </span>
               <ul className="space-y-2 text-xs text-neutral-400">
-                <li><span className="text-neutral-300">Estrela-Guia</span></li>
-                <li><span className="text-neutral-300">3 Prioridades</span></li>
-                <li><span className="text-neutral-300">Piso Mínimo</span></li>
-                <li><span className="text-neutral-300">Review de Domingo</span></li>
-                <li><span className="text-neutral-300">Retomada Sem Culpa</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'North Star' : 'Estrela-Guia'}</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? '3 Priorities' : '3 Prioridades'}</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'Minimum Floor' : 'Piso Mínimo'}</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'Sunday Review' : 'Review de Domingo'}</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'Guilt-Free Reset' : 'Retomada Sem Culpa'}</span></li>
                 <li><span className="text-neutral-300">Zero Streaks</span></li>
               </ul>
             </div>
@@ -125,12 +133,12 @@ export function Footer() {
             {/* Column 3: Sistema & Infraestrutura */}
             <div className="col-span-2 sm:col-span-1">
               <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-3 sm:mb-4">
-                SISTEMA & APP
+                {locale === 'en' ? 'SYSTEM & APP' : 'SISTEMA & APP'}
               </span>
               <ul className="space-y-2 text-xs text-neutral-400">
                 <li><span className="text-neutral-300">Trajetta Engine</span></li>
-                <li><span className="text-neutral-300">Motor de IA Contextual</span></li>
-                <li><span className="text-neutral-300">Memória Longitudinal</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'Contextual AI Engine' : 'Motor de IA Contextual'}</span></li>
+                <li><span className="text-neutral-300">{locale === 'en' ? 'Longitudinal Memory' : 'Memória Longitudinal'}</span></li>
                 <li><span className="text-neutral-300">Mobile PWA</span></li>
                 <li className="pt-2">
                   <Link
@@ -149,7 +157,11 @@ export function Footer() {
         <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-3 sm:gap-4 text-center sm:text-left">
           <div className="flex items-center space-x-2 flex-wrap justify-center sm:justify-start">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00]"></span>
-            <span>Trajetta © {new Date().getFullYear()} — Todos os direitos reservados.</span>
+            <span>
+              {locale === 'en'
+                ? `Trajetta © ${new Date().getFullYear()} — All rights reserved.`
+                : `Trajetta © ${new Date().getFullYear()} — Todos os direitos reservados.`}
+            </span>
             <span className="text-white/20">•</span>
             <Link href={locale === 'en' ? '/en/terms' : '/termos'} className="hover:text-white transition-colors underline underline-offset-2">
               {locale === 'en' ? 'Cancellation Policy' : 'Política de Cancelamento'}

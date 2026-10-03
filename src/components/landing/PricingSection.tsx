@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { appendUtmToUrl, trackMarketingEvent } from '@/lib/analytics';
-import { Check, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
-import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
+import { Check, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/context';
 
 export function PricingSection() {
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
   const [loadingPlan, setLoadingPlan] = useState(false);
 
   const handleStartCheckout = async () => {
-    trackMarketingEvent('plan_selected', { plan: 'monthly', billing: 'monthly' });
-    trackMarketingEvent('trial_started', { plan: 'monthly' });
+    trackMarketingEvent('plan_selected', { plan: 'monthly', billing: 'monthly', locale });
+    trackMarketingEvent('trial_started', { plan: 'monthly', locale });
 
     try {
       setLoadingPlan(true);
@@ -34,7 +36,7 @@ export function PricingSection() {
     }
   };
 
-  const proFeatures = [
+  const proFeaturesPt = [
     'Acesso irrestrito às 4 Áreas da Vida (Corpo, Dinheiro, Carreira e Vida Pessoal)',
     'Trajetta AI ilimitada com memória viva e contexto longitudinal dos seus ciclos',
     'Planejamento semanal inteligente com capacity planning (máx. 3 prioridades)',
@@ -45,10 +47,33 @@ export function PricingSection() {
     'Exportação de dados total em JSON e CSV a qualquer momento',
   ];
 
+  const proFeaturesEn = [
+    'Unrestricted access to 4 Life Areas (Body, Money, Career, and Personal Life)',
+    'Unlimited Trajetta AI with living memory and longitudinal cycle context',
+    'Smart weekly planning with capacity management (max 3 priorities)',
+    'Habits with Minimum Floor & Cumulative Volume (zero punitive streaks)',
+    'Guided Sunday Review with immutable debrief snapshots',
+    'Historical timeline with milestones, reflections, and permanent wins',
+    'Instant 1-click cancellation directly in your dashboard or Stripe',
+    'Full personal data export in JSON and CSV anytime',
+  ];
+
+  const proFeatures = isEn ? proFeaturesEn : proFeaturesPt;
+
   return (
     <section id="planos" className="py-20 sm:py-32 bg-[#060709] relative overflow-hidden">
-      {/* Background Calm Power Atmosphere: Radial Lime Glow and Dark Mist */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[500px] bg-[#B8FF00]/8 rounded-full blur-[140px] pointer-events-none" />
+      {/* Background Calm Power Atmosphere: 4K Rendered Architectural Canvas with Lime Glow */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        <img
+          src="/trajetta-pricing-bg.jpg"
+          alt={isEn ? "Trajetta Pro Atmosphere" : "Atmosfera Trajetta Pro"}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover opacity-35 pointer-events-none mix-blend-screen"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-[#060709]/80 to-[#060709]/90" />
+      </div>
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[500px] bg-[#B8FF00]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
@@ -58,16 +83,19 @@ export function PricingSection() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14181F] border border-[#B8FF00]/30 shadow-[0_0_15px_rgba(184,255,0,0.1)]">
             <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B8FF00]">
-              Investimento na Sua Trajetória
+              {isEn ? 'Investment in Your Trajectory' : 'Investimento na Sua Trajetória'}
             </span>
           </div>
 
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#F2F1ED] tracking-tight [text-wrap:balance]">
-            Invista na sua evolução com o <span className="text-[#B8FF00]">Trajetta Pro</span>.
+            {isEn ? 'Invest in your evolution with ' : 'Invista na sua evolução com o '}
+            <span className="text-[#B8FF00]">Trajetta Pro</span>.
           </h2>
 
           <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-xl mx-auto font-light [text-wrap:pretty]">
-            Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e viva a clareza mental do seu sistema de vida. Cancele com 1 clique a qualquer momento.
+            {isEn
+              ? 'Unrestricted access to every tool. Plan your week, test Trajetta AI, and experience true mental clarity. Cancel with 1 click anytime.'
+              : 'Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e viva a clareza mental do seu sistema de vida. Cancele com 1 clique a qualquer momento.'}
           </p>
         </div>
 
@@ -76,8 +104,8 @@ export function PricingSection() {
           <div className="relative rounded-3xl bg-gradient-to-b from-[#0F131A] via-[#0A0D12] to-[#07090C] border-2 border-[#B8FF00]/50 p-6 sm:p-10 shadow-[0_0_60px_rgba(184,255,0,0.15)] flex flex-col justify-between space-y-8 backdrop-blur-xl">
             {/* Top Monumental Badge */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-[0_0_15px_rgba(184,255,0,0.4)] whitespace-nowrap flex items-center gap-1.5">
-              <Sparkles size={13} className="fill-[#060709]" />
-              <span>Liberação Imediata • Acesso Completo</span>
+              <Zap size={13} className="fill-[#060709] text-[#060709]" />
+              <span>{isEn ? 'Instant Access • Full Unlocked' : 'Liberação Imediata • Acesso Completo'}</span>
             </div>
 
             {/* Plan Header & Pricing */}
@@ -89,16 +117,16 @@ export function PricingSection() {
                   </div>
                   <div>
                     <h3 className="text-xl sm:text-2xl font-extrabold text-[#F2F1ED] tracking-tight">
-                      Trajetta Pro Mensal
+                      {isEn ? 'Trajetta Pro Monthly' : 'Trajetta Pro Mensal'}
                     </h3>
                     <p className="text-xs text-[#8E9499]">
-                      Total flexibilidade mês a mês. Sem fidelidade ou amarras.
+                      {isEn ? 'Total month-to-month flexibility. No commitments or lock-ins.' : 'Total flexibilidade mês a mês. Sem fidelidade ou amarras.'}
                     </p>
                   </div>
                 </div>
 
                 <span className="text-xs px-3 py-1 rounded-full bg-[#B8FF00]/15 border border-[#B8FF00]/30 text-[#B8FF00] font-mono font-bold">
-                  Acesso Completo
+                  {isEn ? 'Full Access' : 'Acesso Completo'}
                 </span>
               </div>
 
@@ -108,19 +136,19 @@ export function PricingSection() {
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-sm font-bold text-[#8E9499]">R$</span>
                     <span className="text-4xl sm:text-5xl font-black text-[#F2F1ED] tracking-tight">29,90</span>
-                    <span className="text-xs font-mono text-[#8E9499]">/mês</span>
+                    <span className="text-xs font-mono text-[#8E9499]">{isEn ? '/mo' : '/mês'}</span>
                   </div>
                   <p className="text-[11px] text-[#B8FF00] font-semibold mt-1">
-                    ✓ Acesso imediato liberado logo após confirmação
+                    {isEn ? '✓ Immediate access unlocked upon confirmation' : '✓ Acesso imediato liberado logo após confirmação'}
                   </p>
                 </div>
 
                 <div className="text-right hidden sm:block">
                   <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">
-                    Garantia
+                    {isEn ? 'Guarantee' : 'Garantia'}
                   </span>
                   <span className="text-xs text-neutral-200 font-medium">
-                    Cancelamento em 1 clique
+                    {isEn ? '1-click cancel' : 'Cancelamento em 1 clique'}
                   </span>
                 </div>
               </div>
@@ -129,7 +157,7 @@ export function PricingSection() {
             {/* Feature Checklist */}
             <div className="space-y-3 pt-2 border-t border-white/8">
               <span className="text-[10.5px] font-mono uppercase tracking-wider text-neutral-400 block mb-3 font-semibold">
-                Tudo o que está incluído no seu plano:
+                {isEn ? 'Everything included in your plan:' : 'Tudo o que está incluído no seu plano:'}
               </span>
               <ul className="space-y-3">
                 {proFeatures.map((feat, idx) => (
@@ -154,11 +182,11 @@ export function PricingSection() {
                 {loadingPlan ? (
                   <span className="flex items-center gap-2 text-[#060709]">
                     <span className="w-4 h-4 rounded-full border-2 border-[#060709] border-t-transparent animate-spin" />
-                    Abrindo checkout seguro da Stripe...
+                    {isEn ? 'Opening secure Stripe checkout...' : 'Abrindo checkout seguro da Stripe...'}
                   </span>
                 ) : (
                   <>
-                    <span>Assinar Trajetta Pro Agora</span>
+                    <span>{isEn ? 'Get Trajetta Pro Now' : 'Assinar Trajetta Pro Agora'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -169,7 +197,9 @@ export function PricingSection() {
                   href={appendUtmToUrl('/register')}
                   className="text-xs text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-4"
                 >
-                  Ou prefere se cadastrar sem cartão primeiro? Criar conta rápida
+                  {isEn
+                    ? 'Prefer to sign up without a card first? Create quick account'
+                    : 'Ou prefere se cadastrar sem cartão primeiro? Criar conta rápida'}
                 </Link>
               </div>
 
@@ -177,12 +207,12 @@ export function PricingSection() {
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-mono text-neutral-400 pt-3 border-t border-white/5">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck size={14} className="text-[#B8FF00]" />
-                  Pagamento Seguro via Stripe
+                  {isEn ? 'Secure Stripe Checkout' : 'Pagamento Seguro via Stripe'}
                 </span>
                 <span>•</span>
-                <span>Garantia de 7 dias CDC</span>
+                <span>{isEn ? '7-day money-back guarantee' : 'Garantia de 7 dias CDC'}</span>
                 <span>•</span>
-                <span>Zero fidelidade</span>
+                <span>{isEn ? 'Zero lock-in' : 'Zero fidelidade'}</span>
               </div>
             </div>
           </div>

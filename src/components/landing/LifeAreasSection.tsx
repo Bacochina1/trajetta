@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
+import { useI18n } from '@/lib/i18n/context';
 
 interface AreaInfo {
   id: 'corpo' | 'dinheiro' | 'carreira' | 'mente';
@@ -27,7 +28,7 @@ interface AreaInfo {
   mockupRows: Array<{ label: string; status: string; tag: string }>;
 }
 
-const AREAS: AreaInfo[] = [
+const AREAS_PT: AreaInfo[] = [
   {
     id: 'corpo',
     tag: 'Corpo & Vitalidade',
@@ -94,7 +95,78 @@ const AREAS: AreaInfo[] = [
   }
 ];
 
+const AREAS_EN: AreaInfo[] = [
+  {
+    id: 'corpo',
+    tag: 'Body & Vitality',
+    color: '#58D6A7',
+    icon: Activity,
+    title: 'Physical energy without the burden of extreme perfection.',
+    desc: 'Build compounding consistency across training, restorative sleep, and nutrition without streak anxiety. When life peaks, activate your 15-minute minimum floor to guard the habit foundation.',
+    metricLabel: 'Cumulative Consistency',
+    metricValue: '84% over 12 weeks',
+    mockupTitle: 'Vitality Floor Active',
+    mockupRows: [
+      { label: 'Strength Workout (3x/week)', status: 'Completed', tag: 'Pillar' },
+      { label: 'Restorative Sleep (> 7h)', status: '4/5 nights', tag: 'Recovery' },
+      { label: 'Minimum Floor on Heavy Days', status: '15m mobility', tag: 'Safety' }
+    ]
+  },
+  {
+    id: 'dinheiro',
+    tag: 'Money & Freedom',
+    color: '#F08A76',
+    icon: DollarSign,
+    title: 'Financial clarity without endless spreadsheets.',
+    desc: 'Connect savings, investments, and wealth growth directly to your weekly bandwidth. Track your emergency cushion and contributions with calm, long-term composure.',
+    metricLabel: 'Monthly Contribution Kept',
+    metricValue: '6 consecutive months',
+    mockupTitle: 'Emergency Cushion & Assets',
+    mockupRows: [
+      { label: 'Goal: Emergency Cushion', status: '$8,400 / 10k', tag: '84%' },
+      { label: 'Automated Monthly Transfer', status: 'Completed', tag: 'On track' },
+      { label: 'Discretionary Spending Margin', status: 'Controlled', tag: 'OK' }
+    ]
+  },
+  {
+    id: 'carreira',
+    tag: 'Career & Craft',
+    color: '#A98CF7',
+    icon: Briefcase,
+    title: 'Deliberate momentum on high-impact initiatives.',
+    desc: 'Filter the noise of reactive work. Every Monday, pick only 3 milestones that truly move your trajectory forward and execute them in deep, protected blocks.',
+    metricLabel: 'Strategic Deliverables',
+    metricValue: '18 milestones delivered',
+    mockupTitle: 'Quarterly Focus in Motion',
+    mockupRows: [
+      { label: 'Flagship Project Release', status: 'Phase 3/4', tag: 'P1' },
+      { label: 'Deep Technical Certification', status: '2h/week', tag: 'P2' },
+      { label: 'Authority & Network Reach', status: 'Published', tag: 'P3' }
+    ]
+  },
+  {
+    id: 'mente',
+    tag: 'Mind & Inner Life',
+    color: '#6FAEF7',
+    icon: Heart,
+    title: 'Presence, stillness, and space for what matters.',
+    desc: 'Life is more than a task checklist. Guard non-negotiable room for reading, emotional stillness, and real connection with those you love, protected from digital fatigue.',
+    metricLabel: 'Evening Wind-Down',
+    metricValue: '92% disconnected',
+    mockupTitle: 'Margin & Mental Space',
+    mockupRows: [
+      { label: 'Screen Disconnect at 10 PM', status: 'Protected', tag: 'Silence' },
+      { label: 'Dedicated Family Time', status: 'Saturdays', tag: 'Presence' },
+      { label: 'Deep Reading (20 pages)', status: '4 books/yr', tag: 'Mind' }
+    ]
+  }
+];
+
 export function LifeAreasSection() {
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
+  const areas = isEn ? AREAS_EN : AREAS_PT;
+
   const [activeIdx, setActiveIdx] = useState(0);
 
   // Keen Slider for mobile touch swiping (exact 1 card per view to fit screen perfectly)
@@ -114,19 +186,22 @@ export function LifeAreasSection() {
     instanceRef.current?.moveToIdx(idx);
   };
 
-  const current = AREAS[activeIdx] || AREAS[0];
+  const current = areas[activeIdx] || areas[0];
 
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 py-14 sm:py-24 border-t border-white/10 overflow-hidden box-border" data-purpose="use-cases" id="areas">
       {/* Eyebrow */}
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>
-        <span>As 4 Áreas Essenciais</span>
+        <span>{isEn ? 'The 4 Essential Life Areas' : 'As 4 Áreas Essenciais'}</span>
       </div>
 
       {/* Section Heading */}
       <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-6 sm:mb-8 [text-wrap:balance]">
-        Um sistema unificado, <span className="text-neutral-500">clareza para toda a sua vida.</span>
+        {isEn ? 'One unified framework, ' : 'Um sistema unificado, '}
+        <span className="text-neutral-500">
+          {isEn ? 'clarity for your whole life.' : 'clareza para toda a sua vida.'}
+        </span>
       </h2>
 
       {/* ============================================================ */}
@@ -135,7 +210,7 @@ export function LifeAreasSection() {
       <div className="block lg:hidden w-full max-w-full">
         {/* Quick Area Pill Selector */}
         <div className="flex items-center gap-1.5 pb-2 mb-4 text-xs font-mono overflow-x-auto scrollbar-none whitespace-nowrap w-full">
-          {AREAS.map((area, idx) => {
+          {areas.map((area, idx) => {
             const isActive = activeIdx === idx;
             return (
               <button
@@ -157,7 +232,7 @@ export function LifeAreasSection() {
 
         {/* Keen Slider Carousel (Constrained strictly to container width) */}
         <div ref={sliderRef} className="keen-slider w-full max-w-full overflow-hidden rounded-2xl">
-          {AREAS.map((area, sIdx) => {
+          {areas.map((area, sIdx) => {
             const Icon = area.icon;
             return (
               <div key={area.id} className="keen-slider__slide w-full min-w-0 max-w-full box-border">
@@ -228,7 +303,9 @@ export function LifeAreasSection() {
                         <span className="truncate mr-2">{area.metricLabel}</span>
                         <div className="flex items-center gap-1 flex-shrink-0">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
-                          <span className="text-white font-medium text-[10px]">Cadência Saudável</span>
+                          <span className="text-white font-medium text-[10px]">
+                            {isEn ? 'Healthy Cadence' : 'Cadência Saudável'}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -236,7 +313,9 @@ export function LifeAreasSection() {
 
                   {/* Swipe hint inside card footer */}
                   <div className="relative z-10 pt-3 flex items-center justify-between text-[10.5px] font-mono text-neutral-400">
-                    <span className="text-[10px] text-neutral-500">← Deslize para navegar →</span>
+                    <span className="text-[10px] text-neutral-500">
+                      {isEn ? '← Swipe to explore →' : '← Deslize para navegar →'}
+                    </span>
                     <span className="text-white/60 font-semibold">{`0${sIdx + 1} / 04`}</span>
                   </div>
                 </div>
@@ -248,7 +327,7 @@ export function LifeAreasSection() {
         {/* Carousel Controls: Dots & Chevrons */}
         <div className="flex items-center justify-between mt-3 px-1 w-full">
           <div className="flex items-center gap-1.5">
-            {AREAS.map((_, idx) => (
+            {areas.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
@@ -268,7 +347,7 @@ export function LifeAreasSection() {
               type="button"
               onClick={() => instanceRef.current?.prev()}
               className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all cursor-pointer"
-              aria-label="Área anterior"
+              aria-label={isEn ? 'Previous area' : 'Área anterior'}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -276,7 +355,7 @@ export function LifeAreasSection() {
               type="button"
               onClick={() => instanceRef.current?.next()}
               className="p-2 rounded-full bg-[#12161e] border border-white/10 text-neutral-300 hover:text-white active:scale-95 transition-all cursor-pointer"
-              aria-label="Próxima área"
+              aria-label={isEn ? 'Next area' : 'Próxima área'}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -288,15 +367,15 @@ export function LifeAreasSection() {
           <div className="space-y-2.5 mb-6 font-mono text-[11px] xs:text-xs text-neutral-300">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-              <span>Visualização longitudinal de progresso</span>
+              <span>{isEn ? 'Longitudinal progress tracking' : 'Visualização longitudinal de progresso'}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-              <span>Pisos mínimos para períodos de crise e cansaço</span>
+              <span>{isEn ? 'Minimum floors for demanding days & fatigue' : 'Pisos mínimos para períodos de crise e cansaço'}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-              <span>Integração no mesmo review semanal sem silos</span>
+              <span>{isEn ? 'Seamless weekly review without silos' : 'Integração no mesmo review semanal sem silos'}</span>
             </div>
           </div>
 
@@ -304,7 +383,7 @@ export function LifeAreasSection() {
             href="#planos"
             className="w-full inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
           >
-            <span>COMEÇAR NO TRAJETTA PRO</span>
+            <span>{isEn ? 'GET STARTED WITH TRAJETTA PRO' : 'COMEÇAR NO TRAJETTA PRO'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -316,7 +395,7 @@ export function LifeAreasSection() {
       <div className="hidden lg:block">
         {/* Tab Navigation Bar */}
         <div className="flex items-center gap-8 border-b border-white/10 pb-3 mb-10 text-xs font-mono">
-          {AREAS.map((area, idx) => {
+          {areas.map((area, idx) => {
             const Icon = area.icon;
             const isActive = activeIdx === idx;
             return (
@@ -378,7 +457,9 @@ export function LifeAreasSection() {
                 <span className="truncate mr-2">{current.metricLabel}</span>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse" />
-                  <span className="text-white font-medium">Cadência Saudável</span>
+                  <span className="text-white font-medium">
+                    {isEn ? 'Healthy Cadence' : 'Cadência Saudável'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -402,15 +483,15 @@ export function LifeAreasSection() {
             <div className="space-y-3 mb-8 w-full font-mono text-xs text-neutral-300">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-                <span>Visualização longitudinal de progresso</span>
+                <span>{isEn ? 'Longitudinal progress tracking' : 'Visualização longitudinal de progresso'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-                <span>Pisos mínimos para períodos de crise e cansaço</span>
+                <span>{isEn ? 'Minimum floors for demanding days & fatigue' : 'Pisos mínimos para períodos de crise e cansaço'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] flex-shrink-0"></span>
-                <span>Integração no mesmo review semanal sem silos</span>
+                <span>{isEn ? 'Seamless weekly review without silos' : 'Integração no mesmo review semanal sem silos'}</span>
               </div>
             </div>
 
@@ -418,7 +499,7 @@ export function LifeAreasSection() {
               href="#planos"
               className="inline-flex items-center justify-center space-x-2 bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all active:scale-95 shadow-lg shadow-[0_0_20px_rgba(184,255,0,0.25)] text-center"
             >
-              <span>COMEÇAR NO TRAJETTA PRO</span>
+              <span>{isEn ? 'GET STARTED WITH TRAJETTA PRO' : 'COMEÇAR NO TRAJETTA PRO'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
