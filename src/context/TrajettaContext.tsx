@@ -85,6 +85,7 @@ type TrajettaContextType = {
     selectedHabits?: { title: string; lifeArea: LifeArea; frequencyPerWeek: number }[];
     firstGoalTitle?: string;
     firstGoalArea?: LifeArea;
+    firstGoalSecondaryAreas?: LifeArea[];
     firstGoalTargetDate?: string;
     firstGoalMilestones?: string[];
   }) => void;
@@ -853,6 +854,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
     selectedHabits?: { title: string; lifeArea: LifeArea; frequencyPerWeek: number }[];
     firstGoalTitle?: string;
     firstGoalArea?: LifeArea;
+    firstGoalSecondaryAreas?: LifeArea[];
     firstGoalTargetDate?: string;
     firstGoalMilestones?: string[];
   }) => {
@@ -889,6 +891,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         title: data.firstGoalTitle.trim(),
         description: data.target12Months ? `Meta ligada ao seu alvo de 12 meses: ${data.target12Months}` : '',
         lifeArea: data.firstGoalArea || data.primaryArea,
+        secondaryAreas: data.firstGoalSecondaryAreas || [],
         status: 'active',
         startDate: new Date().toISOString().split('T')[0],
         targetDate: data.firstGoalTargetDate || '2026-12-31',

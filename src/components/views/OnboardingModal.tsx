@@ -48,6 +48,7 @@ export function OnboardingModal() {
   const [target12Months, setTarget12Months] = useState(user.target12Months || '');
   const [firstGoalTitle, setFirstGoalTitle] = useState('');
   const [firstGoalArea, setFirstGoalArea] = useState<LifeArea>('corpo');
+  const [firstGoalSecondaryAreas, setFirstGoalSecondaryAreas] = useState<LifeArea[]>([]);
   const [firstGoalTargetDate, setFirstGoalTargetDate] = useState('2026-12-31');
 
   const toggleArea = (area: LifeArea) => {
@@ -88,6 +89,7 @@ export function OnboardingModal() {
       selectedHabits,
       firstGoalTitle: firstGoalTitle.trim(),
       firstGoalArea,
+      firstGoalSecondaryAreas,
       firstGoalTargetDate,
     });
     setTimeout(() => {
@@ -419,12 +421,16 @@ export function OnboardingModal() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="onboarding-goal-area" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1">
-                    Área
+                    Área Principal
                   </label>
                   <select
                     id="onboarding-goal-area"
                     value={firstGoalArea}
-                    onChange={e => setFirstGoalArea(e.target.value as LifeArea)}
+                    onChange={e => {
+                      const newArea = e.target.value as LifeArea;
+                      setFirstGoalArea(newArea);
+                      setFirstGoalSecondaryAreas(prev => prev.filter(a => a !== newArea));
+                    }}
                     className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-xs text-[#F2F1ED] focus:outline-none"
                   >
                     <option value="corpo">Corpo & Saúde</option>
@@ -445,6 +451,40 @@ export function OnboardingModal() {
                     onChange={e => setFirstGoalTargetDate(e.target.value)}
                     className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-xs text-[#F2F1ED] focus:outline-none"
                   />
+                </div>
+              </div>
+
+              {/* Secondary Areas (Multi-Area Support) */}
+              <div>
+                <span className="block text-[11px] font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+                  Áreas Complementares (Opcional - selecione mais de uma se aplicar)
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {(['corpo', 'dinheiro', 'carreira', 'vida'] as LifeArea[])
+                    .filter(a => a !== firstGoalArea)
+                    .map(a => {
+                      const isSelected = firstGoalSecondaryAreas.includes(a);
+                      const conf = LIFE_AREAS[a];
+                      return (
+                        <button
+                          key={a}
+                          type="button"
+                          onClick={() => {
+                            setFirstGoalSecondaryAreas(prev =>
+                              prev.includes(a) ? prev.filter(item => item !== a) : [...prev, a]
+                            );
+                          }}
+                          className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
+                            isSelected
+                              ? 'bg-white/15 text-[#F2F1ED] border-white/30 font-semibold shadow-sm'
+                              : 'bg-[#111315] text-[#8E9499] border-white/8 hover:border-white/15'
+                          }`}
+                        >
+                          {isSelected ? '✓ ' : '+ '}
+                          {conf.label}
+                        </button>
+                      );
+                    })}
                 </div>
               </div>
             </div>

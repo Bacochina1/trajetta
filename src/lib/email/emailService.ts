@@ -32,6 +32,27 @@ export async function sendEmail({ to, subject, html, userId }: SendEmailOptions)
         const err = await res.text();
         console.warn(`[Resend Email Warning for ${to}]: ${err}`);
 
+        // If domain is unverified, fallback to onboarding@resend.dev
+        if (fromEmail !== 'Trajetta <onboarding@resend.dev>' && (err.includes('domain is not verified') || err.includes('not have permission') || err.includes('domain'))) {
+          const retryRes = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              from: 'Trajetta <onboarding@resend.dev>',
+              to: [to],
+              subject,
+              html,
+            }),
+          });
+          if (retryRes.ok) {
+            const rData = await retryRes.json();
+            return { success: true, id: rData.id };
+          }
+        }
+
         // In Resend sandbox mode, if the recipient is external, Resend rejects with "only send testing emails".
         // Forward the actual email to the verified owner (companytrajetta@gmail.com) so the founder receives the real email!
         if (err.includes('only send testing emails') || err.includes('validation_error')) {
