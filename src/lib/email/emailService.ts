@@ -6,14 +6,14 @@ interface SendEmailOptions {
   html: string;
   userId?: string;
 }
-
 export async function sendEmail({ to, subject, html, userId }: SendEmailOptions): Promise<{ success: boolean; id?: string; error?: string; sandboxForwarded?: boolean }> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = (process.env.RESEND_API_KEY || '').replace(/[^\x20-\x7E]/g, '').trim();
 
   if (apiKey) {
     try {
       // Use custom domain when verified, or fallback to onboarding@resend.dev
-      const fromEmail = process.env.RESEND_FROM || 'Trajetta <onboarding@resend.dev>';
+      const rawFrom = process.env.RESEND_FROM || 'Trajetta <contato@trajettacompany.com.br>';
+      const fromEmail = rawFrom.replace(/[^\x20-\x7E]/g, '').trim();
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
