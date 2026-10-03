@@ -3,23 +3,22 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { appendUtmToUrl, trackMarketingEvent } from '@/lib/analytics';
-import { Check, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Check, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
 
 export function PricingSection() {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
+  const [loadingPlan, setLoadingPlan] = useState(false);
 
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-
-  const handlePlanClick = async (planKey: 'monthly' | 'annual' | 'founding') => {
-    trackMarketingEvent('plan_selected', { plan: planKey, billing: billingCycle });
-    trackMarketingEvent('trial_started', { plan: planKey });
+  const handleStartCheckout = async () => {
+    trackMarketingEvent('plan_selected', { plan: 'monthly', billing: 'monthly' });
+    trackMarketingEvent('trial_started', { plan: 'monthly' });
 
     try {
-      setLoadingPlan(planKey);
+      setLoadingPlan(true);
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planKey }),
+        body: JSON.stringify({ plan: 'monthly' }),
       });
       const data = await res.json();
       if (data.ok && data.url) {
@@ -31,220 +30,162 @@ export function PricingSection() {
       console.warn('Checkout redirection fallback:', e);
       window.location.href = appendUtmToUrl('/register');
     } finally {
-      setLoadingPlan(null);
+      setLoadingPlan(false);
     }
   };
 
   const proFeatures = [
-    'Acesso irrestrito às 4 Áreas da Vida (Corpo, Dinheiro, Carreira, Vida)',
-    'Planejamento semanal inteligente com capacity planning',
+    'Acesso irrestrito às 4 Áreas da Vida (Corpo, Dinheiro, Carreira e Vida Pessoal)',
+    'Trajetta AI ilimitada com memória viva e contexto longitudinal dos seus ciclos',
+    'Planejamento semanal inteligente com capacity planning (máx. 3 prioridades)',
     'Hábitos com Piso Mínimo e Volume Acumulado (zero streaks punitivos)',
-    'Weekly Review com snapshot imutável de aprendizados',
-    'Timeline histórica com marcos, memórias e conquistas',
-    'Trajetta AI ilimitada com memória viva de contexto',
+    'Weekly Review guiado de domingo com snapshot imutável de aprendizados',
+    'Timeline histórica com marcos, memórias e conquistas permanentes',
+    'Cancelamento instantâneo em 1 clique direto no seu painel ou na Stripe',
     'Exportação de dados total em JSON e CSV a qualquer momento',
   ];
 
   return (
-    <section id="planos" className="py-20 sm:py-28 bg-[#060709] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-            Investimento na Sua Trajetória
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight">
-            Comece agora com 3 dias de degustação gratuita.
-          </h2>
-          <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-2xl mx-auto">
-            Acesso irrestrito a todos os recursos. Teste a Trajetta AI, planeje sua semana e sinta a clareza mental antes de qualquer cobrança. Cancele com 1 clique.
-          </p>
+    <section id="planos" className="py-20 sm:py-32 bg-[#060709] relative overflow-hidden">
+      {/* Background Calm Power Atmosphere: Radial Lime Glow and Dark Mist */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[850px] h-[500px] bg-[#B8FF00]/8 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-          {/* Billing Switcher */}
-          <div className="inline-flex items-center p-1.5 rounded-xl bg-[#14181F] border border-white/8 mt-4 max-w-full">
-            <button
-              type="button"
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all min-h-[36px] ${
-                billingCycle === 'monthly'
-                  ? 'bg-[#B8FF00] text-[#060709]'
-                  : 'text-[#8E9499] hover:text-[#F2F1ED]'
-              }`}
-            >
-              Mensal
-            </button>
-            <button
-              type="button"
-              onClick={() => setBillingCycle('annual')}
-              className={`px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 min-h-[36px] ${
-                billingCycle === 'annual'
-                  ? 'bg-[#B8FF00] text-[#060709]'
-                  : 'text-[#8E9499] hover:text-[#F2F1ED]'
-              }`}
-            >
-              <span>Anual</span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-[#060709] text-[#B8FF00]">
-                -33%
-              </span>
-            </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="max-w-2xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14181F] border border-[#B8FF00]/30 shadow-[0_0_15px_rgba(184,255,0,0.1)]">
+            <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-pulse" />
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B8FF00]">
+              Investimento na Sua Trajetória
+            </span>
           </div>
+
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#F2F1ED] tracking-tight [text-wrap:balance]">
+            Comece agora com 3 dias de <span className="text-[#B8FF00]">degustação gratuita</span>.
+          </h2>
+
+          <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed max-w-xl mx-auto font-light [text-wrap:pretty]">
+            Acesso irrestrito a todas as ferramentas. Planeje sua semana, teste a Trajetta AI e sinta a clareza mental antes de qualquer cobrança. Cancele com 1 clique a qualquer momento.
+          </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto items-stretch">
-          {/* Plan: Trajetta Pro Mensal */}
-          <div className="p-5 sm:p-8 rounded-3xl bg-[#0D0F10] border border-white/8 flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg sm:text-xl font-bold text-[#F2F1ED]">Trajetta Pro Mensal</h3>
-                <span className="text-xs px-2.5 py-1 rounded-full bg-[#171B20] text-[#8E9499] font-mono">
-                  Flexibilidade
-                </span>
-              </div>
-              <p className="text-xs text-[#8E9499] leading-relaxed">
-                Ideal para quem deseja testar mês a mês com total flexibilidade de cancelamento.
-              </p>
-              <div className="pt-2 flex items-baseline gap-1">
-                <span className="text-xs text-[#8E9499]">R$</span>
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#F2F1ED]">29,90</span>
-                <span className="text-xs text-[#8E9499]">/mês</span>
-              </div>
-              <div className="text-[11px] text-[#B8FF00] font-semibold">
-                ✓ 3 dias de teste gratuito inclusos
-              </div>
+        {/* Centerpiece Luxury Monthly Pricing Card */}
+        <div className="max-w-xl mx-auto">
+          <div className="relative rounded-3xl bg-gradient-to-b from-[#0F131A] via-[#0A0D12] to-[#07090C] border-2 border-[#B8FF00]/50 p-6 sm:p-10 shadow-[0_0_60px_rgba(184,255,0,0.15)] flex flex-col justify-between space-y-8 backdrop-blur-xl">
+            {/* Top Monumental Badge */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-[0_0_15px_rgba(184,255,0,0.4)] whitespace-nowrap flex items-center gap-1.5">
+              <Sparkles size={13} className="fill-[#060709]" />
+              <span>3 Dias de Teste Gratuito Inclusos</span>
             </div>
 
-            <ul className="space-y-3 pt-4 border-t border-white/8 flex-1">
-              {proFeatures.slice(0, 5).map((feat, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs text-[#C9CDD1]">
-                  <Check className="w-3.5 h-3.5 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                  <span>{feat}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Plan Header & Pricing */}
+            <div className="space-y-5 pt-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center text-[#B8FF00]">
+                    <Zap size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-[#F2F1ED] tracking-tight">
+                      Trajetta Pro Mensal
+                    </h3>
+                    <p className="text-xs text-[#8E9499]">
+                      Total flexibilidade mês a mês. Sem fidelidade ou amarras.
+                    </p>
+                  </div>
+                </div>
 
-            <div className="space-y-2 pt-2">
-              <button
-                type="button"
-                disabled={loadingPlan !== null}
-                onClick={() => handlePlanClick('monthly')}
-                className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] py-3.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/10 hover:border-[#B8FF00]/40 hover:bg-[#1E232A] transition-all disabled:opacity-50"
-              >
-                {loadingPlan === 'monthly' ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-3.5 h-3.5 rounded-full border-2 border-[#B8FF00] border-t-transparent animate-spin" />
-                    Abrindo checkout seguro...
+                <span className="text-xs px-3 py-1 rounded-full bg-[#B8FF00]/15 border border-[#B8FF00]/30 text-[#B8FF00] font-mono font-bold">
+                  Acesso Completo
+                </span>
+              </div>
+
+              {/* Price Display */}
+              <div className="p-4 rounded-2xl bg-[#12161E]/90 border border-white/8 flex items-baseline justify-between">
+                <div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-sm font-bold text-[#8E9499]">R$</span>
+                    <span className="text-4xl sm:text-5xl font-black text-[#F2F1ED] tracking-tight">29,90</span>
+                    <span className="text-xs font-mono text-[#8E9499]">/mês</span>
+                  </div>
+                  <p className="text-[11px] text-[#B8FF00] font-semibold mt-1">
+                    ✓ R$ 0,00 cobrado hoje • Cobrança somente no 4º dia se você amar
+                  </p>
+                </div>
+
+                <div className="text-right hidden sm:block">
+                  <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">
+                    Garantia
                   </span>
-                ) : (
-                  <>
-                    <span>Começar 3 dias grátis</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </>
-                )}
-              </button>
-
-              <div className="text-center">
-                <Link
-                  href={appendUtmToUrl('/register')}
-                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-2"
-                >
-                  Ou cadastrar sem cartão primeiro
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Plan: Trajetta Pro Anual (Highlighted) */}
-          <div className="p-5 sm:p-8 rounded-3xl bg-[#0D0F10] border-2 border-[#B8FF00]/60 relative flex flex-col justify-between space-y-6 shadow-[0_0_50px_rgba(184,255,0,0.12)]">
-            {/* Top Badge */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#B8FF00] text-[#060709] text-[11px] font-extrabold tracking-tight uppercase shadow-md whitespace-nowrap">
-              Melhor Custo-Benefício
-            </div>
-
-            <div className="space-y-4 pt-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-[#F2F1ED]">Trajetta Pro Anual</h3>
-                <span className="text-xs px-2.5 py-1 rounded-full bg-[#B8FF00]/15 text-[#B8FF00] font-mono font-bold">
-                  Economia de 33%
-                </span>
-              </div>
-              <p className="text-xs text-[#8E9499] leading-relaxed">
-                Um ano inteiro de evolução contínua pelo equivalente a menos de R$ 0,66 por dia.
-              </p>
-              <div className="pt-2 flex items-baseline gap-1">
-                <span className="text-xs text-[#8E9499]">R$</span>
-                <span className="text-4xl font-extrabold text-[#F2F1ED]">19,99</span>
-                <span className="text-xs text-[#8E9499]">/mês equivalente</span>
-              </div>
-              <div className="text-[11px] text-[#8E9499]">
-                Cobrado anualmente: <strong className="text-[#F2F1ED]">R$ 239,90/ano</strong> após os 3 dias de degustação grátis.
+                  <span className="text-xs text-neutral-200 font-medium">
+                    Cancelamento em 1 clique
+                  </span>
+                </div>
               </div>
             </div>
 
-            <ul className="space-y-3 pt-4 border-t border-white/8 flex-1">
-              {proFeatures.map((feat, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs text-[#F2F1ED]">
-                  <Check className="w-3.5 h-3.5 text-[#B8FF00] flex-shrink-0 mt-0.5" />
-                  <span>{feat}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Feature Checklist */}
+            <div className="space-y-3 pt-2 border-t border-white/8">
+              <span className="text-[10.5px] font-mono uppercase tracking-wider text-neutral-400 block mb-3 font-semibold">
+                Tudo o que está incluído no seu plano:
+              </span>
+              <ul className="space-y-3">
+                {proFeatures.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-xs sm:text-[13px] text-[#E0E2E5] leading-relaxed">
+                    <div className="w-4 h-4 rounded-full bg-[#B8FF00]/15 border border-[#B8FF00]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-2.5 h-2.5 text-[#B8FF00]" />
+                    </div>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            <div className="space-y-2 pt-2">
+            {/* CTA Conversion Buttons */}
+            <div className="space-y-3 pt-2">
               <button
                 type="button"
-                disabled={loadingPlan !== null}
-                onClick={() => handlePlanClick('annual')}
-                className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_25px_rgba(184,255,0,0.35)] transition-all transform active:scale-95 disabled:opacity-50"
+                disabled={loadingPlan}
+                onClick={handleStartCheckout}
+                className="w-full inline-flex items-center justify-center gap-2 py-4 sm:py-4.5 rounded-xl text-sm font-extrabold bg-[#B8FF00] text-[#060709] hover:bg-[#c6ff24] shadow-[0_0_30px_rgba(184,255,0,0.35)] transition-all transform active:scale-95 disabled:opacity-50 cursor-pointer uppercase tracking-wider"
               >
-                {loadingPlan === 'annual' ? (
+                {loadingPlan ? (
                   <span className="flex items-center gap-2 text-[#060709]">
                     <span className="w-4 h-4 rounded-full border-2 border-[#060709] border-t-transparent animate-spin" />
-                    Abrindo checkout seguro...
+                    Abrindo checkout seguro da Stripe...
                   </span>
                 ) : (
                   <>
-                    <span>Começar 3 dias grátis</span>
+                    <span>Começar 3 dias grátis agora</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
 
-              <div className="text-center">
+              <div className="text-center pt-1">
                 <Link
                   href={appendUtmToUrl('/register')}
-                  className="text-[11px] text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-2"
+                  className="text-xs text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-4"
                 >
-                  Ou cadastrar sem cartão primeiro
+                  Ou prefere se cadastrar sem cartão primeiro? Criar conta rápida
                 </Link>
+              </div>
+
+              {/* Trust Badges Row */}
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-mono text-neutral-400 pt-3 border-t border-white/5">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck size={14} className="text-[#B8FF00]" />
+                  Pagamento Seguro via Stripe
+                </span>
+                <span>•</span>
+                <span>Garantia de 7 dias CDC</span>
+                <span>•</span>
+                <span>Zero fidelidade</span>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Founding Members Section */}
-        <div className="mt-14 max-w-4xl mx-auto p-6 sm:p-7 rounded-2xl bg-[#0D0F10] border border-white/8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#B8FF00] animate-ping" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-                Programa de Fundadores
-              </span>
-            </div>
-            <h4 className="text-sm sm:text-base font-bold text-[#F2F1ED]">
-              Faça parte dos primeiros usuários da Trajetta.
-            </h4>
-            <p className="text-xs text-[#8E9499]">
-              Garante prioridade nos novos recursos, canal direto com os fundadores e suporte VIP vitalício por R$ 149/ano.
-            </p>
-          </div>
-          <button
-            type="button"
-            disabled={loadingPlan !== null}
-            onClick={() => handlePlanClick('founding')}
-            className="flex-shrink-0 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#171B20] text-[#F2F1ED] border border-white/15 hover:border-[#B8FF00]/40 transition-all disabled:opacity-50"
-          >
-            {loadingPlan === 'founding' ? 'Carregando...' : 'Entrar como Fundador'}
-          </button>
         </div>
       </div>
     </section>
