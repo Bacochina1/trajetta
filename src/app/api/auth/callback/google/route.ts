@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma, ensureDbReady } from '@/lib/db';
 import { createSessionToken, hashPassword, AUTH_COOKIE_NAME } from '@/lib/auth/auth';
-import { sendEmail } from '@/lib/email/emailService';
+import { sendEmail, renderTrialWelcomeEmail } from '@/lib/email/emailService';
 import { syncLeadToManyChat } from '@/lib/crm/manychatService';
 
 export async function GET(request: NextRequest) {
@@ -125,13 +125,12 @@ export async function GET(request: NextRequest) {
       try {
         sendEmail({
           to: email,
-          subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou',
-          html: `<div style="font-family:sans-serif; background:#060709; color:#F2F1ED; padding:32px; border-radius:12px;">
-            <h2 style="color:#B8FF00;">Olá, ${name}!</h2>
-            <p>Sua conta na Trajetta foi criada com sucesso via Google.</p>
-            <p>Você tem 3 dias de degustação gratuita com acesso completo ao Sistema Pessoal de Evolução.</p>
-            <p><a href="${protocol}://${host}/app" style="background:#B8FF00; color:#060709; padding:12px 24px; text-decoration:none; font-weight:bold; border-radius:8px; display:inline-block;">Acessar Meu Painel</a></p>
-          </div>`,
+          subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou 🚀',
+          html: renderTrialWelcomeEmail({
+            userName: name,
+            email,
+          }),
+          userId: user.id,
         }).catch(() => {});
 
         syncLeadToManyChat({

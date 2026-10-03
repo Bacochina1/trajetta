@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma, ensureDbReady } from '@/lib/db';
 import { hashPassword, createSessionToken, AUTH_COOKIE_NAME } from '@/lib/auth/auth';
 import { syncLeadToManyChat } from '@/lib/crm/manychatService';
+import { sendEmail, renderTrialWelcomeEmail } from '@/lib/email/emailService';
 
 export async function POST(req: Request) {
   try {
@@ -50,11 +51,22 @@ export async function POST(req: Request) {
       name: user.name,
       source: 'app_registration',
       status: 'registered',
-      tags: ['trajetta_lead', 'trajetta_registered'],
+      tags: ['trajetta_lead', 'trajetta_registered', 'trial_3d'],
       customFields: {
         trajetta_status: 'active_user',
       },
     }).catch((crmErr) => console.warn('ManyChat sync error on register:', crmErr));
+
+    // Send trial welcome email with access instructions
+    sendEmail({
+      to: cleanEmail,
+      subject: 'Bem-vindo à Trajetta — Sua degustação de 3 dias começou 🚀',
+      html: renderTrialWelcomeEmail({
+        userName: user.name,
+        email: cleanEmail,
+      }),
+      userId: user.id,
+    }).catch((emailErr) => console.warn('Welcome email error on register:', emailErr));
 
     const token = await createSessionToken({
       userId: user.id,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { getSessionUser } from '@/lib/auth/auth';
 import { prisma, ensureDbReady } from '@/lib/db';
+import { sendEmail, renderSubscriptionCancellationEmail } from '@/lib/email/emailService';
 
 export async function POST(req: NextRequest) {
   try {
@@ -68,6 +69,17 @@ export async function POST(req: NextRequest) {
         data: { subscriptionStatus: 'canceling' },
       });
     } catch {}
+
+    // Dispatch clear confirmation email to user
+    sendEmail({
+      to: user.email,
+      subject: 'Confirmação de Cancelamento de Renovação — Trajetta',
+      html: renderSubscriptionCancellationEmail({
+        userName: user.name || 'Membro Trajetta',
+        accessUntilFormatted: accessUntil.toLocaleDateString('pt-BR'),
+      }),
+      userId: user.id,
+    }).catch((emailErr) => console.warn('Cancel email error:', emailErr));
 
     return NextResponse.json({
       ok: true,

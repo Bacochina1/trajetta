@@ -11,21 +11,28 @@ export function Footer() {
   const [quickEmail, setQuickEmail] = useState('');
   const [quickSubmitted, setQuickSubmitted] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleQuickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!quickEmail || !quickEmail.includes('@')) return;
+    if (!quickEmail || !quickEmail.includes('@') || isSubmitting) return;
     try {
-      setQuickSubmitted(true);
-      fetch('/api/waitlist', {
+      setIsSubmitting(true);
+      await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: quickEmail, name: 'Lead Rodapé' }),
-      }).catch(() => {});
-      setTimeout(() => {
-        window.location.href = `/register?email=${encodeURIComponent(quickEmail)}`;
-      }, 700);
-    } catch {
-      window.location.href = '/register';
+        body: JSON.stringify({
+          email: quickEmail,
+          name: 'Leitor Trajetta',
+          source: 'newsletter_footer',
+        }),
+      });
+      setQuickSubmitted(true);
+    } catch (err) {
+      console.warn('Newsletter error:', err);
+      setQuickSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -53,30 +60,31 @@ export function Footer() {
             </p>
 
             <span className="font-mono text-[10px] text-[#B8FF00] uppercase tracking-widest mb-2 font-bold">
-              EXPERIMENTAR 3 DIAS GRÁTIS
+              RECEBER NOVIDADES DA TRAJETTA
             </span>
 
-            {/* Subscribe Form */}
+            {/* Subscribe Form strictly for updates/novidades */}
             {quickSubmitted ? (
-              <div className="flex items-center gap-2 text-xs font-mono text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/20 rounded-lg px-3 py-2 w-full max-w-sm">
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                <span>Redirecionando para seu teste gratuito...</span>
+              <div className="flex items-center gap-2 text-xs font-mono text-[#B8FF00] bg-[#B8FF00]/10 border border-[#B8FF00]/20 rounded-lg px-3.5 py-3 w-full max-w-sm">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#B8FF00]" />
+                <span className="leading-snug">Inscrição confirmada! Você receberá novidades e atualizações por e-mail.</span>
               </div>
             ) : (
               <form onSubmit={handleQuickSubmit} className="flex items-center bg-[#0d1015] border border-white/15 rounded-lg p-1 w-full max-w-sm focus-within:border-[#B8FF00]/60 transition-colors">
                 <input
                   type="email"
                   required
-                  placeholder="Seu melhor e-mail..."
+                  placeholder="Seu e-mail para novidades..."
                   value={quickEmail}
                   onChange={(e) => setQuickEmail(e.target.value)}
                   className="bg-transparent border-none text-xs text-white placeholder-neutral-500 px-3 py-2 focus:outline-none flex-1 min-w-0"
                 />
                 <button
                   type="submit"
-                  className="bg-[#B8FF00] hover:bg-[#a6e600] text-[#060709] text-[10px] font-extrabold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
+                  disabled={isSubmitting}
+                  className="bg-[#B8FF00] hover:bg-[#a6e600] disabled:opacity-60 text-[#060709] text-[10px] font-extrabold tracking-wider uppercase px-3 py-2 rounded transition-colors flex-shrink-0"
                 >
-                  TESTAR AGORA
+                  {isSubmitting ? 'ENVIANDO...' : 'INSCREVER-SE'}
                 </button>
               </form>
             )}

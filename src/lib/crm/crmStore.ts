@@ -8,7 +8,7 @@ export interface CrmLead {
   name: string | null;
   phone: string | null;
   source: string;
-  status: 'waitlist' | 'vip' | 'contatado' | 'convertido' | 'arquivado';
+  status: 'waitlist' | 'vip' | 'contatado' | 'convertido' | 'arquivado' | 'newsletter';
   tags: string[];
   notes: string | null;
   position: number | null;
