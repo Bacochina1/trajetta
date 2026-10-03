@@ -124,7 +124,7 @@ export function WaitlistSection() {
       <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-3 tracking-wider">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00] animate-pulse"></span>
         <span className="text-[#B8FF00] font-semibold">
-          {isEn ? 'Unlocked • Instant Account Creation' : 'Liberado • Criação Imediata de Conta'}
+          {isEn ? '3-Day Free Trial • Instant Access' : '3 Dias de Teste Grátis • Acesso Imediato sem Burocracia'}
         </span>
       </div>
 
@@ -132,12 +132,12 @@ export function WaitlistSection() {
       <div className="max-w-3xl mb-12">
         <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-3 sm:mb-4 [text-wrap:balance]">
           {isEn ? 'Get started immediately ' : 'Comece agora mesmo '}
-          <span className="text-[#B8FF00]">{isEn ? 'without friction' : 'sem burocracia'}</span>
+          <span className="text-[#B8FF00]">{isEn ? 'with 3 days free' : 'sem burocracia'}</span>
         </h2>
         <p className="text-sm sm:text-base text-neutral-400 font-light leading-relaxed">
           {isEn
-            ? 'Set up immediate access in 10 seconds to explore Trajetta AI, align your goals across 4 areas, and plan your week with serene mental clarity.'
-            : 'Crie seu acesso imediato em 10 segundos para explorar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental e serenidade.'}
+            ? 'Set up immediate access in 10 seconds to explore Trajetta AI with 3 days free trial, align your goals across 4 areas, and plan your week with serene mental clarity.'
+            : 'Crie seu acesso imediato em 10 segundos com 3 dias de degustação gratuita para explorar a Trajetta AI, alinhar suas metas nas 4 áreas e planejar sua semana com clareza mental e serenidade.'}
         </p>
       </div>
 
@@ -272,14 +272,14 @@ export function WaitlistSection() {
                     </span>
                   ) : (
                     <>
-                      <span>{isEn ? 'CREATE MY ACCOUNT NOW' : 'CRIAR MINHA CONTA AGORA'}</span>
+                      <span>{isEn ? 'START 3 DAYS FREE • CREATE ACCOUNT' : 'CRIAR MINHA CONTA AGORA • 3 DIAS GRÁTIS'}</span>
                       <ArrowRight className="w-4 h-4 flex-shrink-0" />
                     </>
                   )}
                 </button>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-400 pt-1 gap-2">
-                  <span>{isEn ? '✓ Secure & instant signup' : '✓ Cadastro seguro e instantâneo'}</span>
+                  <span>{isEn ? '✓ 3 days free • Secure & instant signup' : '✓ 3 dias grátis para testar • Cadastro seguro e instantâneo'}</span>
                   <span>
                     {isEn ? 'Already have an account? ' : 'Já tem conta? '}
                     <Link href="/login" className="text-[#B8FF00] hover:underline font-semibold">
@@ -298,7 +298,7 @@ export function WaitlistSection() {
                 {isEn ? 'System Features' : 'Recursos do Sistema'}
               </span>
               <span className="text-[10px] font-mono text-[#B8FF00] bg-[#B8FF00]/15 px-2 py-0.5 rounded font-bold">
-                {isEn ? 'Access Active' : 'Acesso Liberado'}
+                {isEn ? '3 Days Free Included' : '3 Dias Grátis Inclusos'}
               </span>
             </div>
 

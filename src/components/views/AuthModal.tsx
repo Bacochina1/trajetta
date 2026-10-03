@@ -99,11 +99,16 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <button
             type="button"
             onClick={() => { setTab('register'); setError(null); }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-1.5 ${
               tab === 'register' ? 'bg-[#1F2328] text-[#F2F1ED] shadow-sm' : 'text-[#8E9499] hover:text-[#F2F1ED]'
             }`}
           >
-            Criar Conta
+            <span>Criar Conta</span>
+            <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
+              tab === 'register' ? 'bg-[#B8FF00]/20 text-[#B8FF00]' : 'bg-[#B8FF00]/10 text-[#B8FF00]'
+            }`}>
+              3D Grátis
+            </span>
           </button>
         </div>
 
@@ -186,7 +191,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             disabled={loading}
             className="w-full font-bold mt-2"
           >
-            {loading ? 'Processando...' : tab === 'login' ? 'Entrar no Sistema' : 'Iniciar Minha Trajetória'}
+            {loading ? 'Processando...' : tab === 'login' ? 'Entrar no Sistema' : 'Começar 3 Dias Grátis'}
           </Button>
         </form>
 

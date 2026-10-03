@@ -96,13 +96,18 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
             <button
               type="button"
               onClick={() => { setMode('register'); setError(null); }}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all ${
+              className={`py-2 text-xs font-semibold rounded-lg transition-all relative flex items-center justify-center gap-1.5 ${
                 mode === 'register'
                   ? 'bg-white text-black shadow-md'
                   : 'text-[#8E9499] hover:text-[#F2F1ED]'
               }`}
             >
-              Criar Conta
+              <span>Criar Conta</span>
+              <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
+                mode === 'register' ? 'bg-[#060709] text-[#B8FF00]' : 'bg-[#B8FF00]/15 text-[#B8FF00]'
+              }`}>
+                3D Grátis
+              </span>
             </button>
           </div>
 
@@ -183,7 +188,7 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               disabled={loading}
               className="w-full h-11 mt-2 bg-[#B8FF00] hover:bg-[#a3e600] active:scale-[0.99] text-[#0D0F10] font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(184,255,0,0.2)] disabled:opacity-50"
             >
-              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Criar Conta no Sistema'}</span>
+              <span>{loading ? 'Processando...' : mode === 'login' ? 'Entrar no Sistema' : 'Começar 3 Dias Grátis • Criar Conta'}</span>
               <ArrowRight size={14} />
             </button>
 
@@ -193,7 +198,7 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               </div>
             ) : (
               <div className="pt-2 text-center text-[11px] text-[#8E9499] font-mono">
-                ✓ Cadastro rápido e sem necessidade de cartão
+                ✓ 3 dias grátis para testar • Cadastro rápido sem cartão de crédito
               </div>
             )}
           </form>
