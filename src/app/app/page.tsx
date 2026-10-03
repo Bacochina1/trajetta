@@ -33,9 +33,51 @@ export default function TrajettaAppPage() {
     isAuthenticated,
     authLoading,
     login,
+    setUserProfile,
   } = useTrajetta();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+  const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
+
+  // Check for Stripe checkout return
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    const sessionId = urlParams.get('session_id');
+
+    if (paymentStatus === 'success' && sessionId) {
+      fetch(`/api/checkout/verify?session_id=${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            setUserProfile({
+              subscriptionPlan: data.plan || 'pro_annual',
+              trialDaysRemaining: 365,
+            });
+            setPaymentNotice('Sua assinatura Trajetta Pro foi ativada com sucesso! Aproveite.');
+            import('canvas-confetti').then((confettiModule) => {
+              const runConfetti = confettiModule.default || confettiModule;
+              runConfetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#B8FF00', '#F2F1ED', '#38EF7D'],
+              });
+            }).catch(() => {});
+          }
+        })
+        .catch((e) => console.error('Verification error:', e))
+        .finally(() => {
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setTimeout(() => setPaymentNotice(null), 8000);
+        });
+    } else if (paymentStatus === 'cancelled') {
+      setPaymentNotice('O processo de checkout foi cancelado. Você pode assinar quando desejar.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(() => setPaymentNotice(null), 5000);
+    }
+  }, [setUserProfile]);
 
   // While checking session: render full Calm Power layout skeleton instead of empty screen
   if (authLoading) {
@@ -95,7 +137,19 @@ export default function TrajettaAppPage() {
         <Topbar onOpenMobile={() => setMobileMenuOpen(true)} />
 
         {/* Dynamic Viewport */}
-        <main className="flex-1 px-3 py-4 sm:p-8 max-w-6xl w-full mx-auto pb-28 md:pb-12">
+        <main className="flex-1 px-3 py-4 sm:p-8 max-w-6xl w-full mx-auto pb-28 md:pb-12 space-y-4">
+          {paymentNotice && (
+            <div className="p-4 rounded-xl bg-[#B8FF00]/10 border border-[#B8FF00]/40 text-[#B8FF00] text-xs font-semibold flex items-center justify-between gap-3 shadow-lg">
+              <span>{paymentNotice}</span>
+              <button
+                type="button"
+                onClick={() => setPaymentNotice(null)}
+                className="text-white/60 hover:text-white text-xs px-2 py-1 rounded"
+              >
+                ✕
+              </button>
+            </div>
+          )}
           {activeView === 'hoje' && <TodayView />}
           {activeView === 'semana' && <WeekView />}
           {activeView === 'metas' && <GoalsView />}

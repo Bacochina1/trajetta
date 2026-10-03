@@ -26,7 +26,7 @@ export function FormattedMessage({ content, className = '' }: FormattedMessagePr
           <p key={pIdx} className="leading-relaxed">
             {lines.map((line, lIdx) => {
               // Parse **bold** elements inside the line
-              const parts = line.split(/(\**.*?\**)/g);
+              const parts = line.split(/(\*\*.*?\*\*)/g);
               return (
                 <React.Fragment key={lIdx}>
                   {lIdx > 0 && <br />}

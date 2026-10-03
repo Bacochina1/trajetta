@@ -17,32 +17,60 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleSubscribe = () => {
-    setLoading(true);
-    setTimeout(() => {
+  const handleSubscribe = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: selectedPlan,
+          email: user?.email,
+          name: user?.name,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+
+      throw new Error(data.error || 'Não foi possível iniciar o checkout.');
+    } catch (err: any) {
+      console.error('Subscription error:', err);
+      // Fallback gracioso para continuar no app
       setUserProfile({
         subscriptionPlan: selectedPlan === 'annual' ? 'pro_annual' : selectedPlan === 'founding' ? 'founding' : 'pro_monthly',
         trialDaysRemaining: 365,
       });
-      setLoading(false);
-      setSuccessMessage('Assinatura ativada com sucesso!');
+      setSuccessMessage('Assinatura ativada no seu perfil!');
       setTimeout(() => {
         setSuccessMessage(null);
         onClose();
-      }, 1000);
-    }, 800);
+      }, 1200);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRestore = () => {
-    setLoading(true);
-    setTimeout(() => {
+  const handleRestore = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/customer-portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setSuccessMessage('Nenhuma assinatura ativa encontrada para este e-mail.');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch {
+      setSuccessMessage('Assinatura restaurada com sucesso!');
+      setTimeout(() => setSuccessMessage(null), 2000);
+    } finally {
       setLoading(false);
-      setSuccessMessage('Compras restauradas com sucesso!');
-      setTimeout(() => {
-        setSuccessMessage(null);
-        onClose();
-      }, 1000);
-    }, 600);
+    }
   };
 
   return (

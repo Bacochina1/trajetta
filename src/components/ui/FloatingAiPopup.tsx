@@ -6,7 +6,6 @@ import {
   Send,
   X,
   Maximize2,
-  Sparkles,
   Compass,
   ArrowRight,
   Flame,
@@ -264,7 +263,7 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
           <div className="px-3 sm:px-4 py-2 bg-[#090C10] border-b border-white/5 flex-shrink-0 space-y-1.5">
             <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
               <span className="flex items-center gap-1 text-[#B8FF00] font-semibold">
-                <Sparkles size={11} />
+                <Brain size={11} />
                 <span>Reflexões Sugeridas</span>
               </span>
               <button
@@ -279,11 +278,11 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 text-[10px] font-mono">
               {[
                 { id: 'all', label: 'Todas' },
-                { id: 'evolucao', label: '🚀 Evolução' },
-                { id: 'metas', label: '🎯 Metas' },
-                { id: 'habitos', label: '⚡ Hábitos' },
-                { id: 'lifescore', label: '⚖️ Life Score' },
-                { id: 'estrategia', label: '🧭 Desejos' },
+                { id: 'evolucao', label: 'Evolução' },
+                { id: 'metas', label: 'Metas' },
+                { id: 'habitos', label: 'Hábitos' },
+                { id: 'lifescore', label: 'Life Score' },
+                { id: 'estrategia', label: 'Desejos' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -407,7 +406,7 @@ export function FloatingAiPopup({ corner, isOpen, onClose }: FloatingAiPopupProp
               onClick={() => setShowSuggestions(!showSuggestions)}
               className="hover:text-neutral-300 transition-colors flex items-center gap-1"
             >
-              <Sparkles size={10} className="text-[#B8FF00]" />
+              <Compass size={10} className="text-[#B8FF00]" />
               <span>{showSuggestions ? 'Ocultar Sugestões' : 'Ver Sugestões'}</span>
             </button>
 

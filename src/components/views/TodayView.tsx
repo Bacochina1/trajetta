@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { CheckCircle } from '@/components/ui/CheckCircle';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2, RotateCcw, Sparkles } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, Plus, Check, ChevronRight, Brain, Share2, RotateCcw } from 'lucide-react';
 import { ShareCardModal } from '@/components/ui/ShareCardModal';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
 import { LIFE_AREAS } from '@/lib/constants';
@@ -104,7 +104,7 @@ export function TodayView() {
             aria-label="Iniciar Tour Guiado"
             className="px-3 sm:px-3.5 py-2 sm:h-[74px] min-h-[44px] rounded-2xl bg-[#171A1D] hover:bg-[#B8FF00]/10 hover:border-[#B8FF00]/40 border border-white/8 text-[#8E9499] hover:text-[#B8FF00] transition-all flex flex-col items-center justify-center gap-1 group tactile-btn flex-shrink-0"
           >
-            <Sparkles size={16} className="text-[#B8FF00] group-hover:scale-110 transition-transform" />
+            <Compass size={16} className="text-[#B8FF00] group-hover:scale-110 transition-transform" />
             <span className="text-[9px] font-mono uppercase font-bold tracking-wider">Tour</span>
           </button>
 

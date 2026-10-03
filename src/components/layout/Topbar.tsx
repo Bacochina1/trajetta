@@ -4,7 +4,7 @@ import React from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut, Sparkles } from 'lucide-react';
+import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut, Compass } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
@@ -40,7 +40,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           title="Iniciar Tour Guiado do Sistema"
           className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8E9499] hover:text-[#B8FF00] hover:bg-[#B8FF00]/10 border border-white/8 hover:border-[#B8FF00]/30 transition-all tactile-btn"
         >
-          <Sparkles size={13} className="text-[#B8FF00]" />
+          <Compass size={13} className="text-[#B8FF00]" />
           <span>Tour Guiado</span>
         </button>
 

@@ -4,10 +4,10 @@ export const LIFE_AREAS: Record<LifeArea, AreaConfig> = {
   corpo: {
     id: 'corpo',
     label: 'Corpo',
-    color: '#B8FF00', // Trajetta Lime
-    badgeBg: 'rgba(184, 255, 0, 0.1)',
-    badgeText: '#B8FF00',
-    borderColor: 'rgba(184, 255, 0, 0.25)',
+    color: '#58D6A7', // Mint Vital
+    badgeBg: 'rgba(88, 214, 167, 0.1)',
+    badgeText: '#58D6A7',
+    borderColor: 'rgba(88, 214, 167, 0.25)',
     description: 'Academia, corrida, sono, nutrição e energia vital.',
     examples: '3 a 4 treinos semanais, 7h30 de sono, 3L de água.',
   },

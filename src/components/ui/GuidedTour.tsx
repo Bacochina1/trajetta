@@ -11,7 +11,7 @@ export const startGuidedTour = () => {
     showProgress: true,
     animate: true,
     allowClose: true,
-    doneBtnText: 'Concluir Tour ✨',
+    doneBtnText: 'Concluir Tour',
     nextBtnText: 'Próximo →',
     prevBtnText: '← Voltar',
     progressText: 'Passo {{current}} de {{total}}',

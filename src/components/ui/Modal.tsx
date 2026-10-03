@@ -40,6 +40,10 @@ export function Modal({
 
       {/* Modal Container: Concentric Radius (20px outer) */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        aria-describedby={subtitle ? 'modal-subtitle' : undefined}
         className={cn(
           'relative w-full max-h-[92dvh] flex flex-col bg-[#171A1D] border border-white/10 rounded-[20px] shadow-depth-2 overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150',
           maxWidth
@@ -47,8 +51,8 @@ export function Modal({
       >
         <div className="flex items-start justify-between p-3.5 xs:p-4 sm:p-6 border-b border-white/8 flex-shrink-0">
           <div className="pr-2 min-w-0">
-            <h3 className="text-base sm:text-xl font-bold tracking-tight text-[#F2F1ED] truncate">{title}</h3>
-            {subtitle && <p className="text-xs sm:text-sm text-[#8E9499] mt-0.5 sm:mt-1 leading-relaxed line-clamp-2">{subtitle}</p>}
+            <h3 id="modal-title" className="text-base sm:text-xl font-bold tracking-tight text-[#F2F1ED] truncate">{title}</h3>
+            {subtitle && <p id="modal-subtitle" className="text-xs sm:text-sm text-[#8E9499] mt-0.5 sm:mt-1 leading-relaxed line-clamp-2">{subtitle}</p>}
           </div>
           <Button
             variant="ghost"
