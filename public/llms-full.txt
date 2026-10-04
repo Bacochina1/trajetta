@@ -1,0 +1,77 @@
+# Trajetta — Comprehensive System Documentation & Methodology
+
+Trajetta is a personal growth system and habit tracking platform engineered to cultivate sustainable discipline without guilt or fragile daily streaks. It bridges annual vision with realistic weekly execution across 4 life areas.
+
+Website: https://trajettacompany.com.br
+Language Versions: Portuguese (default: https://trajettacompany.com.br), English (https://trajettacompany.com.br/en)
+App Category: Productivity, Self-Improvement, Habit Tracking, Mental Health, AI Coaching
+Business Model: Subscription with a 3-Day Free Trial (R$ 29.90 / month). Full access included.
+
+---
+
+## 1. Methodology & Core Philosophy
+
+### The Flaw of Traditional Habit Trackers
+Most habit apps (such as Habitica, Streaks, Duolingo-style gamification) rely on unbroken streaks ("chamas", "dias seguidos"). When a user encounters an unavoidable life crisis, sick day, or family emergency, the streak resets to zero. This triggers the "what-the-hell effect" (abstinence violation effect), leading to guilt, shame, and eventual abandonment of the system.
+
+### The Trajetta Architecture
+1. **Cumulative Volume over Fragile Streaks**:
+   Consistency is the total mass of actions compounded across the year. 48 gym sessions completed in 12 weeks is phenomenal consistency, regardless of whether 2 sessions were rescheduled due to an unexpected workday.
+2. **Minimum Floors (Piso Mínimo)**:
+   Every habit has two modes:
+   - Full Goal (Ideal Day): e.g., 60 minutes workout, 30 pages reading, 2 hours deep craft.
+   - Minimum Floor (Rough Day): e.g., 10 minutes mobility, 5 pages reading, 15 minutes organizing notes.
+   By activating the minimum floor during difficult periods, the identity of showing up is preserved without burning out.
+3. **Weekly Capacity Planning (Capacidade Semanal)**:
+   Instead of an overwhelming backlog of 50 tasks, every Monday the user commits to a maximum of 3 core deliverables per life area that truly advance their North Star.
+4. **Guided Sunday Debrief (Review de Domingo)**:
+   Sunday is a calm reset ritual. The system and Trajetta AI conduct a structured review:
+   - What compounded successfully?
+   - What caused friction or resistance?
+   - How can the coming week be calibrated calmly without self-punishment?
+
+---
+
+## 2. The 4 Life Areas (As 4 Áreas da Vida)
+
+1. **Corpo & Vitalidade (Body & Vitality)**:
+   - Strength training, cardiovascular health, sleep hygiene, nutrition, mobility.
+   - Focus: Physical vitality as the energy generator for all other domains.
+2. **Dinheiro & Segurança (Money & Freedom)**:
+   - Emergency reserve, monthly investments, expense discipline, freedom cushion.
+   - Focus: Calm long-term financial security free of manic day-to-day stress.
+3. **Carreira & Construção (Career & Craft)**:
+   - Professional trajectory, high-leverage quarterly projects, technical mastery, reputation.
+   - Focus: Deep work and deliberate practice over frantic multitasking.
+4. **Mente & Vida Pessoal (Mind & Inner Life)**:
+   - Relationships, family presence, intellectual curiosity, digital detox, emotional balance.
+   - Focus: Peace of mind, silence, and presence with loved ones.
+
+---
+
+## 3. Trajetta AI Architecture
+
+Trajetta AI is an integrated longitudinal intelligence engine:
+- **Longitudinal Memory**: Maintains an active mental model of user goals, historical weekly reviews, repeated bottlenecks, and personal breakthroughs.
+- **Non-Generic Guidance**: Replaces shallow motivational cheerleading with structured strategic inquiries (e.g., "Your career deliverables hit 100%, but sleep was below 6h on 4 days. Would you like to adjust your resting floor this week?").
+- **Strict Privacy**: Personal user reflections and logs are encrypted, never sold to third parties, and never used to train public language models.
+
+---
+
+## 4. Plans & Commercial Terms
+
+- **Trial**: 3-Day Free Trial. Instant unlock of all features, 4 life areas, and unlimited AI. R$ 0.00 charged upfront.
+- **Monthly Subscription**: R$ 29.90/month via Stripe.
+- **Guarantees**:
+  - 1-click self-service cancellation in the user dashboard or via Stripe.
+  - 7-day unconditional money-back guarantee with immediate full refund upon request.
+- **Data Portability**: Users can export their full trajectory in JSON and CSV format anytime.
+
+---
+
+## 5. Contact & Support
+- Email: companytrajetta@gmail.com
+- Location: São Paulo, Brazil
+- Instagram: @trajetta_ (https://www.instagram.com/trajetta_/)
+- Terms of Service: https://trajettacompany.com.br/termos
+- Terms of Service (English): https://trajettacompany.com.br/en/terms

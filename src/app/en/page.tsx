@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     'non punitive habit tracker',
     'anti burnout productivity',
   ],
+  category: 'productivity',
+  classification: 'Personal Productivity, Habit Tracker, Anti-Burnout Growth, AI Coaching',
   alternates: {
     canonical: 'https://trajettacompany.com.br/en',
     languages: {
@@ -58,9 +60,31 @@ const jsonLdEn = {
       '@type': 'Organization',
       '@id': 'https://trajettacompany.com.br/#organization',
       name: 'Trajetta Company',
+      legalName: 'Trajetta Company',
       url: 'https://trajettacompany.com.br/en',
       logo: 'https://trajettacompany.com.br/trajetta-logo-transparent.png',
+      description:
+        'Personal operating system for sustainable goals, habits, and weekly capacity planning without streak-induced anxiety.',
       sameAs: ['https://www.instagram.com/trajetta_/'],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'São Paulo',
+        addressRegion: 'SP',
+        addressCountry: 'BR',
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'companytrajetta@gmail.com',
+        contactType: 'customer support',
+      },
+      knowsAbout: [
+        'Habit Formation',
+        'Personal Growth Systems',
+        'Burnout Prevention',
+        'Longitudinal AI Coaching',
+        'Weekly Capacity Planning',
+        'Non-Punitive Streaks',
+      ],
     },
     {
       '@type': 'WebSite',
@@ -82,7 +106,8 @@ const jsonLdEn = {
       name: 'Trajetta',
       headline: 'Personal Growth & Non-Punitive Habit System with AI',
       applicationCategory: 'ProductivityApplication',
-      operatingSystem: 'Web, iOS, Android (PWA)',
+      applicationSubCategory: 'Habit Tracker & Personal Operating System',
+      operatingSystem: 'Web, iOS, Android (PWA), macOS, Windows',
       description:
         'Plan your weeks, track sustainable habits and achieve goals across 4 life areas with a longitudinal AI coach that remembers your journey.',
       softwareVersion: '2.0.0',
@@ -99,6 +124,7 @@ const jsonLdEn = {
         priceCurrency: 'BRL',
         priceValidUntil: '2027-12-31',
         availability: 'https://schema.org/InStock',
+        url: 'https://trajettacompany.com.br/en#planos',
         description: 'Trajetta Pro Monthly — 3-day free trial, full unconstrained access',
       },
       featureList: [
@@ -109,6 +135,69 @@ const jsonLdEn = {
         'Weekly Capacity Planning with max 3 priorities',
         'Guided Sunday Review with Immutable Debrief Snapshot',
         'Long-term Historical Timeline and Milestones',
+      ],
+    },
+    {
+      '@type': 'HowTo',
+      '@id': 'https://trajettacompany.com.br/en/#howto',
+      name: 'How to build sustainable consistency and achieve goals with Trajetta',
+      description:
+        'A practical 3-step non-punitive methodology to plan weekly cycles, guard habits with minimum floors, and recalibrate without guilt.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: '1. Set Your 12-Month North Star',
+          text: 'Establish clear direction for the year across the 4 essential life areas: Body & Vitality, Money & Freedom, Career & Craft, and Mind & Inner Life.',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: '2. Plan in Weekly Cycles with 3 Priorities & Minimum Floors',
+          text: 'Every Monday, lock in at most 3 core deliverables and calibrate low-friction minimum habit floors for busy, demanding days.',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: '3. Conduct Sunday Debriefs with Trajetta AI',
+          text: 'Close every week with an honest, lucid reflection. If life threw a curveball, the framework recalibrates your pace with zero guilt and zero wiped streaks.',
+        },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://trajettacompany.com.br/en/#breadcrumbs',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://trajettacompany.com.br/en',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Method',
+          item: 'https://trajettacompany.com.br/en#metodo',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: '4 Life Areas',
+          item: 'https://trajettacompany.com.br/en#areas',
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: 'Plans & Free Trial',
+          item: 'https://trajettacompany.com.br/en#planos',
+        },
+        {
+          '@type': 'ListItem',
+          position: 5,
+          name: 'FAQ',
+          item: 'https://trajettacompany.com.br/en#faq',
+        },
       ],
     },
     {
