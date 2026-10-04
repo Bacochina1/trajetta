@@ -28,6 +28,7 @@ import {
   Smartphone,
   Camera,
   UploadCloud,
+  Compass,
 } from 'lucide-react';
 import { startGuidedTour } from '@/components/ui/GuidedTour';
 import { useI18n } from '@/lib/i18n/context';
@@ -946,6 +947,32 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
         </form>
       </div>
 
+      {/* Guia & Tour do Sistema (Sempre disponível nas Configurações) */}
+      <div className="p-5 rounded-2xl bg-[#14181f] border border-white/8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Compass size={16} className="text-[#B8FF00]" />
+            <h3 className="text-sm font-bold text-[#F2F1ED]">Guia Interativo do Sistema</h3>
+            <span className="text-[10px] font-mono uppercase bg-[#B8FF00]/10 text-[#B8FF00] px-2 py-0.5 rounded-full font-semibold">
+              Tour
+            </span>
+          </div>
+          <p className="text-xs text-[#8E9499]">
+            Reveja o passo a passo guiado pelos ritos diários, inteligência silenciosa, jornadas de foco e princípios sem punição.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            setActiveView('hoje');
+            setTimeout(() => startGuidedTour(), 300);
+          }}
+          className="px-4 py-2.5 rounded-xl bg-[#B8FF00]/10 hover:bg-[#B8FF00]/20 text-[#B8FF00] text-xs font-bold border border-[#B8FF00]/30 transition-all flex items-center gap-2 select-none tactile-btn flex-shrink-0"
+        >
+          <Compass size={14} />
+          <span>Fazer Tour Guiado</span>
+        </button>
+      </div>
+
       {/* Reset Account & Redo Onboarding */}
       <div className="p-5 rounded-2xl bg-[#14181f] border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
@@ -958,16 +985,6 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
-          <button
-            onClick={() => {
-              setActiveView('hoje');
-              setTimeout(() => startGuidedTour(), 300);
-            }}
-            className="px-4 py-2.5 rounded-xl bg-[#B8FF00]/10 hover:bg-[#B8FF00]/20 text-[#B8FF00] text-xs font-bold border border-[#B8FF00]/30 transition-all flex items-center gap-2 select-none tactile-btn"
-          >
-            <Sparkles size={14} />
-            <span>Fazer Tour Guiado</span>
-          </button>
           <button
             onClick={() => setIsOnboardingOpen(true)}
             className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#F2F1ED] text-xs font-bold border border-white/10 transition-all flex items-center gap-2 select-none tactile-btn"

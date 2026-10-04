@@ -5,7 +5,7 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { getCurrentDateFormatted } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Menu, Plus, CheckCircle2, RotateCcw, User, LogOut, Compass } from 'lucide-react';
-import { startGuidedTour } from '@/components/ui/GuidedTour';
+import { startGuidedTour, useTourStatus } from '@/components/ui/GuidedTour';
 import { useI18n } from '@/lib/i18n/context';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
@@ -22,6 +22,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
     isAuthenticated,
   } = useTrajetta();
   const { t, formatDate } = useI18n();
+  const { isTourCompleted } = useTourStatus();
   const dateFormatted = formatDate(new Date(), { weekday: 'short', day: 'numeric', month: 'short' });
 
   return (
@@ -50,15 +51,17 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         {/* Language Switcher */}
         <LanguageSwitcher />
 
-        {/* Tour Guiado */}
-        <button
-          onClick={() => startGuidedTour(() => setActiveView('hoje'))}
-          title="Iniciar Tour Guiado do Sistema"
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8E9499] hover:text-[#B8FF00] hover:bg-[#B8FF00]/10 border border-white/8 hover:border-[#B8FF00]/30 transition-all tactile-btn"
-        >
-          <Compass size={13} className="text-[#B8FF00]" />
-          <span>Tour Guiado</span>
-        </button>
+        {/* Tour Guiado (Visível apenas na 1ª experiência antes de concluir; depois fica exclusivo nas configs) */}
+        {!isTourCompleted && (
+          <button
+            onClick={() => startGuidedTour(() => setActiveView('hoje'))}
+            title="Iniciar Tour Guiado do Sistema"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8E9499] hover:text-[#B8FF00] hover:bg-[#B8FF00]/10 border border-white/8 hover:border-[#B8FF00]/30 transition-all tactile-btn"
+          >
+            <Compass size={13} className="text-[#B8FF00]" />
+            <span>Tour Guiado</span>
+          </button>
+        )}
 
         {/* Nova Meta (Hidden on tiny screens, icon on md) */}
         <Button

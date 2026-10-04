@@ -1,8 +1,51 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
+
+const TOUR_STORAGE_KEY = 'trajetta_tour_completed';
+const TOUR_EVENT_NAME = 'trajetta_tour_status_change';
+
+export const isTourCompleted = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  try {
+    return localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
+export const markTourCompleted = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(TOUR_STORAGE_KEY, 'true');
+    window.dispatchEvent(new CustomEvent(TOUR_EVENT_NAME));
+  } catch {}
+};
+
+export const resetTourCompleted = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(TOUR_STORAGE_KEY);
+    window.dispatchEvent(new CustomEvent(TOUR_EVENT_NAME));
+  } catch {}
+};
+
+export function useTourStatus() {
+  const [completed, setCompleted] = useState<boolean>(true);
+
+  useEffect(() => {
+    setCompleted(isTourCompleted());
+    const handler = () => {
+      setCompleted(isTourCompleted());
+    };
+    window.addEventListener(TOUR_EVENT_NAME, handler);
+    return () => window.removeEventListener(TOUR_EVENT_NAME, handler);
+  }, []);
+
+  return { isTourCompleted: completed, markTourCompleted, resetTourCompleted };
+}
 
 export const startGuidedTour = (navigateToToday?: unknown) => {
   if (typeof window === 'undefined') return;
@@ -59,8 +102,8 @@ export const startGuidedTour = (navigateToToday?: unknown) => {
       {
         element: '[data-tour="topbar-user"]',
         popover: {
-          title: '👤 Seu Perfil & Tour Guiado',
-          description: 'Acesse suas configurações, consulte seu status de membro ou reinicie este tour guiado a qualquer momento!',
+          title: '👤 Seu Perfil & Configurações',
+          description: 'Acesse suas configurações, consulte seu status de membro ou reinicie este tour guiado a qualquer momento nas configurações!',
           side: 'bottom' as const,
           align: 'end' as const,
         },
@@ -69,6 +112,10 @@ export const startGuidedTour = (navigateToToday?: unknown) => {
 
     const validSteps = allSteps.filter(s => document.querySelector(s.element) !== null);
     if (validSteps.length === 0) return;
+
+    const handleTourFinish = () => {
+      markTourCompleted();
+    };
 
     const driverObj = driver({
       showProgress: true,
@@ -79,6 +126,15 @@ export const startGuidedTour = (navigateToToday?: unknown) => {
       prevBtnText: '← Voltar',
       progressText: 'Passo {{current}} de {{total}}',
       steps: validSteps,
+      onDestroyed: handleTourFinish,
+      onCloseClick: () => {
+        handleTourFinish();
+        driverObj.destroy();
+      },
+      onDoneClick: () => {
+        handleTourFinish();
+        driverObj.destroy();
+      },
     });
 
     driverObj.drive();

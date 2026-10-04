@@ -18,7 +18,7 @@ import {
   User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { startGuidedTour } from '@/components/ui/GuidedTour';
+import { startGuidedTour, useTourStatus } from '@/components/ui/GuidedTour';
 import { useI18n } from '@/lib/i18n/context';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
@@ -31,6 +31,7 @@ export function Sidebar({
 }) {
   const { activeView, setActiveView, user, setIsReviewModalOpen, setIsOnboardingOpen, setIsAuthModalOpen } = useTrajetta();
   const { t } = useI18n();
+  const { isTourCompleted } = useTourStatus();
 
   const navItems: { id: ActiveView; label: string; icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }> }[] = [
     { id: 'hoje', label: t.app.today, icon: Calendar },
@@ -164,19 +165,21 @@ export function Sidebar({
             <LanguageSwitcher />
           </div>
 
-          {/* Guided Tour Trigger Button */}
-          <button
-            onClick={() => {
-              startGuidedTour(() => setActiveView('hoje'));
-              onClose();
-            }}
-            title="Iniciar Tour Guiado do Sistema"
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-[#B8FF00]/10 border border-white/5 hover:border-[#B8FF00]/30 text-[#8E9499] hover:text-[#B8FF00] text-xs font-semibold transition-all group tactile-btn"
-          >
-            <Compass size={14} className="text-[#B8FF00] group-hover:rotate-12 transition-transform" />
-            <span className="flex-1 text-left">Tour do Sistema</span>
-            <span className="text-[9px] font-mono uppercase bg-[#B8FF00]/10 text-[#B8FF00] px-1.5 py-0.5 rounded">Guia</span>
-          </button>
+          {/* Guided Tour Trigger Button (Visível apenas na 1ª experiência antes de concluir; depois fica exclusivo nas configs) */}
+          {!isTourCompleted && (
+            <button
+              onClick={() => {
+                startGuidedTour(() => setActiveView('hoje'));
+                onClose();
+              }}
+              title="Iniciar Tour Guiado do Sistema"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-[#B8FF00]/10 border border-white/5 hover:border-[#B8FF00]/30 text-[#8E9499] hover:text-[#B8FF00] text-xs font-semibold transition-all group tactile-btn"
+            >
+              <Compass size={14} className="text-[#B8FF00] group-hover:rotate-12 transition-transform" />
+              <span className="flex-1 text-left">Tour do Sistema</span>
+              <span className="text-[9px] font-mono uppercase bg-[#B8FF00]/10 text-[#B8FF00] px-1.5 py-0.5 rounded">Guia</span>
+            </button>
+          )}
 
           {/* User Profile Chip */}
           <button
