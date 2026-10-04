@@ -24,6 +24,7 @@ import { PaywallModal } from '@/components/views/PaywallModal';
 import { AuthGateView } from '@/components/views/AuthGateView';
 import { FloatingAiTrigger } from '@/components/ui/FloatingAiTrigger';
 import { Skeleton, TodayViewSkeleton } from '@/components/ui/Skeleton';
+import { useI18n } from '@/lib/i18n/context';
 
 export default function TrajettaAppPage() {
   const {
@@ -35,9 +36,20 @@ export default function TrajettaAppPage() {
     login,
     setUserProfile,
   } = useTrajetta();
+  const { setLocale } = useI18n();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
+
+  // Sync language from URL if provided (e.g. redirected from /en/app)
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    if (langParam === 'en' || langParam === 'pt') {
+      setLocale(langParam);
+    }
+  }, [setLocale]);
 
   // Check for Stripe checkout return
   React.useEffect(() => {
