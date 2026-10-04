@@ -15,9 +15,12 @@ export function LanguageSwitcher({ className = '', variant = 'compact' }: Langua
   const { locale, setLocale } = useI18n();
   const pathname = usePathname();
 
+  // Check if we are inside the authenticated web app
+  const isAppRoute = pathname?.startsWith('/app') || pathname?.startsWith('/dashboard') || pathname?.startsWith('/crm');
+
   // If on a public SEO landing route, provide real crawlable HTML links
   const isEnRoute = pathname?.startsWith('/en');
-  const targetPtUrl = isEnRoute ? pathname.replace(/^\/en/, '') || '/' : pathname;
+  const targetPtUrl = isEnRoute ? pathname.replace(/^\/en/, '') || '/' : pathname || '/';
   const targetEnUrl = isEnRoute ? pathname : `/en${pathname === '/' ? '' : pathname}`;
 
   if (variant === 'full') {
@@ -46,6 +49,39 @@ export function LanguageSwitcher({ className = '', variant = 'compact' }: Langua
           aria-label="Switch to English"
         >
           <span>🇺🇸 English</span>
+        </button>
+      </div>
+    );
+  }
+
+  // Inside the application, avoid navigating to unmapped routes; switch context seamlessly
+  if (isAppRoute) {
+    return (
+      <div className={`inline-flex items-center gap-1 p-1 rounded-lg bg-[#14181F] border border-white/10 ${className}`}>
+        <Globe size={13} className="text-[#8E9499] ml-1.5 mr-0.5" />
+        <button
+          type="button"
+          onClick={() => setLocale('pt')}
+          className={`px-2 py-1 rounded text-[11px] font-mono font-bold transition-all cursor-pointer ${
+            locale === 'pt'
+              ? 'bg-[#B8FF00] text-[#060709]'
+              : 'text-[#8E9499] hover:text-[#F2F1ED]'
+          }`}
+          aria-label="Versão em Português"
+        >
+          PT
+        </button>
+        <button
+          type="button"
+          onClick={() => setLocale('en')}
+          className={`px-2 py-1 rounded text-[11px] font-mono font-bold transition-all cursor-pointer ${
+            locale === 'en'
+              ? 'bg-[#B8FF00] text-[#060709]'
+              : 'text-[#8E9499] hover:text-[#F2F1ED]'
+          }`}
+          aria-label="English version"
+        >
+          EN
         </button>
       </div>
     );

@@ -75,8 +75,15 @@ export function Sidebar({
         </div>
 
         {/* North Star Metric Card */}
-        <div className="my-4 p-3 rounded-xl bg-[#171A1D] border border-white/8 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/25 flex items-center justify-center text-[#B8FF00] flex-shrink-0">
+        <div
+          onClick={() => {
+            setActiveView('semana');
+            onClose();
+          }}
+          className="my-4 p-3 rounded-xl bg-[#171A1D] hover:bg-[#1c2126] border border-white/8 hover:border-[#B8FF00]/30 flex items-center gap-3 cursor-pointer transition-all group select-none"
+          title="Clique para ver seu ritmo e planejamento semanal"
+        >
+          <div className="w-8 h-8 rounded-lg bg-[#B8FF00]/10 border border-[#B8FF00]/25 group-hover:border-[#B8FF00]/50 flex items-center justify-center text-[#B8FF00] flex-shrink-0 transition-colors">
             <TrendingUp size={16} strokeWidth={2} />
           </div>
           <div className="flex-1 min-w-0">
@@ -86,8 +93,9 @@ export function Sidebar({
               </span>
               <span className="text-[11px] text-[#8E9499]">semanas</span>
             </div>
-            <p className="text-[10px] text-[#B8FF00] font-medium tracking-tight mt-0.5">
-              North Star em construção
+            <p className="text-[10px] text-[#B8FF00] font-medium tracking-tight mt-0.5 flex items-center gap-1">
+              <span>North Star em construção</span>
+              <ChevronRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
             </p>
           </div>
         </div>
@@ -159,7 +167,7 @@ export function Sidebar({
           {/* Guided Tour Trigger Button */}
           <button
             onClick={() => {
-              startGuidedTour();
+              startGuidedTour(() => setActiveView('hoje'));
               onClose();
             }}
             title="Iniciar Tour Guiado do Sistema"

@@ -52,7 +52,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
 
         {/* Tour Guiado */}
         <button
-          onClick={startGuidedTour}
+          onClick={() => startGuidedTour(() => setActiveView('hoje'))}
           title="Iniciar Tour Guiado do Sistema"
           className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8E9499] hover:text-[#B8FF00] hover:bg-[#B8FF00]/10 border border-white/8 hover:border-[#B8FF00]/30 transition-all tactile-btn"
         >

@@ -5,6 +5,7 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { ShareCardModal } from '@/components/ui/ShareCardModal';
+import { AreaDetailsModal } from '@/components/ui/AreaDetailsModal';
 import { ShareCardData } from '@/lib/shareCardGenerator';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
@@ -20,6 +21,7 @@ import {
   Layers,
   Compass,
   Zap,
+  ChevronRight,
 } from 'lucide-react';
 
 interface RadarDataPoint {
@@ -33,6 +35,7 @@ export function LifeScoreView() {
   const { lifeScore, user, habits, goals } = useTrajetta();
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [selectedArea, setSelectedArea] = useState<LifeArea | null>(null);
+  const [detailedArea, setDetailedArea] = useState<LifeArea | null>(null);
 
   const areas: LifeArea[] = ['corpo', 'dinheiro', 'carreira', 'vida'];
 
@@ -406,7 +409,7 @@ export function LifeScoreView() {
                 {radarPoints.map((p, idx) => {
                   const { x, y } = getCoordinates(idx, p.score);
                   return (
-                    <g key={p.area} className="cursor-pointer" onClick={() => setSelectedArea(p.area)}>
+                    <g key={p.area} className="cursor-pointer" onClick={() => { setSelectedArea(p.area); setDetailedArea(p.area); }}>
                       {/* Pulse outer circle */}
                       <circle cx={x} cy={y} r="8" fill={p.color} fillOpacity="0.25" className="animate-pulse" />
                       {/* Core circle */}
@@ -526,7 +529,10 @@ export function LifeScoreView() {
           return (
             <div
               key={area}
-              onClick={() => setSelectedArea(selectedArea === area ? null : area)}
+              onClick={() => {
+                setSelectedArea(area);
+                setDetailedArea(area);
+              }}
               className={`trajetta-card p-6 border space-y-4 flex flex-col justify-between transition-all duration-300 cursor-pointer ${
                 isHighlighted
                   ? 'border-[#B8FF00]/50 ring-1 ring-[#B8FF00]/30 bg-[#12161D]'
@@ -559,16 +565,38 @@ export function LifeScoreView() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/8 text-[11px] text-[#8E9499] flex justify-between items-center">
-                <span>{config.description}</span>
-                <span className="text-[10px] text-[#B8FF00] font-mono">
-                  {isHighlighted ? 'Selecionado' : 'Ver detalhes'}
-                </span>
+              <div className="pt-3 border-t border-white/8 text-[11px] text-[#8E9499] flex justify-between items-center gap-2">
+                <span className="truncate">{config.description}</span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedArea(area);
+                    setDetailedArea(area);
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-[#B8FF00]/10 hover:bg-[#B8FF00] text-[#B8FF00] hover:text-[#0D0F10] font-bold text-xs transition-all flex items-center gap-1 active:scale-95 flex-shrink-0"
+                  aria-label={`Ver detalhes de ${config.label}`}
+                >
+                  <span>Ver detalhes</span>
+                  <ChevronRight size={13} />
+                </button>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Area Detailed Modal */}
+      {detailedArea && (
+        <AreaDetailsModal
+          area={detailedArea}
+          onClose={() => setDetailedArea(null)}
+          score={areaMetrics[detailedArea].score}
+          status={areaMetrics[detailedArea].status}
+          trend={areaMetrics[detailedArea].trend}
+          calmInsight={areaMetrics[detailedArea].calmInsight}
+        />
+      )}
 
       {/* Share Card Modal */}
       <ShareCardModal

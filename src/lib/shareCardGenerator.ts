@@ -36,30 +36,75 @@ export async function generateShareCardCanvas(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D context not supported');
 
-  // Load logo image if available
+  // Load background and logo images in parallel
+  let bgImg: HTMLImageElement | null = null;
   let logoImg: HTMLImageElement | null = null;
+
   try {
-    logoImg = await new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(img);
-      img.onerror = () => resolve(null);
-      img.src = '/trajetta-logo-transparent.png';
-    });
+    const [loadedBg, loadedLogo] = await Promise.all([
+      new Promise<HTMLImageElement | null>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = '/trajetta-email-banner.jpg';
+      }),
+      new Promise<HTMLImageElement | null>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = '/trajetta-logo-transparent.png';
+      }),
+    ]);
+    bgImg = loadedBg;
+    logoImg = loadedLogo;
   } catch {
-    logoImg = null;
+    // Graceful fallback to pure css canvas
   }
 
-  // 1. Cinematic Background
+  // 1. Base dark background
   ctx.fillStyle = '#060709';
   ctx.fillRect(0, 0, width, height);
+
+  // Draw atmospheric mountain / mist background image if loaded
+  if (bgImg) {
+    // Cover the canvas with aspect ratio preservation
+    const imgRatio = bgImg.width / bgImg.height;
+    const canvasRatio = width / height;
+    let renderW = width;
+    let renderH = height;
+    let renderX = 0;
+    let renderY = 0;
+
+    if (canvasRatio > imgRatio) {
+      renderH = width / imgRatio;
+      renderY = (height - renderH) / 2;
+    } else {
+      renderW = height * imgRatio;
+      renderX = (width - renderW) / 2;
+    }
+
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.drawImage(bgImg, renderX, renderY, renderW, renderH);
+    ctx.restore();
+
+    // Dark directional scrim gradient to ensure AAA text contrast over image
+    const scrim = ctx.createLinearGradient(0, 0, 0, height);
+    scrim.addColorStop(0, 'rgba(6, 7, 9, 0.70)');
+    scrim.addColorStop(0.4, 'rgba(6, 7, 9, 0.82)');
+    scrim.addColorStop(1, 'rgba(6, 7, 9, 0.94)');
+    ctx.fillStyle = scrim;
+    ctx.fillRect(0, 0, width, height);
+  }
 
   // Radial luminous glow from top-right (#B8FF00 ambient)
   const glowX = width * 0.75;
   const glowY = format === 'stories' ? height * 0.28 : height * 0.35;
   const radGrad = ctx.createRadialGradient(glowX, glowY, 10, glowX, glowY, width * 0.7);
-  radGrad.addColorStop(0, 'rgba(184, 255, 0, 0.12)');
-  radGrad.addColorStop(0.5, 'rgba(184, 255, 0, 0.03)');
+  radGrad.addColorStop(0, 'rgba(184, 255, 0, 0.14)');
+  radGrad.addColorStop(0.5, 'rgba(184, 255, 0, 0.04)');
   radGrad.addColorStop(1, 'rgba(6, 7, 9, 0)');
   ctx.fillStyle = radGrad;
   ctx.fillRect(0, 0, width, height);

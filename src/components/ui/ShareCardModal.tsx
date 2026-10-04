@@ -149,7 +149,12 @@ export function ShareCardModal({ isOpen, onClose, data }: ShareCardModalProps) {
 
             {/* Visual Card Container */}
             <div
-              className={`w-full transition-all duration-300 rounded-2xl border border-white/10 bg-[#0E1218] p-5 shadow-2xl flex flex-col justify-between ${
+              style={{
+                backgroundImage: "linear-gradient(180deg, rgba(14, 18, 24, 0.82) 0%, rgba(14, 18, 24, 0.92) 100%), url('/trajetta-email-banner.jpg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              className={`w-full transition-all duration-300 rounded-2xl border border-white/15 p-5 shadow-2xl flex flex-col justify-between relative backdrop-blur-sm ${
                 format === 'stories'
                   ? 'max-w-[280px] aspect-[9/16] my-2'
                   : 'max-w-[340px] aspect-square my-4'
