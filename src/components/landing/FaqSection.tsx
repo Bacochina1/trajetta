@@ -40,7 +40,7 @@ export function FaqSection() {
   const faqsEn = [
     {
       q: 'How does Trajetta Pro activation work?',
-      a: 'Activation is instant. As soon as your payment is confirmed securely via Stripe, your account is unlocked immediately with full access to all 4 life areas, habits with minimum floor, weekly planning, and unlimited Trajetta AI. You also have an unconditional 7-day money-back guarantee.',
+      a: 'Activation is instant and starts with a 3-day free trial ($0.00 charged today). You immediately receive your credentials via email with instant access to all 4 life areas, goals, habits with minimum floors, and unlimited Trajetta AI. On top of the free trial, you are protected by an unconditional 7-day full refund guarantee if you do not love it.',
     },
     {
       q: 'Is Trajetta just another habit tracker or todo app?',

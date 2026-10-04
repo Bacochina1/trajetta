@@ -2,9 +2,13 @@
 
 import React from 'react';
 import { Check, X } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/context';
 
 export function AudienceSection() {
-  const isFor = [
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
+
+  const isForPt = [
     'Para quem tem objetivos em mais de uma área e se sente dividido.',
     'Para quem já tentou planners de papel, Notion ou habit trackers e desistiu.',
     'Para quem vive recomeçando do zero e quer consistência sustentável.',
@@ -12,21 +16,38 @@ export function AudienceSection() {
     'Para quem quer ver o progresso real acumulado ao longo dos meses.',
   ];
 
-  const isNotFor = [
+  const isForEn = [
+    'For those with goals across multiple areas who feel constantly torn.',
+    'For those who tried paper planners, Notion or habit trackers and abandoned them.',
+    'For those tired of restarting from scratch who want sustainable consistency.',
+    'For those seeking a simple, weekly self-reflection ritual without guilt.',
+    'For those who want to see authentic cumulative progress compounding over months.',
+  ];
+
+  const isNotForPt = [
     'Não é para quem busca um simples bloco de notas ou lista rápida de compras.',
     'Não é para quem quer um chatbot genérico que promete trabalhar no seu lugar.',
     'Não é para quem acredita em hacks mágicos ou produtividade tóxica de 18 horas por dia.',
   ];
+
+  const isNotForEn = [
+    'Not for those looking for a trivial scratchpad or a quick grocery checklist.',
+    'Not for those seeking a generic chatbot promising to do the work for you.',
+    'Not for those chasing magical shortcuts or toxic 18-hour-a-day grind culture.',
+  ];
+
+  const isFor = isEn ? isForEn : isForPt;
+  const isNotFor = isEn ? isNotForEn : isNotForPt;
 
   return (
     <section className="py-20 sm:py-28 bg-[#080A0C] border-y border-white/[0.06] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-14 sm:mb-16">
           <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-            Alinhamento de Expectativa
+            {isEn ? 'Expectation Alignment' : 'Alinhamento de Expectativa'}
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight">
-            Para quem a Trajetta foi desenhada?
+            {isEn ? 'Who was Trajetta designed for?' : 'Para quem a Trajetta foi desenhada?'}
           </h2>
         </div>
 
@@ -35,7 +56,7 @@ export function AudienceSection() {
           <div className="p-6 sm:p-8 rounded-2xl bg-[#0D0F10] border border-[#B8FF00]/30 space-y-5">
             <h3 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#B8FF00]" />
-              A Trajetta é ideal para você se:
+              {isEn ? 'Trajetta is ideal for you if:' : 'A Trajetta é ideal para você se:'}
             </h3>
             <ul className="space-y-3.5">
               {isFor.map((item, idx) => (
@@ -51,7 +72,7 @@ export function AudienceSection() {
           <div className="p-6 sm:p-8 rounded-2xl bg-[#0D0F10] border border-white/8 space-y-5">
             <h3 className="text-lg font-bold text-[#F2F1ED] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-red-400" />
-              Não recomendamos a Trajetta se:
+              {isEn ? 'We do not recommend Trajetta if:' : 'Não recomendamos a Trajetta se:'}
             </h3>
             <ul className="space-y-3.5">
               {isNotFor.map((item, idx) => (

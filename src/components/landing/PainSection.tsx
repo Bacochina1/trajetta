@@ -2,9 +2,13 @@
 
 import React from 'react';
 import { RotateCcw, BatteryLow, CalendarX, Target, ZapOff } from 'lucide-react';
+import { useI18n } from '@/lib/i18n/context';
 
 export function PainSection() {
-  const pains = [
+  const { locale } = useI18n();
+  const isEn = locale === 'en';
+
+  const painsPt = [
     {
       icon: Target,
       headline: 'Você começa o ano com metas e meses depois nem lembra onde anotou.',
@@ -32,18 +36,50 @@ export function PainSection() {
     },
   ];
 
+  const painsEn = [
+    {
+      icon: Target,
+      headline: 'You start the year with grand goals and months later cannot even remember where they were written down.',
+      description: 'Ambitious resolutions in January become forgotten notes in March because there was never a pragmatic bridge connecting high vision to the very next Monday.',
+    },
+    {
+      icon: BatteryLow,
+      headline: 'You craft an idyllic daily routine and completely abandon it after three days.',
+      description: 'Trying to reinvent yourself overnight produces severe reality shock. When daily emergencies hit, rigid inflexible schedules are always the first to collapse.',
+    },
+    {
+      icon: CalendarX,
+      headline: 'You reach Sunday exhausted, yet unable to articulate what genuinely compounded.',
+      description: 'Five hectic days putting out fires, answering messages, and checking off arbitrary to-do lists, only to be left with the unsettling sensation of spinning in place.',
+    },
+    {
+      icon: ZapOff,
+      headline: 'You attempt to optimize health, finances, craft, and relationships all at once.',
+      description: 'Without weekly capacity planning, your attention fractures trying to maximize every domain simultaneously, ultimately sustaining none with composure.',
+    },
+    {
+      icon: RotateCcw,
+      headline: 'You feel eternally trapped in the cycle of restarting from scratch.',
+      description: 'Traditional apps punish you for missing a single day by wiping out streaks. You get demoralized, uninstall the app, and wait for "next Monday" to start over.',
+    },
+  ];
+
+  const pains = isEn ? painsEn : painsPt;
+
   return (
     <section className="py-20 sm:py-28 bg-[#080A0C] border-y border-white/[0.06] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-14 sm:mb-20">
           <span className="text-xs font-bold uppercase tracking-wider text-[#B8FF00]">
-            O Problema Real
+            {isEn ? 'The Root Friction' : 'O Problema Real'}
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#F2F1ED] tracking-tight leading-tight">
-            O problema nunca foi sua força de vontade.
+            {isEn ? 'The obstacle was never your willpower.' : 'O problema nunca foi sua força de vontade.'}
           </h2>
           <p className="text-sm sm:text-base text-[#8E9499] leading-relaxed">
-            É tentar viver uma vida real com ferramentas que te forçam a viver no automático e a desistir no primeiro imprevisto.
+            {isEn
+              ? 'It is attempting to live a complex, unpredictable human life with rigid tools that force you into autopilot and make you give up at the first roadblock.'
+              : 'É tentar viver uma vida real com ferramentas que te forçam a viver no automático e a desistir no primeiro imprevisto.'}
           </p>
         </div>
 
