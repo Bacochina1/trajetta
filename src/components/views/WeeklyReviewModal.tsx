@@ -5,12 +5,13 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { AreaBadge } from '@/components/ui/AreaBadge';
+import { ShareCardModal } from '@/components/ui/ShareCardModal';
 import { CheckCircle2, ChevronRight, Share2, Check, ArrowRight, Brain, Mail, Send } from 'lucide-react';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
 
 export function WeeklyReviewModal() {
-  const { isReviewModalOpen, setIsReviewModalOpen, submitWeeklyReview, weeklyPlan, user, habits, goals } = useTrajetta();
+  const { isReviewModalOpen, setIsReviewModalOpen, submitWeeklyReview, weeklyPlan, user, habits, goals, lifeScore } = useTrajetta();
   
   const [step, setStep] = useState<number>(1);
   const [whatAdvanced, setWhatAdvanced] = useState('');
@@ -20,6 +21,7 @@ export function WeeklyReviewModal() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [aiText, setAiText] = useState<string>('');
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [isShareCardOpen, setIsShareCardOpen] = useState(false);
 
   // Auto-computed metrics
   const totalHabitLogs = habits.reduce((acc, h) => acc + h.daysCompletedThisWeek.length, 0);
@@ -340,7 +342,7 @@ export function WeeklyReviewModal() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
               <div className="bg-white/5 rounded-xl p-3 border border-white/5">
                 <span className="text-2xl font-black text-[#B8FF00] block tabular-numbers">
-                  3
+                  {goals.filter(g => g.progress > 0).length || (goals.length > 0 ? 1 : 0)}
                 </span>
                 <span className="text-[10px] text-[#8E9499] uppercase font-semibold">
                   Metas Avançadas
@@ -355,16 +357,22 @@ export function WeeklyReviewModal() {
                 </span>
               </div>
               <div className="bg-white/5 rounded-xl p-3 border border-white/5">
-                <span className="text-xs font-bold text-[#58D6A7] block mt-1">
-                  Corpo
+                <span
+                  className="text-xs font-bold block mt-1"
+                  style={{ color: LIFE_AREAS[topArea]?.color || '#58D6A7' }}
+                >
+                  {LIFE_AREAS[topArea]?.label || 'Corpo'}
                 </span>
                 <span className="text-[10px] text-[#8E9499] uppercase font-semibold">
                   Principal Área
                 </span>
               </div>
               <div className="bg-white/5 rounded-xl p-3 border border-white/5">
-                <span className="text-xs font-bold text-[#F08A76] block mt-1">
-                  Dinheiro
+                <span
+                  className="text-xs font-bold block mt-1"
+                  style={{ color: LIFE_AREAS[neglectedArea]?.color || '#F08A76' }}
+                >
+                  {LIFE_AREAS[neglectedArea]?.label || 'Vida'}
                 </span>
                 <span className="text-[10px] text-[#8E9499] uppercase font-semibold">
                   Atenção Necessária
@@ -415,7 +423,7 @@ export function WeeklyReviewModal() {
               <Button
                 variant="secondary"
                 size="md"
-                onClick={() => alert('Card pronto para compartilhamento!')}
+                onClick={() => setIsShareCardOpen(true)}
                 className="text-xs flex-1 sm:flex-none"
               >
                 <Share2 size={14} /> Compartilhar
@@ -432,6 +440,28 @@ export function WeeklyReviewModal() {
           </div>
         </div>
       )}
+
+      {/* Share Card Modal for Weekly Review */}
+      <ShareCardModal
+        isOpen={isShareCardOpen}
+        onClose={() => setIsShareCardOpen(false)}
+        data={{
+          userName: user?.name || 'Explorador',
+          overallScore: Math.round(
+            (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
+          ),
+          scoreStatus: 'Ritmo Semanal Fechado',
+          streakDays: Math.max(14, (user.completedWeeksCount || 1) * 7),
+          consistencyRate: habitRate,
+          completedHabitsCount: totalHabitLogs,
+          areas: {
+            corpo: lifeScore.corpo.score,
+            dinheiro: lifeScore.dinheiro.score,
+            carreira: lifeScore.carreira.score,
+            vida: lifeScore.vida.score,
+          },
+        }}
+      />
     </Modal>
   );
 }
