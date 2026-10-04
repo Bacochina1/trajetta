@@ -10,7 +10,7 @@ import { LifeArea } from '@/types';
 import { Flame, Plus, Check, ShieldCheck, Heart, Trash2, Repeat } from 'lucide-react';
 
 export function HabitsView() {
-  const { habits, toggleHabitToday, createHabit, deleteHabit } = useTrajetta();
+  const { habits, toggleHabitToday, toggleHabitDay, createHabit, deleteHabit } = useTrajetta();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newArea, setNewArea] = useState<LifeArea>('corpo');
@@ -176,7 +176,7 @@ export function HabitsView() {
                       return (
                         <button
                           key={day}
-                          onClick={() => toggleHabitToday(habit.id)}
+                          onClick={() => toggleHabitDay(habit.id, day)}
                           aria-label={`${DAY_NAMES[day]}: ${isDone ? 'Concluído' : 'Não concluído'}`}
                           className={`flex-1 min-w-0 py-1.5 sm:py-2 px-0.5 min-h-[44px] rounded-xl flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition-all tactile-btn select-none ${
                             isDone

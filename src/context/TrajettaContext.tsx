@@ -60,6 +60,7 @@ type TrajettaContextType = {
   logout: () => Promise<void>;
   setActiveView: (view: ActiveView) => void;
   toggleHabitToday: (habitId: string) => void;
+  toggleHabitDay: (habitId: string, dayIndex: number) => void;
   toggleGoalMilestone: (goalId: string, milestoneId: string) => void;
   toggleGoalActionToday: (goalId: string, actionId: string) => void;
   updateGoalProgress: (goalId: string, newProgress: number) => void;
@@ -412,20 +413,20 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
   // Current day index in JS: 0=Domingo, 1=Segunda, etc.
   const todayIndex = new Date().getDay();
 
-  const toggleHabitToday = (habitId: string) => {
+  const toggleHabitDay = (habitId: string, targetDay: number) => {
     let isNowCompleted = false;
     setHabits(prev =>
       prev.map(h => {
         if (h.id !== habitId) return h;
-        const exists = h.daysCompletedThisWeek.includes(todayIndex);
+        const exists = h.daysCompletedThisWeek.includes(targetDay);
         isNowCompleted = !exists;
         const newDays = exists
-          ? h.daysCompletedThisWeek.filter(d => d !== todayIndex)
-          : [...h.daysCompletedThisWeek, todayIndex];
+          ? h.daysCompletedThisWeek.filter(d => d !== targetDay)
+          : [...h.daysCompletedThisWeek, targetDay];
         return {
           ...h,
           daysCompletedThisWeek: newDays,
-          totalCompletedAllTime: (h.totalCompletedAllTime || 0) + (exists ? -1 : 1)
+          totalCompletedAllTime: Math.max(0, (h.totalCompletedAllTime || 0) + (exists ? -1 : 1))
         };
       })
     );
@@ -440,6 +441,10 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
         completed: isNowCompleted
       })
     }).catch(() => {});
+  };
+
+  const toggleHabitToday = (habitId: string) => {
+    toggleHabitDay(habitId, new Date().getDay());
   };
 
   const toggleGoalMilestone = (goalId: string, milestoneId: string) => {
@@ -1068,6 +1073,7 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       setUserProfile: (patch: Partial<UserProfile>) => setUser((prev) => ({ ...prev, ...patch })),
       setActiveView,
       toggleHabitToday,
+      toggleHabitDay,
       toggleGoalMilestone,
       toggleGoalActionToday,
       updateGoalProgress,

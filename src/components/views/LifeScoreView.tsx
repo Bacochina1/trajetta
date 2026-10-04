@@ -102,14 +102,30 @@ export function LifeScoreView() {
       const trend: 'up' | 'stable' | 'down' =
         dynamicScore > baseFromSaved ? 'up' : dynamicScore < baseFromSaved ? 'down' : 'stable';
 
-      let calmInsight = '';
-      if (status === 'strong') {
-        calmInsight = 'Excelente sustentabilidade. Mantenha a cadência sem elevar o volume desnecessariamente.';
-      } else if (status === 'evolving') {
-        calmInsight = 'Ritmo consistente em construção. Priorize o piso mínimo nos dias com menor energia.';
-      } else {
-        calmInsight = 'Área com menor vazão nesta semana. Reduza a meta a um micropasso de 5 minutos para retomar.';
-      }
+      const areaSpecificInsights: Record<LifeArea, Record<'strong' | 'evolving' | 'attention', string>> = {
+        corpo: {
+          strong: 'Vitalidade física e ritmo de sono consistentes. Mantenha a cadência sem sobrecarregar.',
+          evolving: 'Construindo ritmo de treinos e descanso. Em dias cansativos, acione seu piso mínimo de 15 minutos.',
+          attention: 'Energia física oscilando. Reduza a cobrança e garanta apenas água e 5 minutos de movimento.',
+        },
+        dinheiro: {
+          strong: 'Reserva e aportes sob controle lúcido. Foco no horizonte de longo prazo sem ansiedade.',
+          evolving: 'Controle de fluxo financeiro ativo. Mantenha os aportes semanais e freie gastos por impulso.',
+          attention: 'Finanças pedem atenção serena. Abra o extrato hoje e anote 1 despesa supérflua para evitar.',
+        },
+        carreira: {
+          strong: 'Avanço deliberado em projetos de alto impacto. Excelente proteção contra trabalho reativo.',
+          evolving: 'Foco estratégico em construção. Garanta ao menos 1 bloco matinal de trabalho sem distrações.',
+          attention: 'Trabalho disperso ou sobrecarregado. Feche as abas abertas e escolha a única entrega inegociável.',
+        },
+        vida: {
+          strong: 'Espaço preservado para mente, família e descanso. Presença real longe do ruído digital.',
+          evolving: 'Buscando equilíbrio e margem mental. Proteja o desligamento de telas antes de dormir.',
+          attention: 'Sobrecarga mental acumulada. Reserve 15 minutos desconectado e mande mensagem para quem importa.',
+        },
+      };
+
+      const calmInsight = areaSpecificInsights[area][status];
 
       areaMetrics[area] = {
         score: dynamicScore,
@@ -219,10 +235,10 @@ export function LifeScoreView() {
     areaMetrics.vida.score;
 
   const distribution = {
-    corpo: Math.round((areaMetrics.corpo.score / totalAreaScores) * 100),
-    dinheiro: Math.round((areaMetrics.dinheiro.score / totalAreaScores) * 100),
-    carreira: Math.round((areaMetrics.carreira.score / totalAreaScores) * 100),
-    vida: Math.round((areaMetrics.vida.score / totalAreaScores) * 100),
+    corpo: totalAreaScores > 0 ? Math.round((areaMetrics.corpo.score / totalAreaScores) * 100) : 25,
+    dinheiro: totalAreaScores > 0 ? Math.round((areaMetrics.dinheiro.score / totalAreaScores) * 100) : 25,
+    carreira: totalAreaScores > 0 ? Math.round((areaMetrics.carreira.score / totalAreaScores) * 100) : 25,
+    vida: totalAreaScores > 0 ? Math.round((areaMetrics.vida.score / totalAreaScores) * 100) : 25,
   };
 
   const getStatusBadge = (status: 'attention' | 'evolving' | 'strong') => {

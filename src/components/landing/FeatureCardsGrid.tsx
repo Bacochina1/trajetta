@@ -16,6 +16,25 @@ export function FeatureCardsGrid() {
   const { locale } = useI18n();
   const isEn = locale === 'en';
 
+  const [recalculated, setRecalculated] = React.useState(false);
+  const [floorActivated, setFloorActivated] = React.useState(false);
+  const [victoryLogged, setVictoryLogged] = React.useState(false);
+
+  const handleRecalculate = () => {
+    setRecalculated(true);
+    setTimeout(() => setRecalculated(false), 3500);
+  };
+
+  const handleActivateFloor = () => {
+    setFloorActivated(true);
+    setTimeout(() => setFloorActivated(false), 3500);
+  };
+
+  const handleLogVictory = () => {
+    setVictoryLogged(true);
+    setTimeout(() => setVictoryLogged(false), 3500);
+  };
+
   return (
     <section className="relative z-20 max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 pb-20 sm:pb-32" data-purpose="feature-cards" id="ciclos">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -163,33 +182,57 @@ export function FeatureCardsGrid() {
               {/* Chip 1: Retomada sem culpa */}
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
-                  <RotateCcw className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                  <RotateCcw className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${recalculated ? 'text-[#B8FF00] rotate-180 duration-500' : 'text-neutral-400'}`} />
                   <span className="truncate">{isEn ? 'Guilt-free reset after pause' : 'Retomada sem culpa após pausa'}</span>
                 </div>
-                <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  {isEn ? 'Recalculate' : 'Recalcular'}
+                <button
+                  type="button"
+                  onClick={handleRecalculate}
+                  className={`font-semibold text-[9.5px] xs:text-[10px] px-2.5 py-1 rounded-md transition-all flex-shrink-0 active:scale-95 cursor-pointer ${
+                    recalculated
+                      ? 'bg-[#B8FF00] text-black shadow-[0_0_10px_rgba(184,255,0,0.3)]'
+                      : 'bg-white hover:bg-neutral-100 text-black'
+                  }`}
+                >
+                  {recalculated ? (isEn ? '✓ Recalibrated' : '✓ Recalibrado') : (isEn ? 'Recalculate' : 'Recalcular')}
                 </button>
               </div>
 
               {/* Chip 2: Piso Mínimo */}
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                  <ShieldCheck className={`w-3.5 h-3.5 flex-shrink-0 ${floorActivated ? 'text-[#B8FF00]' : 'text-neutral-400'}`} />
                   <span className="truncate">{isEn ? 'Activate workout minimum floor' : 'Ativar piso mínimo de treino'}</span>
                 </div>
-                <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  {isEn ? 'Activate' : 'Ativar'}
+                <button
+                  type="button"
+                  onClick={handleActivateFloor}
+                  className={`font-semibold text-[9.5px] xs:text-[10px] px-2.5 py-1 rounded-md transition-all flex-shrink-0 active:scale-95 cursor-pointer ${
+                    floorActivated
+                      ? 'bg-[#B8FF00] text-black shadow-[0_0_10px_rgba(184,255,0,0.3)]'
+                      : 'bg-white hover:bg-neutral-100 text-black'
+                  }`}
+                >
+                  {floorActivated ? (isEn ? '✓ Active (15m)' : '✓ Ativo (15m)') : (isEn ? 'Activate' : 'Ativar')}
                 </button>
               </div>
 
               {/* Chip 3: Registrar Vitória */}
               <div className="bg-[#151921]/95 border border-white/15 px-2.5 xs:px-3 py-2 rounded-xl flex items-center justify-between text-[10.5px] xs:text-[11px] shadow-lg backdrop-blur-sm">
                 <div className="flex items-center space-x-1.5 xs:space-x-2 text-neutral-300 truncate mr-2">
-                  <Zap className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                  <Zap className={`w-3.5 h-3.5 flex-shrink-0 ${victoryLogged ? 'text-[#B8FF00] fill-[#B8FF00]' : 'text-neutral-400'}`} />
                   <span className="truncate">{isEn ? 'Log quiet victory' : 'Registrar vitória silenciosa'}</span>
                 </div>
-                <button className="bg-white hover:bg-neutral-100 text-black font-semibold text-[9.5px] xs:text-[10px] px-2 xs:px-2.5 py-1 rounded-md transition-colors flex-shrink-0">
-                  {isEn ? 'Log' : 'Registrar'}
+                <button
+                  type="button"
+                  onClick={handleLogVictory}
+                  className={`font-semibold text-[9.5px] xs:text-[10px] px-2.5 py-1 rounded-md transition-all flex-shrink-0 active:scale-95 cursor-pointer ${
+                    victoryLogged
+                      ? 'bg-[#B8FF00] text-black shadow-[0_0_10px_rgba(184,255,0,0.3)]'
+                      : 'bg-white hover:bg-neutral-100 text-black'
+                  }`}
+                >
+                  {victoryLogged ? (isEn ? '✓ Logged' : '✓ Gravado') : (isEn ? 'Log' : 'Registrar')}
                 </button>
               </div>
             </div>

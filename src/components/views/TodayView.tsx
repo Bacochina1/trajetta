@@ -24,6 +24,7 @@ export function TodayView() {
     setIsNewGoalModalOpen,
     lifeScore,
     user,
+    addTimelineEvent,
   } = useTrajetta();
 
   const [dailyNote, setDailyNote] = useState('');
@@ -54,10 +55,23 @@ export function TodayView() {
     ? activeJourney.status === 'completed' || activeJourney.currentDay >= activeJourney.totalDays
     : false;
 
-  const handleSaveNote = () => {
+  const handleSaveNote = async () => {
     if (!dailyNote.trim()) return;
-    setNoteSaved(true);
-    setTimeout(() => setNoteSaved(false), 2500);
+    try {
+      await addTimelineEvent({
+        title: dailyNote.trim(),
+        description: 'Vitória discreta registrada no dia',
+        type: 'achievement',
+        lifeArea: 'vida',
+        tag: 'Registro Diário',
+      });
+      setNoteSaved(true);
+      setDailyNote('');
+      setTimeout(() => setNoteSaved(false), 3000);
+    } catch {
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 2500);
+    }
   };
 
   return (
