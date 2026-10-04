@@ -13,7 +13,7 @@ export function FaqSection() {
   const faqsPt = [
     {
       q: 'Como funciona a ativação e liberação do Trajetta Pro?',
-      a: 'A liberação é instantânea. Assim que o pagamento de R$ 29,90/mês é confirmado com segurança via Stripe, você recebe suas credenciais e tem acesso imediato a todas as 4 áreas da vida, metas, hábitos com piso mínimo e IA ilimitada. Você conta com garantia legal incondicional de 7 dias com reembolso total se não amar.',
+      a: 'A liberação é instantânea e você começa com 3 dias de degustação gratuita (R$ 0,00 cobrado hoje). Você recebe suas credenciais no e-mail na mesma hora e tem acesso imediato a todas as 4 áreas da vida, metas, hábitos com piso mínimo e Trajetta AI sem limites. Além do teste grátis, você conta com garantia incondicional de 7 dias com reembolso total se não amar.',
     },
     {
       q: 'A Trajetta é mais um aplicativo de hábitos ou listas?',
