@@ -338,46 +338,96 @@ export function renderWeeklyReviewEmail(data: {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fechamento da Semana ${data.weekNumber} — Trajetta</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #060709; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F2F1ED;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #0E1217; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+<body style="margin: 0; padding: 0; background-color: #060709; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F2F1ED; -webkit-font-smoothing: antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #060709; padding: 32px 12px 50px 12px;">
     <tr>
-      <td style="padding: 32px 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); background-color: #090C10;">
-        <span style="font-size: 20px; font-weight: 800; color: #F2F1ED;">trajetta</span>
-        <span style="font-size: 11px; color: #B8FF00; font-weight: 600; margin-left: 8px;">Domingo de Reflexão</span>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 40px;">
-        <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 8px 0; color: #F2F1ED;">
-          Semana ${data.weekNumber} Concluída, ${data.userName}.
-        </h2>
-        <p style="font-size: 13px; color: #8E9499; margin: 0 0 24px 0;">
-          ${data.streakWeeks} semanas consecutivas registradas na sua North Star de 2026.
-        </p>
-        <div style="background-color: #12151B; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 28px;">
-          <span style="font-size: 11px; font-weight: 700; color: #B8FF00; text-transform: uppercase; letter-spacing: 1px;">Reflexão da Trajetta IA</span>
-          <p style="font-size: 14px; line-height: 1.6; color: #F2F1ED; margin: 12px 0 0 0; font-style: italic;">
-            “${data.reflection}”
-          </p>
-        </div>
-        <table cellpadding="0" cellspacing="0">
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #0B0E14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; box-shadow: 0 35px 80px rgba(0,0,0,0.85);">
+          
+          <!-- Banner Atmosférico Editorial de Fundo com Scrim Suave -->
           <tr>
-            <td style="background-color: #B8FF00; border-radius: 8px; text-align: center;">
-              <a href="https://trajettacompany.com.br/app" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 700; color: #0D0F10; text-decoration: none; border-radius: 8px;">
-                Ver Cartão da Semana →
+            <td style="padding: 0; background-color: #080A0F; border-bottom: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+              <a href="https://trajettacompany.com.br" target="_blank" style="text-decoration: none; display: block;">
+                <img src="https://trajettacompany.com.br/trajetta-email-banner.jpg" alt="Trajetta" width="600" style="display: block; width: 100%; max-height: 160px; object-fit: cover; opacity: 0.88;" />
               </a>
             </td>
           </tr>
+
+          <!-- Cabeçalho com Logo Oficial -->
+          <tr>
+            <td style="padding: 30px 36px 22px 36px; background-color: #0B0E14; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td align="left" style="vertical-align: middle;">
+                    <table cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td style="vertical-align: middle; padding-right: 12px;">
+                          <a href="https://trajettacompany.com.br" target="_blank" style="text-decoration: none; display: inline-block;">
+                            <img src="https://trajettacompany.com.br/trajetta-logo-white.png" alt="Trajetta" width="34" height="34" style="display: block; border-radius: 8px;" />
+                          </a>
+                        </td>
+                        <td style="vertical-align: middle;">
+                          <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.6px; color: #FFFFFF; display: block; line-height: 1;">trajetta</span>
+                          <span style="font-size: 10px; font-family: monospace; letter-spacing: 1.5px; text-transform: uppercase; color: #8E9499; display: block; margin-top: 4px;">DOMINGO DE REFLEXÃO</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.12); border: 1px solid rgba(184, 255, 0, 0.35); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px;">
+                      SEMANA ${data.weekNumber}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Conteúdo -->
+          <tr>
+            <td style="padding: 36px 36px 32px 36px;">
+              <h1 style="font-size: 24px; font-weight: 700; line-height: 1.3; margin: 0 0 10px 0; color: #FFFFFF; letter-spacing: -0.5px;">
+                Semana ${data.weekNumber} Concluída, ${data.userName}.
+              </h1>
+              <p style="font-size: 13px; color: #8E9499; margin: 0 0 24px 0; font-family: monospace;">
+                ✦ ${data.streakWeeks} semanas consecutivas registradas na sua North Star de 2026.
+              </p>
+
+              <div style="background-color: #12151B; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
+                <div style="font-size: 11px; font-weight: 700; color: #B8FF00; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 12px;">
+                  REFLEXÃO DA TRAJETTA AI
+                </div>
+                <p style="font-size: 15px; line-height: 1.7; color: #F2F1ED; margin: 0; font-style: italic;">
+                  “${data.reflection}”
+                </p>
+              </div>
+
+              <!-- Botão Principal -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 12px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://trajettacompany.com.br/app" target="_blank" style="display: inline-block; background-color: #B8FF00; color: #080A0D; font-size: 13px; font-weight: 800; letter-spacing: 0.3px; text-decoration: none; padding: 16px 32px; border-radius: 12px; box-shadow: 0 8px 24px rgba(184, 255, 0, 0.28);">
+                      Ver Cartão da Minha Semana →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Rodapé -->
+          <tr>
+            <td style="padding: 24px 36px; background-color: #080A0E; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+              <p style="font-size: 11px; color: #6D747D; margin: 0; font-family: monospace;">
+                Trajetta • Disciplina serena, sustentável e sem punição.
+              </p>
+            </td>
+          </tr>
+
         </table>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 24px 40px; background-color: #090C10; border-top: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
-        <p style="font-size: 11px; color: #8E9499; margin: 0;">
-          Trajetta • Disciplina serena e sustentável.
-        </p>
       </td>
     </tr>
   </table>
@@ -854,18 +904,29 @@ export function renderSubscriptionCancellationEmail(data: {
       <td align="center">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #0D1015; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
           
-          <!-- Cabeçalho -->
+          <!-- Banner Atmosférico Editorial de Fundo com Scrim Suave -->
           <tr>
-            <td style="padding: 32px 36px 26px 36px; background-color: #090C10; border-bottom: 1px solid rgba(255, 255, 255, 0.07);">
+            <td style="padding: 0; background-color: #080A0F; border-bottom: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+              <a href="https://trajettacompany.com.br" target="_blank" style="text-decoration: none; display: block;">
+                <img src="https://trajettacompany.com.br/trajetta-email-banner.jpg" alt="Trajetta" width="600" style="display: block; width: 100%; max-height: 160px; object-fit: cover; opacity: 0.88;" />
+              </a>
+            </td>
+          </tr>
+
+          <!-- Cabeçalho com Logo Oficial -->
+          <tr>
+            <td style="padding: 30px 36px 22px 36px; background-color: #0B0E14; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td align="left" style="vertical-align: middle;">
                     <table cellpadding="0" cellspacing="0" role="presentation">
                       <tr>
-                        <td style="width: 32px; height: 32px; background: linear-gradient(135deg, #B8FF00 0%, #8AC400 100%); border-radius: 8px; text-align: center; vertical-align: middle;">
-                          <span style="font-size: 18px; font-weight: 900; color: #060709; line-height: 32px; display: inline-block;">T</span>
+                        <td style="vertical-align: middle; padding-right: 12px;">
+                          <a href="https://trajettacompany.com.br" target="_blank" style="text-decoration: none; display: inline-block;">
+                            <img src="https://trajettacompany.com.br/trajetta-logo-white.png" alt="Trajetta" width="34" height="34" style="display: block; border-radius: 8px;" />
+                          </a>
                         </td>
-                        <td style="padding-left: 12px; vertical-align: middle;">
+                        <td style="vertical-align: middle;">
                           <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.6px; color: #FFFFFF; display: block; line-height: 1;">trajetta</span>
                           <span style="font-size: 10px; font-family: monospace; letter-spacing: 1.5px; text-transform: uppercase; color: #8E9499; display: block; margin-top: 4px;">TRANSPARÊNCIA TOTAL</span>
                         </td>
@@ -885,12 +946,12 @@ export function renderSubscriptionCancellationEmail(data: {
           <!-- Conteúdo -->
           <tr>
             <td style="padding: 36px 36px 30px 36px;">
-              <h1 style="font-size: 24px; font-weight: 800; line-height: 1.3; margin: 0 0 14px 0; color: #FFFFFF; letter-spacing: -0.5px;">
+              <h1 style="font-size: 24px; font-weight: 700; line-height: 1.3; margin: 0 0 14px 0; color: #FFFFFF; letter-spacing: -0.5px;">
                 Cancelamento confirmado, ${data.userName}.
               </h1>
               
-              <p style="font-size: 14px; line-height: 1.65; color: #A4ABB3; margin: 0 0 24px 0;">
-                Confirmamos o cancelamento da renovação automática da sua assinatura no Trajetta. Como prezamos pela serenidade e pelo respeito aos nossos membros, não haverá qualquer cobrança futura.
+              <p style="font-size: 15px; line-height: 1.7; color: #BAC2CC; margin: 0 0 24px 0;">
+                Confirmamos o cancelamento da renovação automática da sua assinatura no Trajetta. Como prezamos pela serenidade e pelo respeito absoluto aos nossos membros, não haverá qualquer cobrança futura.
               </p>
 
               <!-- Box Acesso Vigente -->
@@ -911,7 +972,7 @@ export function renderSubscriptionCancellationEmail(data: {
 
           <!-- Rodapé -->
           <tr>
-            <td style="padding: 24px 36px; background-color: #080A0D; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+            <td style="padding: 24px 36px; background-color: #080A0E; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
               <p style="font-size: 11px; color: #6D747D; margin: 0 0 6px 0; font-family: monospace;">
                 TRAJETTA • DISCIPLINA SUSTENTÁVEL • CONTATO: companytrajetta@gmail.com
               </p>
