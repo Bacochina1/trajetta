@@ -1,10 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Download, Share, PlusSquare, X, Smartphone, Sparkles } from 'lucide-react';
 import { useI18n } from '@/lib/i18n/context';
 
 export function PwaManager() {
+  const pathname = usePathname();
+  const isAppRoute = pathname?.startsWith('/app') || pathname?.startsWith('/dashboard');
+
   const { t } = useI18n();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isStandalone, setIsStandalone] = useState(false);
@@ -13,6 +17,7 @@ export function PwaManager() {
   const [showMobileInstallBanner, setShowMobileInstallBanner] = useState(false);
 
   useEffect(() => {
+    if (!isAppRoute) return;
     // 1. Register Service Worker with instant update check
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -107,7 +112,7 @@ export function PwaManager() {
     }
   };
 
-  if (isStandalone) return null;
+  if (isStandalone || !isAppRoute) return null;
 
   return (
     <>

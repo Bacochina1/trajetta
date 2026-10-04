@@ -41,9 +41,6 @@ function InnerLandingContent() {
 
   return (
     <div className="min-h-screen bg-[#060709] text-[#ffffff] selection:bg-[#B8FF00] selection:text-[#060709] font-sans antialiased overflow-x-hidden">
-      {/* PWA Manager */}
-      <PwaManager />
-
       {/* 1. Floating Capsule Navbar with Language Switcher */}
       <Navbar />
 
