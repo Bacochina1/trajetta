@@ -160,19 +160,34 @@ export function renderWelcomeEmail(userName: string, position: number = 1481): s
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Você está na Lista VIP da Trajetta</title>
   <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
     @media only screen and (max-width: 480px) {
-      .email-wrap { padding: 12px 6px !important; }
-      .email-container { width: 100% !important; border-radius: 14px !important; }
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
       .email-pad { padding: 22px 18px !important; }
       .header-pad { padding: 20px 18px 16px 18px !important; }
-      .banner-img { max-height: 110px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
       .cta-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 15px 16px !important; text-align: center !important; font-size: 13px !important; }
       .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
       .pass-box { padding: 16px 14px !important; }
       .pass-name { font-size: 18px !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-pad { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
+      .pass-box { padding: 14px 10px !important; }
+      .pass-name { font-size: 16px !important; }
+      .cta-btn { padding: 14px 10px !important; font-size: 12.5px !important; }
     }
   </style>
 </head>
@@ -350,27 +365,53 @@ export function renderWeeklyReviewEmail(data: {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Fechamento da Semana ${data.weekNumber} — Trajetta</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    @media only screen and (max-width: 480px) {
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
+      .email-pad { padding: 22px 18px !important; }
+      .header-pad { padding: 20px 18px 16px 18px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
+      .cta-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 15px 16px !important; text-align: center !important; font-size: 13px !important; }
+      .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
+      .review-box { padding: 18px 16px !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-pad { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
+      .cta-btn { padding: 14px 10px !important; font-size: 12.5px !important; }
+      .review-box { padding: 14px 12px !important; }
+    }
+  </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #060709; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F2F1ED; -webkit-font-smoothing: antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #060709; padding: 32px 12px 50px 12px;">
+  <table class="email-wrap" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #060709; padding: 32px 12px 50px 12px;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #0B0E14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; box-shadow: 0 35px 80px rgba(0,0,0,0.85);">
+        <table class="email-container" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #0B0E14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; box-shadow: 0 35px 80px rgba(0,0,0,0.85);">
           
           <!-- Banner Atmosférico Editorial de Fundo com Scrim Suave -->
           <tr>
             <td style="padding: 0; background-color: #080A0F; border-bottom: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
               <a href="https://trajettacompany.com.br" target="_blank" style="text-decoration: none; display: block;">
-                <img src="https://trajettacompany.com.br/trajetta-email-banner.jpg" alt="Trajetta" width="600" style="display: block; width: 100%; max-height: 160px; object-fit: cover; opacity: 0.88;" />
+                <img class="banner-img" src="https://trajettacompany.com.br/trajetta-email-banner.jpg" alt="Trajetta" width="600" style="display: block; width: 100%; max-height: 160px; object-fit: cover; opacity: 0.88;" />
               </a>
             </td>
           </tr>
 
           <!-- Cabeçalho com Logo Oficial -->
           <tr>
-            <td style="padding: 30px 36px 22px 36px; background-color: #0B0E14; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+            <td class="header-pad" style="padding: 30px 36px 22px 36px; background-color: #0B0E14; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td align="left" style="vertical-align: middle;">
@@ -389,7 +430,7 @@ export function renderWeeklyReviewEmail(data: {
                     </table>
                   </td>
                   <td align="right" style="vertical-align: middle;">
-                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.12); border: 1px solid rgba(184, 255, 0, 0.35); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px;">
+                    <span class="badge-tag" style="display: inline-block; background-color: rgba(184, 255, 0, 0.12); border: 1px solid rgba(184, 255, 0, 0.35); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap;">
                       SEMANA ${data.weekNumber}
                     </span>
                   </td>
@@ -400,15 +441,15 @@ export function renderWeeklyReviewEmail(data: {
 
           <!-- Conteúdo -->
           <tr>
-            <td style="padding: 36px 36px 32px 36px;">
-              <h1 style="font-size: 24px; font-weight: 700; line-height: 1.3; margin: 0 0 10px 0; color: #FFFFFF; letter-spacing: -0.5px;">
+            <td class="email-pad" style="padding: 36px 36px 32px 36px;">
+              <h1 class="mobile-title" style="font-size: 24px; font-weight: 700; line-height: 1.3; margin: 0 0 10px 0; color: #FFFFFF; letter-spacing: -0.5px;">
                 Semana ${data.weekNumber} Concluída, ${data.userName}.
               </h1>
               <p style="font-size: 13px; color: #8E9499; margin: 0 0 24px 0; font-family: monospace;">
                 ✦ ${data.streakWeeks} semanas consecutivas registradas na sua North Star de 2026.
               </p>
 
-              <div style="background-color: #12151B; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
+              <div class="review-box" style="background-color: #12151B; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
                 <div style="font-size: 11px; font-weight: 700; color: #B8FF00; text-transform: uppercase; letter-spacing: 1.5px; font-family: monospace; margin-bottom: 12px;">
                   REFLEXÃO DA TRAJETTA AI
                 </div>
@@ -421,7 +462,7 @@ export function renderWeeklyReviewEmail(data: {
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 12px;">
                 <tr>
                   <td align="center">
-                    <a href="https://trajettacompany.com.br/app" target="_blank" style="display: inline-block; background-color: #B8FF00; color: #080A0D; font-size: 13px; font-weight: 800; letter-spacing: 0.3px; text-decoration: none; padding: 16px 32px; border-radius: 12px; box-shadow: 0 8px 24px rgba(184, 255, 0, 0.28);">
+                    <a class="cta-btn" href="https://trajettacompany.com.br/app" target="_blank" style="display: block; width: 100%; box-sizing: border-box; background-color: #B8FF00; color: #080A0D; font-size: 13px; font-weight: 800; letter-spacing: 0.3px; text-decoration: none; padding: 16px 32px; border-radius: 12px; text-align: center; box-shadow: 0 8px 24px rgba(184, 255, 0, 0.28);">
                       Ver Cartão da Minha Semana →
                     </a>
                   </td>
@@ -432,7 +473,7 @@ export function renderWeeklyReviewEmail(data: {
 
           <!-- Rodapé -->
           <tr>
-            <td style="padding: 24px 36px; background-color: #080A0E; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+            <td class="email-pad" style="padding: 24px 36px; background-color: #080A0E; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
               <p style="font-size: 11px; color: #6D747D; margin: 0; font-family: monospace;">
                 Trajetta • Disciplina serena, sustentável e sem punição.
               </p>
@@ -460,18 +501,33 @@ export function renderProWelcomeEmail(data: {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Seu Acesso ao Trajetta Pro foi Liberado!</title>
   <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
     @media only screen and (max-width: 480px) {
-      .email-wrap { padding: 12px 6px !important; }
-      .email-container { width: 100% !important; border-radius: 14px !important; }
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
       .email-pad { padding: 22px 18px !important; }
       .header-pad { padding: 20px 18px 16px 18px !important; }
-      .banner-img { max-height: 110px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
       .creds-box { padding: 16px 14px !important; }
       .cta-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 16px 18px !important; font-size: 13px !important; }
       .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
+      .stack-row td { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 2px 0 !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-pad { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
+      .creds-box { padding: 14px 10px !important; }
+      .cta-btn { padding: 14px 10px !important; font-size: 12.5px !important; }
     }
   </style>
 </head>
@@ -511,7 +567,7 @@ export function renderProWelcomeEmail(data: {
                     </table>
                   </td>
                   <td align="right" style="vertical-align: middle;">
-                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap;">
+                    <span class="badge-tag" style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap;">
                       ● PRO ATIVO
                     </span>
                   </td>
@@ -538,22 +594,22 @@ export function renderProWelcomeEmail(data: {
                       SEUS DADOS DE ACESSO
                     </div>
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
-                      <tr>
+                      <tr class="stack-row">
                         <td style="color: #8E9499; padding: 4px 0; width: 120px;">E-mail:</td>
                         <td style="color: #FFFFFF; font-weight: 600; font-family: monospace; word-break: break-all;">${data.email}</td>
                       </tr>
                       ${
                         data.temporaryPassword
-                          ? `<tr>
+                          ? `<tr class="stack-row">
                               <td style="color: #8E9499; padding: 4px 0;">Senha Temporária:</td>
                               <td style="color: #B8FF00; font-weight: 700; font-family: monospace; letter-spacing: 0.5px;">${data.temporaryPassword}</td>
                             </tr>`
-                          : `<tr>
+                          : `<tr class="stack-row">
                               <td style="color: #8E9499; padding: 4px 0;">Senha:</td>
                               <td style="color: #C9CDD1;">A mesma que você definiu no cadastro</td>
                             </tr>`
                       }
-                      <tr>
+                      <tr class="stack-row">
                         <td style="color: #8E9499; padding: 4px 0;">Status do Plano:</td>
                         <td style="color: #58D6A7; font-weight: 700;">Ativo e Liberado ✓</td>
                       </tr>
@@ -603,7 +659,7 @@ export function renderProWelcomeEmail(data: {
 
           <!-- Rodapé -->
           <tr>
-            <td style="padding: 28px 40px; background-color: #080A0D; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+            <td class="email-pad" style="padding: 24px 36px; background-color: #080A0D; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
               <p style="font-size: 11px; color: #6D747D; margin: 0 0 8px 0; font-family: monospace;">
                 TRAJETTA • DISCIPLINA SUSTENTÁVEL • CONTATO: companytrajetta@gmail.com
               </p>
@@ -627,18 +683,32 @@ export function renderNewsletterWelcomeEmail(email: string): string {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Bem-vindo à Trajetta • 3 Dias de Degustação Gratuita</title>
   <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
     @media only screen and (max-width: 480px) {
-      .email-wrap { padding: 12px 6px !important; }
-      .email-container { width: 100% !important; border-radius: 14px !important; }
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
       .email-content { padding: 22px 18px !important; }
       .header-pad { padding: 18px 18px 16px 18px !important; }
-      .banner-img { max-height: 110px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
       .gift-box { padding: 18px 16px !important; }
-      .cta-button { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 16px 18px !important; font-size: 13px !important; }
+      .cta-button { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 16px 18px !important; font-size: 13px !important; text-align: center !important; }
       .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-content { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
+      .gift-box { padding: 14px 10px !important; }
+      .cta-button { padding: 14px 10px !important; font-size: 12.5px !important; }
     }
   </style>
 </head>
@@ -679,7 +749,7 @@ export function renderNewsletterWelcomeEmail(email: string): string {
                     </table>
                   </td>
                   <td align="right" style="vertical-align: middle;">
-                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.08); border: 1px solid rgba(184, 255, 0, 0.28); color: #B8FF00; font-family: -apple-system, BlinkMacSystemFont, monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 9999px;">
+                    <span class="badge-tag" style="display: inline-block; background-color: rgba(184, 255, 0, 0.08); border: 1px solid rgba(184, 255, 0, 0.28); color: #B8FF00; font-family: -apple-system, BlinkMacSystemFont, monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 9999px; white-space: nowrap;">
                       ● 3 DIAS GRÁTIS
                     </span>
                   </td>
@@ -793,18 +863,33 @@ export function renderTrialWelcomeEmail(data: {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Bem-vindo à Trajetta — Sua Conta foi Criada com Sucesso</title>
   <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
     @media only screen and (max-width: 480px) {
-      .email-wrap { padding: 12px 6px !important; }
-      .email-container { width: 100% !important; border-radius: 14px !important; }
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
       .email-pad { padding: 22px 18px !important; }
       .header-pad { padding: 20px 18px 16px 18px !important; }
-      .banner-img { max-height: 110px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
       .creds-box { padding: 16px 14px !important; }
-      .cta-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 16px 18px !important; font-size: 13px !important; }
+      .cta-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 16px 18px !important; font-size: 13px !important; text-align: center !important; }
       .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
+      .stack-row td { display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 2px 0 !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-pad { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
+      .creds-box { padding: 14px 10px !important; }
+      .cta-btn { padding: 14px 10px !important; font-size: 12.5px !important; }
     }
   </style>
 </head>
@@ -844,7 +929,7 @@ export function renderTrialWelcomeEmail(data: {
                     </table>
                   </td>
                   <td align="right" style="vertical-align: middle;">
-                    <span style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap;">
+                    <span class="badge-tag" style="display: inline-block; background-color: rgba(184, 255, 0, 0.15); border: 1px solid rgba(184, 255, 0, 0.4); color: #B8FF00; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; white-space: nowrap;">
                       ● CONTA ATIVA
                     </span>
                   </td>
@@ -871,11 +956,11 @@ export function renderTrialWelcomeEmail(data: {
                       SEUS DADOS DE ACESSO
                     </div>
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
-                      <tr>
+                      <tr class="stack-row">
                         <td style="color: #8E9499; padding: 4px 0; width: 120px;">E-mail:</td>
                         <td style="color: #FFFFFF; font-weight: 600; font-family: monospace; word-break: break-all;">${data.email}</td>
                       </tr>
-                      <tr>
+                      <tr class="stack-row">
                         <td style="color: #8E9499; padding: 4px 0;">Status:</td>
                         <td style="color: #58D6A7; font-weight: 700;">Conta Criada & Acesso Liberado ✓</td>
                       </tr>
@@ -935,16 +1020,28 @@ export function renderSubscriptionCancellationEmail(data: {
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title>Confirmação de Cancelamento de Renovação — Trajetta</title>
   <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
     @media only screen and (max-width: 480px) {
-      .email-wrap { padding: 12px 6px !important; }
-      .email-container { width: 100% !important; border-radius: 14px !important; }
+      .email-wrap { padding: 10px 6px !important; }
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
       .email-pad { padding: 22px 18px !important; }
       .header-pad { padding: 20px 18px 16px 18px !important; }
-      .banner-img { max-height: 110px !important; }
+      .banner-img { max-height: 110px !important; height: auto !important; }
       .mobile-title { font-size: 21px !important; line-height: 1.25 !important; }
+      .badge-tag { font-size: 9px !important; padding: 3px 8px !important; }
+    }
+    @media only screen and (max-width: 360px) {
+      .email-wrap { padding: 4px 2px !important; }
+      .email-pad { padding: 18px 12px !important; }
+      .header-pad { padding: 14px 12px 12px 12px !important; }
+      .mobile-title { font-size: 19px !important; line-height: 1.25 !important; }
     }
   </style>
 </head>
