@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Brain, Check, Shield } from 'lucide-react';
+import { Brain, Check, Shield } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
 
 export function TrajettaAiSection() {

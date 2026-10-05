@@ -4,7 +4,7 @@ import React from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useTrajetta } from '@/context/TrajettaContext';
-import { Compass, Sparkles, Feather, RotateCcw, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Compass, Feather, RotateCcw, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export function RecoveryModal() {
   const { isRecoveryModalOpen, setIsRecoveryModalOpen, habits, goals, updateWeeklyPriority, setIsOnboardingOpen } = useTrajetta();

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Download, Share, PlusSquare, X, Smartphone, Sparkles } from 'lucide-react';
+import { Download, Share, PlusSquare, X, Smartphone } from 'lucide-react';
 import { useI18n } from '@/lib/i18n/context';
 
 export function PwaManager() {

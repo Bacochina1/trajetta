@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, CheckCircle2, RotateCcw, Sparkles, Sliders, Check } from 'lucide-react';
+import { Calendar, CheckCircle2, RotateCcw, Sliders, Check } from 'lucide-react';
 import { trackMarketingEvent } from '@/lib/analytics';
 
 export function ProductCycleSection() {

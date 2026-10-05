@@ -18,7 +18,6 @@ import {
   Check,
   Smartphone,
   Square,
-  Sparkles,
   Flame,
   Activity,
   Layers,

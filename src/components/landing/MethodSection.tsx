@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Compass, Calendar, CheckSquare, Sparkles, RefreshCw, History } from 'lucide-react';
+import { Compass, Calendar, CheckSquare, Feather, RefreshCw, History } from 'lucide-react';
 
 export function MethodSection() {
   const steps = [
@@ -31,7 +31,7 @@ export function MethodSection() {
       title: 'Reflexão',
       concept: 'Entender o que a semana te ensinou.',
       detail: 'O Weekly Review registra vitórias, dificuldades e padrões em 5 minutos. Uma semana sem reflexão é apenas tempo passando no automático.',
-      icon: Sparkles,
+      icon: Feather,
     },
     {
       num: '05',
