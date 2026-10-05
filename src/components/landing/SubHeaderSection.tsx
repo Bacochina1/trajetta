@@ -8,7 +8,7 @@ export function SubHeaderSection() {
   const isEn = locale === 'en';
 
   return (
-    <section className="relative z-20 max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 pt-14 sm:pt-20 pb-8 sm:pb-12" data-purpose="sub-section-header" id="metodo">
+    <section className="relative z-20 max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 lg:px-14 pt-14 sm:pt-20 pb-8 sm:pb-12" data-purpose="sub-section-header" id="manifesto">
       {/* Tag Pill */}
       <div className="inline-flex items-center space-x-2 text-[11px] sm:text-xs font-mono tracking-wide text-neutral-400 mb-4 sm:mb-6">
         <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF00]"></span>

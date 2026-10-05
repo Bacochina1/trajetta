@@ -3,6 +3,7 @@ import { prisma } from '../src/lib/db';
 import { hashPassword, verifyPassword, createSessionToken, verifySessionToken } from '../src/lib/auth/auth';
 import { callNvidiaAI, generateWeeklyReviewReflection } from '../src/lib/ai/aiService';
 import { renderWelcomeEmail, renderWeeklyReviewEmail, sendEmail } from '../src/lib/email/emailService';
+import { STRIPE_PLANS } from '../src/lib/stripe';
 
 describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
   // -------------------------------------------------------------
@@ -200,6 +201,32 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
 
       // Clean up
       await prisma.waitlist.delete({ where: { id: waitlistEntry.id } });
+    });
+  });
+
+  // -------------------------------------------------------------
+  // 7. STRIPE MONETIZATION & BILLING SUITE
+  // -------------------------------------------------------------
+  describe('7. Stripe Monetization & Plans Structure Audit', () => {
+    it('deve conter as definições corretas dos 3 planos com 3 dias de trial gratuito', async () => {
+      const { STRIPE_PLANS } = await import('../src/lib/stripe');
+
+      expect(STRIPE_PLANS.monthly).toBeDefined();
+      expect(STRIPE_PLANS.annual).toBeDefined();
+      expect(STRIPE_PLANS.founding).toBeDefined();
+
+      // Verificar valores em centavos e períodos de teste
+      expect(STRIPE_PLANS.monthly.amount).toBe(2990);
+      expect(STRIPE_PLANS.monthly.trialDays).toBe(3);
+      expect(STRIPE_PLANS.monthly.interval).toBe('month');
+
+      expect(STRIPE_PLANS.annual.amount).toBe(23990);
+      expect(STRIPE_PLANS.annual.trialDays).toBe(3);
+      expect(STRIPE_PLANS.annual.interval).toBe('year');
+
+      expect(STRIPE_PLANS.founding.amount).toBe(14900);
+      expect(STRIPE_PLANS.founding.trialDays).toBe(3);
+      expect(STRIPE_PLANS.founding.interval).toBe('year');
     });
   });
 });
