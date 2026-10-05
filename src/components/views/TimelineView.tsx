@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import { Plus, History, Calendar, Award, Milestone, Clock } from 'lucide-react';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
@@ -167,60 +168,67 @@ export function TimelineView() {
       </div>
 
       {/* Modal Novo Marco */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D0F10]/80 backdrop-blur-sm">
-          <div className="bg-[#171A1D] border border-white/10 rounded-2xl p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-bold text-[#F2F1ED]">Registrar Marco na Linha do Tempo</h3>
-            <form onSubmit={handleAddEvent} className="space-y-4">
-              <div>
-                <label className="block text-xs text-[#8E9499] mb-1">Título do Acontecimento</label>
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  placeholder="Ex: Promoção no trabalho, Início do curso, Primeira meta batida..."
-                  required
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-[#8E9499] mb-1">Descrição / Contexto</label>
-                <textarea
-                  value={newDesc}
-                  onChange={e => setNewDesc(e.target.value)}
-                  rows={3}
-                  placeholder="O que essa conquista representou na sua vida?"
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-[#8E9499] mb-1">Área da Vida</label>
-                <select
-                  value={newArea}
-                  onChange={e => setNewArea(e.target.value as LifeArea)}
-                  className="w-full bg-[#111315] border border-white/10 rounded-lg p-2.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00]"
-                >
-                  <option value="corpo">Corpo</option>
-                  <option value="dinheiro">Dinheiro</option>
-                  <option value="carreira">Carreira</option>
-                  <option value="vida">Vida</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <Button variant="ghost" size="sm" type="button" onClick={() => setIsModalOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button variant="primary" size="sm" type="submit">
-                  Gravar Marco
-                </Button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Registrar Marco na Linha do Tempo"
+        subtitle="Adicione um acontecimento memorável à sua trajetória contínua."
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleAddEvent} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#8E9499] mb-1.5">
+              Título do Acontecimento
+            </label>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              placeholder="Ex: Promoção no trabalho, Início do curso, Primeira meta batida..."
+              required
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3.5 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] focus:ring-1 focus:ring-[#B8FF00] transition-colors"
+            />
           </div>
-        </div>
-      )}
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#8E9499] mb-1.5">
+              Descrição / Contexto
+            </label>
+            <textarea
+              value={newDesc}
+              onChange={e => setNewDesc(e.target.value)}
+              rows={3}
+              placeholder="O que essa conquista representou na sua vida?"
+              className="w-full bg-[#111315] border border-white/10 rounded-xl p-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] focus:ring-1 focus:ring-[#B8FF00] resize-none transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#8E9499] mb-1.5">
+              Área da Vida
+            </label>
+            <select
+              value={newArea}
+              onChange={e => setNewArea(e.target.value as LifeArea)}
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-xs text-[#F2F1ED] focus:outline-none focus:border-[#B8FF00] focus:ring-1 focus:ring-[#B8FF00] transition-colors"
+            >
+              <option value="corpo">Corpo</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="carreira">Carreira</option>
+              <option value="vida">Vida</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+            <Button variant="primary" size="md" type="submit">
+              Gravar Marco
+            </Button>
+            <Button variant="ghost" size="md" type="button" onClick={() => setIsModalOpen(false)}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
