@@ -57,17 +57,25 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   const handleRestore = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/customer-portal', { method: 'POST' });
+      const res = await fetch('/api/subscription/status');
       const data = await res.json();
-      if (data.ok && data.url) {
-        window.location.href = data.url;
+      if (data.ok && data.status === 'active') {
+        setUserProfile({
+          subscriptionPlan: data.plan || 'pro_monthly',
+          trialDaysRemaining: 365,
+        });
+        setSuccessMessage('Assinatura restaurada com sucesso!');
+        setTimeout(() => {
+          setSuccessMessage(null);
+          onClose();
+        }, 1500);
         return;
       }
       setSuccessMessage('Nenhuma assinatura ativa encontrada para este e-mail.');
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch {
-      setSuccessMessage('Assinatura restaurada com sucesso!');
-      setTimeout(() => setSuccessMessage(null), 2000);
+      setSuccessMessage('Nenhuma assinatura ativa encontrada.');
+      setTimeout(() => setSuccessMessage(null), 2500);
     } finally {
       setLoading(false);
     }

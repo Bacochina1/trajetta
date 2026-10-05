@@ -86,8 +86,6 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
       hostedUrl?: string;
     }>;
   }>({});
-  const [loadingPortal, setLoadingPortal] = useState(false);
-  const [portalError, setPortalError] = useState<string | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelFeedback, setCancelFeedback] = useState<string | null>(null);
@@ -165,24 +163,6 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
       })
       .catch(() => {});
   }, []);
-
-  const handleOpenPortal = async () => {
-    try {
-      setLoadingPortal(true);
-      setPortalError(null);
-      const res = await fetch('/api/customer-portal', { method: 'POST' });
-      const data = await res.json();
-      if (data.ok && data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      setPortalError(data.error || 'Nenhuma assinatura ativa vinculada encontrada.');
-    } catch {
-      setPortalError('Erro ao conectar ao portal de faturamento.');
-    } finally {
-      setLoadingPortal(false);
-    }
-  };
 
   const handleConfirmCancel = async () => {
     try {
@@ -503,16 +483,6 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button
-              variant="secondary"
-              size="sm"
-              disabled={loadingPortal}
-              onClick={handleOpenPortal}
-              className="text-xs"
-            >
-              <ExternalLink size={13} className="text-[#B8FF00]" />
-              <span>{loadingPortal ? 'Carregando...' : 'Portal Stripe (Faturas & Cartão)'}</span>
-            </Button>
-            <Button
               variant="primary"
               size="sm"
               onClick={onOpenPaywall}
@@ -523,18 +493,6 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
             </Button>
           </div>
         </div>
-
-        {portalError && (
-          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center justify-between gap-2">
-            <span>{portalError}</span>
-            <button
-              onClick={() => setPortalError(null)}
-              className="text-white/40 hover:text-white text-xs px-1"
-            >
-              ✕
-            </button>
-          </div>
-        )}
 
         <div className="p-4 rounded-xl bg-[#111315] border border-white/5 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

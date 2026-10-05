@@ -89,7 +89,7 @@ export default function TermosPage() {
               No Trajetta, acreditamos em relações de longo prazo baseadas na confiança e no valor real entregue à sua vida. Você tem total autonomia para gerenciar ou cancelar sua assinatura a qualquer momento.
             </p>
             <ul className="list-disc pl-5 space-y-1 text-xs text-[#8E9499]">
-              <li><strong>Como cancelar:</strong> Acesse seu aplicativo, vá em <em>Configurações (Você) &gt; Assinatura & Faturamento &gt; Cancelar Assinatura</em>, ou utilize o <em>Portal Stripe</em> integrado.</li>
+              <li><strong>Como cancelar:</strong> Acesse seu aplicativo, vá em <em>Configurações (Você) &gt; Assinatura & Faturamento &gt; Cancelar Assinatura</em> diretamente em 1 clique.</li>
               <li><strong>Efeito do cancelamento:</strong> Nenhuma nova renovação ou cobrança será efetuada em seu cartão de crédito.</li>
               <li><strong>Manutenção do acesso:</strong> Ao cancelar, seu acesso ao Trajetta Pro continuará plenamente ativo até o término do ciclo já contratado (final do mês ou do ano vigente).</li>
               <li><strong>Seus dados continuam seus:</strong> Ao término do plano, seu histórico de metas, hábitos e reflexões não é excluído. Você pode exportar seus dados em JSON/CSV a qualquer instante.</li>
@@ -104,7 +104,7 @@ export default function TermosPage() {
               Em total conformidade com o artigo 49 do Código de Defesa do Consumidor brasileiro e o Decreto do Comércio Eletrônico (Decreto nº 7.962/2013), você tem até <strong>7 (sete) dias corridos</strong> a partir da data de qualquer cobrança para solicitar o cancelamento com <strong>estorno de 100% do valor pago</strong>.
             </p>
             <p className="text-xs text-[#8E9499]">
-              Para solicitar o estorno nos primeiros 7 dias, basta enviar uma mensagem com seu e-mail cadastrado para <strong>contato@trajettacompany.com.br</strong> ou abrir o Portal do Assinante no app. O reembolso é estornado diretamente na fatura do cartão utilizado via Stripe.
+              Para solicitar o estorno nos primeiros 7 dias, basta enviar uma mensagem com seu e-mail cadastrado para <strong>contato@trajettacompany.com.br</strong> ou cancelar diretamente pelo painel do app. O reembolso é estornado diretamente na fatura do cartão utilizado via Stripe.
             </p>
           </section>
 

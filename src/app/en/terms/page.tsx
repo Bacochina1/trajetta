@@ -90,7 +90,7 @@ export default function EnglishTermsPage() {
               At Trajetta, we believe in building long-term relationships based on genuine value. You retain full autonomy to manage or cancel your subscription at any time.
             </p>
             <ul className="list-disc pl-5 space-y-1 text-xs text-[#8E9499]">
-              <li><strong>How to cancel:</strong> Go to <em>Settings (You) &gt; Subscription & Billing &gt; Cancel Subscription</em>, or use the embedded <em>Stripe Billing Portal</em>.</li>
+              <li><strong>How to cancel:</strong> Go to <em>Settings (You) &gt; Subscription & Billing &gt; Cancel Subscription</em> with 1 click directly in the app.</li>
               <li><strong>Cancellation effect:</strong> No future automatic renewals or charges will occur on your card.</li>
               <li><strong>Access retention:</strong> Your access to Trajetta Pro remains fully active until the end of the paid billing cycle.</li>
               <li><strong>Data ownership:</strong> Your goals, habits, and reflections are never deleted. You can export your full data in JSON/CSV at any time.</li>
