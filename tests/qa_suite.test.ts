@@ -229,4 +229,40 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       expect(STRIPE_PLANS.founding.interval).toBe('year');
     });
   });
+
+  // -------------------------------------------------------------
+  // 8. CODEBASE COMPLIANCE: ZERO BLOCKING DIALOGS & CALM POWER
+  // -------------------------------------------------------------
+  describe('8. Codebase Compliance: Zero Dialogs & Calm Power Tone', () => {
+    it('deve garantir ausência de window.alert, window.confirm ou window.prompt no código-fonte src/', async () => {
+      const fs = await import('fs');
+      const path = await import('path');
+
+      function scanDir(dir: string): string[] {
+        const results: string[] = [];
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            results.push(...scanDir(fullPath));
+          } else if (/\.(tsx|ts|jsx|js)$/.test(entry.name)) {
+            results.push(fullPath);
+          }
+        }
+        return results;
+      }
+
+      const srcDir = path.resolve(__dirname, '../src');
+      const files = scanDir(srcDir);
+      const forbiddenPatterns = [/\bwindow\.alert\b/, /\bwindow\.confirm\b/, /\bwindow\.prompt\b/];
+
+      for (const file of files) {
+        const content = fs.readFileSync(file, 'utf-8');
+        for (const pattern of forbiddenPatterns) {
+          expect(pattern.test(content)).toBe(false);
+        }
+      }
+    });
+  });
 });
+
