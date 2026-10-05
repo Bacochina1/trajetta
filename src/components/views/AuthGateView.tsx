@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { TrajettaLogo } from '@/components/ui/TrajettaLogo';
-import { Lock, Mail, User as UserIcon, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, User as UserIcon, ArrowLeft, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 interface AuthGateViewProps {
@@ -15,6 +15,7 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -173,13 +174,21 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               <div className="relative">
                 <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E9499]" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-11 pl-10 pr-3.5 bg-[#14181f] border border-white/10 rounded-xl text-xs text-[#F2F1ED] placeholder-[#8E9499]/50 focus:outline-none focus:border-[#B8FF00] focus:ring-1 focus:ring-[#B8FF00] transition-colors"
+                  className="w-full h-11 pl-10 pr-10 bg-[#14181f] border border-white/10 rounded-xl text-xs text-[#F2F1ED] placeholder-[#8E9499]/50 focus:outline-none focus:border-[#B8FF00] focus:ring-1 focus:ring-[#B8FF00] transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Ocultar senha' : 'Exibir senha'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8E9499] hover:text-[#F2F1ED] p-1 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
               </div>
             </div>
 

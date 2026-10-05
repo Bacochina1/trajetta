@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { Button } from '@/components/ui/Button';
 import { Brain, Send, Compass, ArrowRight, RefreshCw, Sparkles, Flame, Target, Scale } from 'lucide-react';
@@ -16,6 +16,7 @@ interface Message {
 
 export function AiCoachView() {
   const { user, goals, habits, journeys, weeklyPlan, weeklyReviews, timeline, lifeScore } = useTrajetta();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const firstName = user.name ? user.name.split(' ')[0] : 'Explorador';
   const targetNote = user.target12Months && user.target12Months.length > 2 ? ` com foco em ${user.target12Months}` : '';
@@ -135,6 +136,10 @@ export function AiCoachView() {
     }
   };
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
   return (
     <div className="space-y-6 max-w-3xl mx-auto pb-16">
       {/* Header with Mascot */}
@@ -233,6 +238,7 @@ export function AiCoachView() {
               <span className="text-[11px]">Trajetta IA formulando reflexão serena...</span>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Personalized Reflection Prompts (Dynamic from user data) */}
