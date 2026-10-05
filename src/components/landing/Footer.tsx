@@ -112,6 +112,7 @@ export function Footer() {
                 <li><a className="hover:text-white transition-colors" href="#metodo">{locale === 'en' ? 'The Method' : 'O Método'}</a></li>
                 <li><a className="hover:text-[#B8FF00] transition-colors" href="#planos">{locale === 'en' ? 'Plans & Pro Membership' : 'Planos & Assinatura Pro'}</a></li>
                 <li><a className="hover:text-white transition-colors" href="#faq">{locale === 'en' ? 'Frequently Asked Questions' : 'Perguntas Frequentes'}</a></li>
+                <li className="pt-1"><Link className="hover:text-white text-neutral-300 font-medium transition-colors" href="/login">{locale === 'en' ? 'Sign In / Account' : 'Entrar na Conta'}</Link></li>
               </ul>
             </div>
 

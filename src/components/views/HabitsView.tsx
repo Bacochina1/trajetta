@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import { DAY_NAMES, DAY_INITIALS } from '@/lib/utils';
 import { LIFE_AREAS } from '@/lib/constants';
 import { LifeArea } from '@/types';
@@ -208,71 +209,71 @@ export function HabitsView() {
       </div>
 
       {/* Modal Novo Hábito */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D0F10]/80 backdrop-blur-sm">
-          <div className="bg-[#171A1D] border border-white/10 rounded-2xl p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-bold text-[#F2F1ED]">Criar Novo Hábito</h3>
-            <form onSubmit={handleCreate} className="space-y-4">
-              <div>
-                <label htmlFor="habit-title" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
-                  Nome do Hábito
-                </label>
-                <input
-                  id="habit-title"
-                  type="text"
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  placeholder="Ex: Treino de força, Ler 20 min..."
-                  required
-                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="habit-area" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
-                  Área da Vida
-                </label>
-                <select
-                  id="habit-area"
-                  value={newArea}
-                  onChange={e => setNewArea(e.target.value as LifeArea)}
-                  className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
-                >
-                  <option value="corpo">Corpo</option>
-                  <option value="dinheiro">Dinheiro</option>
-                  <option value="carreira">Carreira</option>
-                  <option value="vida">Vida</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="habit-freq" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
-                  Frequência Semanal ({newFreq}x por semana)
-                </label>
-                <input
-                  id="habit-freq"
-                  type="range"
-                  min={1}
-                  max={7}
-                  value={newFreq}
-                  onChange={e => setNewFreq(Number(e.target.value))}
-                  className="w-full accent-[#B8FF00] cursor-pointer"
-                />
-              </div>
-
-              {/* Design for Developers: Both primary and secondary actions placed at the bottom-left */}
-              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
-                <Button variant="primary" size="md" type="submit">
-                  Criar Hábito
-                </Button>
-                <Button variant="ghost" size="md" type="button" onClick={() => setIsModalOpen(false)}>
-                  Cancelar
-                </Button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Criar Novo Hábito"
+        subtitle="Defina um hábito com frequência semanal sustentável."
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleCreate} className="space-y-4">
+          <div>
+            <label htmlFor="habit-title" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+              Nome do Hábito
+            </label>
+            <input
+              id="habit-title"
+              type="text"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              placeholder="Ex: Treino de força, Ler 20 min..."
+              required
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-4 text-sm text-[#F2F1ED] placeholder:text-white/40 focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
+            />
           </div>
-        </div>
-      )}
+
+          <div>
+            <label htmlFor="habit-area" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+              Área da Vida
+            </label>
+            <select
+              id="habit-area"
+              value={newArea}
+              onChange={e => setNewArea(e.target.value as LifeArea)}
+              className="w-full h-10 bg-[#111315] border border-white/10 rounded-xl px-3 text-sm text-[#F2F1ED] focus:ring-1 focus:ring-[#B8FF00]/50 focus:border-[#B8FF00] focus:outline-none transition-colors"
+            >
+              <option value="corpo">Corpo</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="carreira">Carreira</option>
+              <option value="vida">Vida</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="habit-freq" className="block text-xs font-semibold text-[#8E9499] uppercase tracking-wider mb-1.5">
+              Frequência Semanal ({newFreq}x por semana)
+            </label>
+            <input
+              id="habit-freq"
+              type="range"
+              min={1}
+              max={7}
+              value={newFreq}
+              onChange={e => setNewFreq(Number(e.target.value))}
+              className="w-full accent-[#B8FF00] cursor-pointer"
+            />
+          </div>
+
+          <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+            <Button variant="primary" size="md" type="submit">
+              Criar Hábito
+            </Button>
+            <Button variant="ghost" size="md" type="button" onClick={() => setIsModalOpen(false)}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

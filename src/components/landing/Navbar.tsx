@@ -64,6 +64,14 @@ export function Navbar() {
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <LanguageSwitcher />
 
+            {/* Existing Member Sign In Link */}
+            <Link
+              href="/login"
+              className="text-[12px] sm:text-[13px] font-medium text-neutral-300 hover:text-white px-2 sm:px-2.5 py-1.5 rounded-lg transition-colors"
+            >
+              {isEn ? 'Sign In' : 'Entrar'}
+            </Link>
+
             {/* Pro CTA Button */}
             <a
               href="#planos"
@@ -138,7 +146,15 @@ export function Navbar() {
             <span className="text-xs font-mono text-neutral-500">06</span>
           </a>
 
-          <div className="pt-2 pb-2">
+          <div className="pt-2 pb-2 flex flex-col gap-2.5">
+            <Link
+              href="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center text-xs font-semibold uppercase py-3 rounded-full border border-white/10 text-neutral-200 hover:bg-white/5 active:scale-95 transition-all"
+            >
+              {isEn ? 'Sign In / Account' : 'Entrar na Minha Conta'}
+            </Link>
+
             <a
               href="#planos"
               onClick={() => setMobileMenuOpen(false)}

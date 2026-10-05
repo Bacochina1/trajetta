@@ -375,29 +375,46 @@ export function WeekView() {
       </div>
 
       {/* Share Card Modal */}
-      <ShareCardModal
-        isOpen={isShareOpen}
-        onClose={() => setIsShareOpen(false)}
-        data={{
-          userName: user.name || 'Explorador',
-          overallScore: Math.round(
-            (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
-          ),
-          scoreStatus: 'Ritmo Consistente',
-          streakDays: habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 1) * 7), 7),
-          consistencyRate:
-            totalPlannedActions > 0
-              ? Math.min(100, Math.round((habits.reduce((acc, h) => acc + (h.daysCompletedThisWeek?.length || 0), 0) / Math.max(1, totalHabitsTarget)) * 100))
-              : 85,
-          completedHabitsCount: habits.filter(h => h.daysCompletedThisWeek.length > 0).length,
-          areas: {
-            corpo: lifeScore.corpo.score,
-            dinheiro: lifeScore.dinheiro.score,
-            carreira: lifeScore.carreira.score,
-            vida: lifeScore.vida.score,
-          },
-        }}
-      />
+      {(() => {
+        const overallScore = Math.round(
+          (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
+        );
+        const scoreStatus =
+          overallScore >= 80
+            ? 'Ritmo Excelente'
+            : overallScore >= 60
+            ? 'Ritmo Consistente'
+            : overallScore >= 40
+            ? 'Construindo Momento'
+            : 'Calibrando Rotina';
+        const dynamicStreak = habits.length > 0
+          ? habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 0) * 7), 0)
+          : (user.completedWeeksCount || 0) * 7;
+
+        return (
+          <ShareCardModal
+            isOpen={isShareOpen}
+            onClose={() => setIsShareOpen(false)}
+            data={{
+              userName: user.name || 'Explorador',
+              overallScore,
+              scoreStatus,
+              streakDays: dynamicStreak,
+              consistencyRate:
+                totalPlannedActions > 0
+                  ? Math.min(100, Math.round((habits.reduce((acc, h) => acc + (h.daysCompletedThisWeek?.length || 0), 0) / Math.max(1, totalHabitsTarget)) * 100))
+                  : 85,
+              completedHabitsCount: habits.filter(h => h.daysCompletedThisWeek.length > 0).length,
+              areas: {
+                corpo: lifeScore.corpo.score,
+                dinheiro: lifeScore.dinheiro.score,
+                carreira: lifeScore.carreira.score,
+                vida: lifeScore.vida.score,
+              },
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }

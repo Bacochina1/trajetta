@@ -18,11 +18,14 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_APP_URL ||
       'https://trajettacompany.com.br';
 
+    const userLocale = body.locale === 'en' ? 'en' : 'pt-BR';
+    const appBase = body.locale === 'en' ? `${origin}/en/app` : `${origin}/app`;
+
     const sessionParams: any = {
       mode: 'subscription',
       billing_address_collection: 'auto',
       allow_promotion_codes: true,
-      locale: 'pt-BR',
+      locale: userLocale,
       line_items: [
         {
           price: plan.priceId,
@@ -33,6 +36,7 @@ export async function POST(req: NextRequest) {
         userId: user?.id || body.userId || '',
         planKey: plan.id,
         subscriptionPlan: plan.subscriptionPlanKey,
+        locale: userLocale,
       },
       subscription_data: {
         metadata: {
@@ -40,8 +44,8 @@ export async function POST(req: NextRequest) {
           planKey: plan.id,
         },
       },
-      success_url: `${origin}/app?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/app?payment=cancelled`,
+      success_url: `${appBase}?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appBase}?payment=cancelled`,
     };
 
     if (customerEmail) {

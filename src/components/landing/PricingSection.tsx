@@ -20,14 +20,14 @@ export function PricingSection() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: 'monthly' }),
+        body: JSON.stringify({ plan: 'monthly', locale }),
       });
       const data = await res.json();
       if (data.ok && data.url) {
         window.location.href = data.url;
         return;
       }
-      window.location.href = appendUtmToUrl('/register');
+      window.location.href = appendUtmToUrl(isEn ? '/en/register' : '/register');
     } catch (e) {
       console.warn('Checkout redirection fallback:', e);
       window.location.href = appendUtmToUrl('/register');
@@ -135,7 +135,7 @@ export function PricingSection() {
                 <div>
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-sm font-semibold text-[#8E9499]">R$</span>
-                    <span className="text-4xl sm:text-5xl font-semibold text-[#F2F1ED] tracking-tight">29,90</span>
+                    <span className="text-4xl sm:text-5xl font-semibold text-[#F2F1ED] tracking-tight">{isEn ? '29.90' : '29,90'}</span>
                     <span className="text-xs font-mono text-[#8E9499]">{isEn ? '/mo' : '/mês'}</span>
                   </div>
                   <p className="text-[11px] text-[#B8FF00] font-medium mt-1">
@@ -194,7 +194,7 @@ export function PricingSection() {
 
               <div className="text-center pt-1">
                 <Link
-                  href={appendUtmToUrl('/register')}
+                  href={appendUtmToUrl(isEn ? '/en/register' : '/register')}
                   className="text-xs text-[#8E9499] hover:text-[#B8FF00] transition-colors underline underline-offset-4 font-normal"
                 >
                   {isEn

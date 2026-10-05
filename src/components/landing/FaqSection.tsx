@@ -114,7 +114,10 @@ export function FaqSection() {
                 className="border border-white/10 rounded-xl sm:rounded-2xl bg-[#0a0d12] overflow-hidden transition-colors"
               >
                 <button
+                  type="button"
                   onClick={() => toggleFaq(idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${idx}`}
                   className="w-full text-left px-4 xs:px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4 focus:outline-none cursor-pointer"
                 >
                   <span className="text-xs xs:text-sm sm:text-base font-normal text-white">
@@ -128,7 +131,11 @@ export function FaqSection() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 xs:px-5 sm:px-6 pb-4 sm:pb-5 pt-1 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed border-t border-white/5">
+                  <div
+                    id={`faq-answer-${idx}`}
+                    role="region"
+                    className="px-4 xs:px-5 sm:px-6 pb-4 sm:pb-5 pt-1 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed border-t border-white/5"
+                  >
                     {item.a}
                   </div>
                 )}
