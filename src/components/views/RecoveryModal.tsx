@@ -53,13 +53,14 @@ export function RecoveryModal() {
 
         {/* 3 Action Options */}
         <div className="space-y-3">
-          <div
+          <button
+            type="button"
             onClick={handleStartLight}
-            className="p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-[#B8FF00]/50 cursor-pointer transition-all group"
+            className="w-full text-left p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-[#B8FF00]/50 cursor-pointer transition-all group block"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#58D6A7]/15 text-[#58D6A7] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#58D6A7]/15 text-[#58D6A7] flex items-center justify-center flex-shrink-0">
                   <Feather size={16} />
                 </div>
                 <div>
@@ -71,17 +72,18 @@ export function RecoveryModal() {
                   </p>
                 </div>
               </div>
-              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-[#B8FF00] group-hover:translate-x-1 transition-all" />
+              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-[#B8FF00] group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" />
             </div>
-          </div>
+          </button>
 
-          <div
+          <button
+            type="button"
             onClick={handleResume}
-            className="p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-white/20 cursor-pointer transition-all group"
+            className="w-full text-left p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-white/20 cursor-pointer transition-all group block"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#6FAEF7]/15 text-[#6FAEF7] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#6FAEF7]/15 text-[#6FAEF7] flex items-center justify-center flex-shrink-0">
                   <RotateCcw size={16} />
                 </div>
                 <div>
@@ -93,17 +95,18 @@ export function RecoveryModal() {
                   </p>
                 </div>
               </div>
-              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-white group-hover:translate-x-1 transition-all" />
+              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" />
             </div>
-          </div>
+          </button>
 
-          <div
+          <button
+            type="button"
             onClick={handleReorganize}
-            className="p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-white/20 cursor-pointer transition-all group"
+            className="w-full text-left p-4 rounded-xl bg-[#171A1D] hover:bg-[#1F2328] border border-white/8 hover:border-white/20 cursor-pointer transition-all group block"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#A98CF7]/15 text-[#A98CF7] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#A98CF7]/15 text-[#A98CF7] flex items-center justify-center flex-shrink-0">
                   <Compass size={16} />
                 </div>
                 <div>
@@ -115,9 +118,9 @@ export function RecoveryModal() {
                   </p>
                 </div>
               </div>
-              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-white group-hover:translate-x-1 transition-all" />
+              <ArrowRight size={16} className="text-[#8E9499] group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" />
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </Modal>

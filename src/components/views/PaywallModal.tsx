@@ -100,9 +100,10 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {/* Plan: Monthly */}
-          <div
+          <button
+            type="button"
             onClick={() => setSelectedPlan('monthly')}
-            className={`p-4 rounded-xl border cursor-pointer transition-all duration-150 relative ${
+            className={`w-full text-left p-4 rounded-xl border cursor-pointer transition-all duration-150 relative block ${
               selectedPlan === 'monthly'
                 ? 'bg-[#1F2328] border-[#B8FF00] shadow-[0_0_15px_rgba(184,255,0,0.15)]'
                 : 'bg-[#171A1D] border-white/8 hover:border-white/15'
@@ -118,12 +119,13 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <p className="text-[11px] text-[#8E9499] mt-2 leading-tight">
               Flexibilidade total. Cancele quando quiser.
             </p>
-          </div>
+          </button>
 
           {/* Plan: Annual (Recommended) */}
-          <div
+          <button
+            type="button"
             onClick={() => setSelectedPlan('annual')}
-            className={`p-4 rounded-xl border cursor-pointer transition-all duration-150 relative ${
+            className={`w-full text-left p-4 rounded-xl border cursor-pointer transition-all duration-150 relative block ${
               selectedPlan === 'annual'
                 ? 'bg-[#1F2328] border-[#B8FF00] shadow-[0_0_20px_rgba(184,255,0,0.2)]'
                 : 'bg-[#171A1D] border-white/8 hover:border-white/15'
@@ -142,12 +144,13 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <p className="text-[11px] text-[#8E9499] mt-2 leading-tight">
               Apenas R$ 19,99/mês. 52 semanas garantidas.
             </p>
-          </div>
+          </button>
 
           {/* Plan: Founding Member */}
-          <div
+          <button
+            type="button"
             onClick={() => setSelectedPlan('founding')}
-            className={`p-4 rounded-xl border cursor-pointer transition-all duration-150 relative ${
+            className={`w-full text-left p-4 rounded-xl border cursor-pointer transition-all duration-150 relative block ${
               selectedPlan === 'founding'
                 ? 'bg-[#1F2328] border-[#B8FF00] shadow-[0_0_15px_rgba(184,255,0,0.15)]'
                 : 'bg-[#171A1D] border-white/8 hover:border-white/15'
@@ -163,7 +166,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <p className="text-[11px] text-[#8E9499] mt-2 leading-tight">
               Condição histórica para os primeiros exploradores.
             </p>
-          </div>
+          </button>
         </div>
 
         {/* Benefits Checklist */}
