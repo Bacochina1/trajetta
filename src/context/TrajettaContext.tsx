@@ -431,13 +431,21 @@ export function TrajettaProvider({ children }: { children: React.ReactNode }) {
       })
     );
 
+    // Compute accurate calendar date for the clicked day of the current week
+    const now = new Date();
+    const currentDayOfWeek = now.getDay();
+    const diffDays = targetDay - currentDayOfWeek;
+    const targetDateObj = new Date(now);
+    targetDateObj.setDate(now.getDate() + diffDays);
+    const targetDateStr = targetDateObj.toISOString().split('T')[0];
+
     // Sync with backend API (creates HabitLog & ActivityEvent)
     fetch('/api/habits/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         habitId,
-        date: new Date().toISOString().split('T')[0],
+        date: targetDateStr,
         completed: isNowCompleted
       })
     }).catch(() => {});
