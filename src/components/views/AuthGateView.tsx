@@ -211,40 +211,6 @@ export function AuthGateView({ onLoginSuccess, initialMode = 'login' }: AuthGate
               </div>
             )}
           </form>
-
-          {/* Divider */}
-          <div className="relative flex items-center justify-center my-5">
-            <div className="border-t border-white/8 w-full" />
-            <span className="bg-[#0e1218] px-3 text-[10px] text-[#8E9499] uppercase tracking-widest absolute">
-              ou acesse com
-            </span>
-          </div>
-
-          {/* Google OAuth Button */}
-          <a
-            href="/api/auth/google?returnUrl=/app"
-            className="w-full flex items-center justify-center gap-2.5 min-h-[44px] py-2.5 px-4 rounded-xl bg-[#14181f] border border-white/10 hover:border-white/20 text-xs font-semibold text-[#F2F1ED] transition-all active:scale-[0.98] shadow-md"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path
-                fill="#EA4335"
-                d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.4 8.9 5 12 5z"
-              />
-              <path
-                fill="#4285F4"
-                d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.7s.1-2 .4-2.7L1.6 6.4C.6 8.4 0 10.6 0 12s.6 3.6 1.6 5.6l3.7-2.9z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.4-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"
-              />
-            </svg>
-            <span>Continuar com Google</span>
-          </a>
         </div>
       </div>
 
