@@ -8,15 +8,13 @@ export default function robots(): MetadataRoute.Robots {
       // 1. General search engines (Google, Bing, Yahoo, DuckDuckGo)
       {
         userAgent: '*',
-        allow: ['/', '/en', '/termos', '/en/terms', '/llms.txt', '/llms-full.txt'],
+        allow: ['/', '/en', '/login', '/register', '/termos', '/en/terms', '/llms.txt', '/llms-full.txt'],
         disallow: [
           '/api/',
           '/app/',
           '/admin/',
           '/crm/',
           '/dashboard/',
-          '/login',
-          '/register',
           '/auth',
         ],
       },
