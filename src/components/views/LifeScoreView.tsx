@@ -161,11 +161,12 @@ export function LifeScoreView() {
       weeklyPaceRate,
       totalActiveDaysVolume,
       totalHabitsCount,
+      totalCompletedThisWeek,
       areaMetrics,
     };
   }, [habits, goals, lifeScore]);
 
-  const { overallScore, weeklyPaceRate, totalActiveDaysVolume, areaMetrics } = calculatedMetrics;
+  const { overallScore, weeklyPaceRate, totalActiveDaysVolume, totalCompletedThisWeek, areaMetrics } = calculatedMetrics;
 
   const overallStatus =
     overallScore >= 75
@@ -181,7 +182,7 @@ export function LifeScoreView() {
     scoreStatus: overallStatus,
     streakDays: totalActiveDaysVolume,
     consistencyRate: weeklyPaceRate,
-    completedHabitsCount: habits.length * 3 + 6,
+    completedHabitsCount: totalCompletedThisWeek,
     areas: {
       corpo: areaMetrics.corpo.score,
       dinheiro: areaMetrics.dinheiro.score,

@@ -6,11 +6,13 @@ import {
   renderTrialWelcomeEmail,
   renderNewsletterWelcomeEmail,
   renderSubscriptionCancellationEmail,
+  renderWeeklyReviewEmail,
 } from '@/lib/email/emailService';
 
 export async function POST(req: Request) {
   try {
-    const { email, name, type } = await req.json();
+    const body = await req.json();
+    const { email, name, type } = body;
     const recipient = email || 'companytrajetta@gmail.com';
     const userName = name || 'Membro Trajetta';
 
@@ -18,6 +20,15 @@ export async function POST(req: Request) {
     let subject = '';
 
     switch (type) {
+      case 'weekly_review':
+        subject = `Fechamento da Semana ${body.weekNumber || 40} — Trajetta`;
+        html = renderWeeklyReviewEmail({
+          userName,
+          weekNumber: body.weekNumber || 40,
+          streakWeeks: body.streakWeeks || 1,
+          reflection: body.reflection || 'Sua consistência nesta semana foi admirável.',
+        });
+        break;
       case 'newsletter':
         subject = 'Inscrição confirmada na Trajetta — Novidades e Atualizações';
         html = renderNewsletterWelcomeEmail(recipient);

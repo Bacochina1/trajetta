@@ -83,7 +83,14 @@ export function WeeklyReviewModal() {
       await fetch('/api/email/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email || 'companytrajetta@gmail.com', name: user.name }),
+        body: JSON.stringify({
+          type: 'weekly_review',
+          email: user.email || 'companytrajetta@gmail.com',
+          name: user.name || 'Membro Trajetta',
+          weekNumber: weeklyPlan.weekNumber,
+          streakWeeks: user.completedWeeksCount || 1,
+          reflection: aiText || `Você avançou consistentemente esta semana com foco destacado em ${LIFE_AREAS[topArea]?.label || 'Corpo'}.`,
+        }),
       });
       setEmailStatus('sent');
     } catch {

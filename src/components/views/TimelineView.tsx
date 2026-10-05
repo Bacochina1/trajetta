@@ -73,10 +73,10 @@ export function TimelineView() {
       </div>
 
       {/* Year Filter Tabs */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll pb-1">
         <button
           onClick={() => setSelectedYear('todos')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors tactile-btn ${
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors tactile-btn flex-shrink-0 ${
             selectedYear === 'todos'
               ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_15px_rgba(184,255,0,0.15)]'
               : 'bg-[#171A1D] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'
@@ -88,7 +88,7 @@ export function TimelineView() {
           <button
             key={y}
             onClick={() => setSelectedYear(y)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors tactile-btn ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors tactile-btn flex-shrink-0 ${
               selectedYear === y
                 ? 'bg-[#B8FF00] text-[#0D0F10] font-bold shadow-[0_0_15px_rgba(184,255,0,0.15)]'
                 : 'bg-[#171A1D] text-[#8E9499] hover:text-[#F2F1ED] border border-white/8'

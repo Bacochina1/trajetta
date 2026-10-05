@@ -500,7 +500,10 @@ export function TodayView() {
             (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
           ),
           scoreStatus: 'Ritmo Consistente',
-          streakDays: 14,
+          streakDays: Math.max(
+            user.completedWeeksCount ? user.completedWeeksCount * 7 : 7,
+            habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 1) * 7), 7)
+          ),
           consistencyRate: movementPercentage,
           completedHabitsCount: todayHabitsDone,
           areas: {
