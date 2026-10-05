@@ -19,6 +19,8 @@ import { ProfileView } from '@/components/views/ProfileView';
 import { WeeklyReviewModal } from '@/components/views/WeeklyReviewModal';
 import { OnboardingModal } from '@/components/views/OnboardingModal';
 import { NewGoalModal } from '@/components/views/NewGoalModal';
+import { RecoveryModal } from '@/components/views/RecoveryModal';
+import { QuickCaptureModal } from '@/components/views/QuickCaptureModal';
 import { AuthModal } from '@/components/views/AuthModal';
 import { PaywallModal } from '@/components/views/PaywallModal';
 import { AuthGateView } from '@/components/views/AuthGateView';
@@ -31,6 +33,8 @@ export default function TrajettaAppPage() {
     activeView,
     isAuthModalOpen,
     setIsAuthModalOpen,
+    isQuickCaptureOpen,
+    setIsQuickCaptureOpen,
     isAuthenticated,
     authLoading,
     login,
@@ -40,6 +44,22 @@ export default function TrajettaAppPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
+
+  // Global Keyboard Shortcut: Ctrl/Cmd + K for Quick Capture
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        const target = e.target as HTMLElement | null;
+        const isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+        if (!isInput) {
+          e.preventDefault();
+          setIsQuickCaptureOpen(!isQuickCaptureOpen);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isQuickCaptureOpen, setIsQuickCaptureOpen]);
 
   // Sync language from URL if provided (e.g. redirected from /en/app)
   React.useEffect(() => {
@@ -187,6 +207,8 @@ export default function TrajettaAppPage() {
       <WeeklyReviewModal />
       <OnboardingModal />
       <NewGoalModal />
+      <RecoveryModal />
+      <QuickCaptureModal />
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
     </div>

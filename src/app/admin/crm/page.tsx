@@ -73,6 +73,7 @@ Equipe Trajetta`);
   const [newLeadEmail, setNewLeadEmail] = useState('');
   const [newLeadPhone, setNewLeadPhone] = useState('');
   const [newLeadTag, setNewLeadTag] = useState('VIP');
+  const [leadError, setLeadError] = useState('');
 
   // Fetch leads
   const fetchLeads = async () => {
@@ -181,6 +182,7 @@ Equipe Trajetta`);
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newLeadEmail) return;
+    setLeadError('');
 
     try {
       const res = await fetch('/api/admin/crm/leads', {
@@ -202,9 +204,11 @@ Equipe Trajetta`);
         setNewLeadName('');
         setNewLeadEmail('');
         setNewLeadPhone('');
+      } else {
+        setLeadError(data.error || 'Erro ao salvar lead.');
       }
     } catch (err) {
-      alert('Erro ao salvar lead.');
+      setLeadError('Erro ao salvar lead. Tente novamente.');
     }
   };
 
@@ -215,7 +219,7 @@ Equipe Trajetta`);
       .map((l) => ({ email: l.email, name: l.name || 'Membro' }));
 
     if (recipients.length === 0) {
-      alert('Selecione pelo menos um lead para enviar o e-mail.');
+      setEmailStatusMessage('Selecione pelo menos um lead na tabela para enviar o e-mail.');
       return;
     }
 
@@ -705,6 +709,12 @@ Equipe Trajetta`);
                   className="w-full bg-[#14181F] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
                 />
               </div>
+
+              {leadError && (
+                <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono">
+                  {leadError}
+                </div>
+              )}
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
                 <button

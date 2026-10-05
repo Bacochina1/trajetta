@@ -384,8 +384,11 @@ export function WeekView() {
             (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
           ),
           scoreStatus: 'Ritmo Consistente',
-          streakDays: 14,
-          consistencyRate: 86,
+          streakDays: habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 1) * 7), 7),
+          consistencyRate:
+            totalPlannedActions > 0
+              ? Math.min(100, Math.round((habits.reduce((acc, h) => acc + (h.daysCompletedThisWeek?.length || 0), 0) / Math.max(1, totalHabitsTarget)) * 100))
+              : 85,
           completedHabitsCount: habits.filter(h => h.daysCompletedThisWeek.length > 0).length,
           areas: {
             corpo: lifeScore.corpo.score,

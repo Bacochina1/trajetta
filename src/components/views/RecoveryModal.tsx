@@ -7,7 +7,7 @@ import { useTrajetta } from '@/context/TrajettaContext';
 import { Compass, Sparkles, Feather, RotateCcw, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export function RecoveryModal() {
-  const { isRecoveryModalOpen, setIsRecoveryModalOpen, habits, goals, updateWeeklyPriority } = useTrajetta();
+  const { isRecoveryModalOpen, setIsRecoveryModalOpen, habits, goals, updateWeeklyPriority, setIsOnboardingOpen } = useTrajetta();
 
   if (!isRecoveryModalOpen) return null;
 
@@ -24,6 +24,7 @@ export function RecoveryModal() {
 
   const handleReorganize = () => {
     setIsRecoveryModalOpen(false);
+    setIsOnboardingOpen(true);
   };
 
   return (

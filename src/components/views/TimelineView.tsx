@@ -16,7 +16,12 @@ export function TimelineView() {
   const [newDesc, setNewDesc] = useState('');
   const [newArea, setNewArea] = useState<LifeArea>('corpo');
 
-  const years = [2026, 2025, 2024];
+  const years = React.useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const eventYears = timeline.map(e => e.year).filter(Boolean);
+    const set = new Set<number>([currentYear, currentYear - 1, currentYear - 2, ...eventYears]);
+    return Array.from(set).sort((a, b) => b - a);
+  }, [timeline]);
 
   const filteredEvents = selectedYear === 'todos'
     ? timeline

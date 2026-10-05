@@ -86,9 +86,11 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
     }>;
   }>({});
   const [loadingPortal, setLoadingPortal] = useState(false);
+  const [portalError, setPortalError] = useState<string | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelFeedback, setCancelFeedback] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   // Avatar Upload & Security State
   const [avatarUploading, setAvatarUploading] = useState(false);
@@ -166,15 +168,16 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   const handleOpenPortal = async () => {
     try {
       setLoadingPortal(true);
+      setPortalError(null);
       const res = await fetch('/api/customer-portal', { method: 'POST' });
       const data = await res.json();
       if (data.ok && data.url) {
         window.location.href = data.url;
         return;
       }
-      alert(data.error || 'Nenhuma assinatura ativa vinculada encontrada.');
+      setPortalError(data.error || 'Nenhuma assinatura ativa vinculada encontrada.');
     } catch {
-      alert('Erro ao conectar ao portal de faturamento.');
+      setPortalError('Erro ao conectar ao portal de faturamento.');
     } finally {
       setLoadingPortal(false);
     }
@@ -183,6 +186,7 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   const handleConfirmCancel = async () => {
     try {
       setCancelLoading(true);
+      setCancelError(null);
       const res = await fetch('/api/subscription/cancel', { method: 'POST' });
       const data = await res.json();
       if (data.ok) {
@@ -200,10 +204,10 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           setCancelFeedback(null);
         }, 3500);
       } else {
-        alert(data.error || 'Não foi possível processar o cancelamento.');
+        setCancelError(data.error || 'Não foi possível processar o cancelamento.');
       }
     } catch {
-      alert('Erro ao conectar ao serviço de cancelamento.');
+      setCancelError('Erro ao conectar ao serviço de cancelamento.');
     } finally {
       setCancelLoading(false);
     }
@@ -519,6 +523,18 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </div>
         </div>
 
+        {portalError && (
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center justify-between gap-2">
+            <span>{portalError}</span>
+            <button
+              onClick={() => setPortalError(null)}
+              className="text-white/40 hover:text-white text-xs px-1"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         <div className="p-4 rounded-xl bg-[#111315] border border-white/5 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -638,6 +654,12 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
             {cancelFeedback && (
               <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold text-center">
                 {cancelFeedback}
+              </div>
+            )}
+
+            {cancelError && (
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold text-center">
+                {cancelError}
               </div>
             )}
 
