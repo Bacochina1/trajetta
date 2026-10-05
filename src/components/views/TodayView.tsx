@@ -491,29 +491,43 @@ export function TodayView() {
       </div>
 
       {/* Share Card Modal */}
-      <ShareCardModal
-        isOpen={isShareOpen}
-        onClose={() => setIsShareOpen(false)}
-        data={{
-          userName: user?.name || 'Explorador',
-          overallScore: Math.round(
-            (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
-          ),
-          scoreStatus: 'Ritmo Consistente',
-          streakDays: Math.max(
-            user.completedWeeksCount ? user.completedWeeksCount * 7 : 7,
-            habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 1) * 7), 7)
-          ),
-          consistencyRate: movementPercentage,
-          completedHabitsCount: todayHabitsDone,
-          areas: {
-            corpo: lifeScore.corpo.score,
-            dinheiro: lifeScore.dinheiro.score,
-            carreira: lifeScore.carreira.score,
-            vida: lifeScore.vida.score,
-          },
-        }}
-      />
+      {(() => {
+        const overallScore = Math.round(
+          (lifeScore.corpo.score + lifeScore.dinheiro.score + lifeScore.carreira.score + lifeScore.vida.score) / 4
+        );
+        const scoreStatus =
+          overallScore >= 80
+            ? 'Ritmo Excelente'
+            : overallScore >= 60
+            ? 'Ritmo Consistente'
+            : overallScore >= 40
+            ? 'Construindo Momento'
+            : 'Calibrando Rotina';
+
+        return (
+          <ShareCardModal
+            isOpen={isShareOpen}
+            onClose={() => setIsShareOpen(false)}
+            data={{
+              userName: user?.name || 'Explorador',
+              overallScore,
+              scoreStatus,
+              streakDays: Math.max(
+                user.completedWeeksCount ? user.completedWeeksCount * 7 : 7,
+                habits.reduce((acc, h) => Math.max(acc, (h.streakWeeks || 1) * 7), 7)
+              ),
+              consistencyRate: movementPercentage,
+              completedHabitsCount: todayHabitsDone,
+              areas: {
+                corpo: lifeScore.corpo.score,
+                dinheiro: lifeScore.dinheiro.score,
+                carreira: lifeScore.carreira.score,
+                vida: lifeScore.vida.score,
+              },
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }
