@@ -214,9 +214,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         {/* Social Logins */}
         <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => handleSocialMock('Google')}
+          <a
+            href="/api/auth/google?returnUrl=/app"
             className="flex items-center justify-center gap-2 min-h-[44px] py-2 px-4 rounded-xl bg-[#111315] border border-white/8 hover:border-white/20 text-sm font-medium text-[#F2F1ED] transition-all active:scale-[0.96]"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -238,7 +237,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               />
             </svg>
             <span>Google</span>
-          </button>
+          </a>
 
           <button
             type="button"
