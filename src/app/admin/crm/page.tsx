@@ -74,6 +74,9 @@ Equipe Trajetta`);
   const [newLeadPhone, setNewLeadPhone] = useState('');
   const [newLeadTag, setNewLeadTag] = useState('VIP');
   const [leadError, setLeadError] = useState('');
+  const [leadToDelete, setLeadToDelete] = useState<string | null>(null);
+  const [addingTagLeadId, setAddingTagLeadId] = useState<string | null>(null);
+  const [inlineTagValue, setInlineTagValue] = useState('');
 
   // Fetch leads
   const fetchLeads = async () => {
@@ -153,16 +156,19 @@ Equipe Trajetta`);
   };
 
   // Add tag inline
-  const handleAddTag = async (id: string) => {
-    const tag = prompt('Digite a nova tag para este lead (ex: Quente, WhatsApp, Lote 2):');
-    if (!tag || !tag.trim()) return;
-    const clean = tag.trim();
-
+  const handleSaveInlineTag = async (id: string) => {
+    if (!inlineTagValue.trim()) {
+      setAddingTagLeadId(null);
+      return;
+    }
+    const clean = inlineTagValue.trim();
     const target = leads.find((l) => l.id === id);
     if (!target) return;
 
     const nextTags = Array.from(new Set([...target.tags, clean]));
     setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, tags: nextTags } : l)));
+    setAddingTagLeadId(null);
+    setInlineTagValue('');
 
     await fetch('/api/admin/crm/leads', {
       method: 'PATCH',
@@ -171,10 +177,10 @@ Equipe Trajetta`);
     });
   };
 
-  // Delete lead
-  const handleDeleteLead = async (id: string, email: string) => {
-    if (!confirm(`Tem certeza que deseja excluir o lead ${email}?`)) return;
+  // Delete lead (non-blocking)
+  const handleConfirmDelete = async (id: string) => {
     setLeads((prev) => prev.filter((l) => l.id !== id));
+    setLeadToDelete(null);
     await fetch(`/api/admin/crm/leads?id=${id}`, { method: 'DELETE' });
   };
 
@@ -522,13 +528,58 @@ Equipe Trajetta`);
                                 {t}
                               </span>
                             ))}
-                            <button
-                              onClick={() => handleAddTag(lead.id)}
-                              className="text-neutral-500 hover:text-[#B8FF00] text-xs px-1"
-                              title="Adicionar tag"
-                            >
-                              +
-                            </button>
+                            {addingTagLeadId === lead.id ? (
+                              <div className="inline-flex items-center gap-1">
+                                <input
+                                  type="text"
+                                  value={inlineTagValue}
+                                  onChange={(e) => setInlineTagValue(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      handleSaveInlineTag(lead.id);
+                                    } else if (e.key === 'Escape') {
+                                      setAddingTagLeadId(null);
+                                      setInlineTagValue('');
+                                    }
+                                  }}
+                                  placeholder="Nova tag..."
+                                  autoFocus
+                                  className="w-20 bg-[#14181F] border border-[#B8FF00]/50 rounded px-1.5 py-0.5 text-[10.5px] text-white focus:outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleSaveInlineTag(lead.id)}
+                                  className="text-[#B8FF00] hover:text-white text-xs px-1 font-bold"
+                                  title="Salvar tag"
+                                >
+                                  ✓
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setAddingTagLeadId(null);
+                                    setInlineTagValue('');
+                                  }}
+                                  className="text-neutral-500 hover:text-neutral-300 text-xs px-1"
+                                  title="Cancelar"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setAddingTagLeadId(lead.id);
+                                  setInlineTagValue('');
+                                }}
+                                className="text-neutral-500 hover:text-[#B8FF00] text-xs px-1 font-bold"
+                                title="Adicionar tag"
+                              >
+                                +
+                              </button>
+                            )}
                           </div>
                         </td>
                         <td className="p-4">
@@ -564,13 +615,33 @@ Equipe Trajetta`);
                             >
                               <Mail className="w-3.5 h-3.5" />
                             </button>
-                            <button
-                              onClick={() => handleDeleteLead(lead.id, lead.email)}
-                              className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-neutral-400 hover:text-red-400"
-                              title="Excluir lead"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            {leadToDelete === lead.id ? (
+                              <div className="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/30 p-1 rounded-lg">
+                                <button
+                                  type="button"
+                                  onClick={() => handleConfirmDelete(lead.id)}
+                                  className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500 text-white hover:bg-red-600 transition-colors"
+                                >
+                                  Excluir
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setLeadToDelete(null)}
+                                  className="px-1.5 py-0.5 rounded text-[10px] text-neutral-400 hover:text-white"
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setLeadToDelete(lead.id)}
+                                className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-neutral-400 hover:text-red-400"
+                                title="Excluir lead"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>

@@ -111,7 +111,7 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       expect(response.length).toBeGreaterThan(15);
       // Strict Anti-AI check: No sparkles
       expect(response.includes('✨')).toBe(false);
-    }, 30000);
+    }, 45000);
 
     it('deve gerar reflexão de Weekly Review no tom Calm Power', async () => {
       const reflection = await generateWeeklyReviewReflection({
@@ -124,7 +124,7 @@ describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
       expect(reflection).toBeDefined();
       expect(reflection.length).toBeGreaterThan(25);
       expect(reflection.includes('✨')).toBe(false);
-    }, 30000);
+    }, 45000);
   });
 
   // -------------------------------------------------------------

@@ -9,7 +9,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { LifeArea } from '@/types';
 
 export function QuickCaptureModal() {
-  const { isQuickCaptureOpen, setIsQuickCaptureOpen, createGoal, createHabit, addTimelineEvent } = useTrajetta();
+  const { isQuickCaptureOpen, setIsQuickCaptureOpen, createGoal, createHabit, addTimelineEvent, goals, updateGoal } = useTrajetta();
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [suggestion, setSuggestion] = useState<{
@@ -74,6 +74,25 @@ export function QuickCaptureModal() {
         description: suggestion.reasoning,
         lifeArea: suggestion.area
       });
+    } else if (suggestion.type === 'acao') {
+      const targetGoal = goals.find(g => g.lifeArea === suggestion.area) || goals[0];
+      if (targetGoal) {
+        const newAction = {
+          id: 'act-' + Date.now(),
+          title: suggestion.title,
+          isControllable: true,
+          completedToday: false,
+        };
+        updateGoal(targetGoal.id, {
+          actions: [...(targetGoal.actions || []), newAction]
+        });
+      } else {
+        await createHabit({
+          title: suggestion.title,
+          lifeArea: suggestion.area,
+          frequencyPerWeek: 3
+        });
+      }
     }
 
     setConfirmed(true);

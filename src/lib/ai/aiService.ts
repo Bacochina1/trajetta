@@ -294,7 +294,7 @@ ${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
             temperature: 0.35,
             max_tokens: maxTokens
           }),
-          signal: AbortSignal.timeout(15000)
+          signal: AbortSignal.timeout(8000)
         });
 
         if (res.ok) {
