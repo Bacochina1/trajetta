@@ -16,7 +16,7 @@ import {
   Tag,
   CheckCircle2,
   Clock,
-  Sparkles,
+  Star,
   LogOut,
   ExternalLink,
   MessageSquare,
@@ -343,7 +343,7 @@ Equipe Trajetta`);
           <div className="bg-[#0D1015] border border-white/10 rounded-2xl p-5 relative overflow-hidden">
             <div className="flex items-center justify-between text-neutral-400 text-xs font-mono mb-2">
               <span>LISTA VIP</span>
-              <Sparkles className="w-4 h-4 text-amber-400" />
+              <Star className="w-4 h-4 text-amber-400" />
             </div>
             <div className="text-3xl font-bold text-amber-300 tabular-numbers">
               {leads.filter((l) => l.tags.includes('VIP') || l.status === 'vip' || l.status === 'waitlist').length}

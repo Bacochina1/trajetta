@@ -6,7 +6,7 @@ import { AreaBadge } from '@/components/ui/AreaBadge';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { LIFE_AREAS } from '@/lib/constants';
-import { Compass, Check, Plus, Footprints, ShieldAlert, Sparkles, RotateCcw } from 'lucide-react';
+import { Compass, Check, Plus, Footprints, ShieldAlert, RotateCcw } from 'lucide-react';
 
 const STARTER_JOURNEYS = [
   {
@@ -256,7 +256,7 @@ export function JourneysView() {
       {(journeys.length === 0 || showCatalog) && (
         <div className="space-y-4 pt-4 border-t border-white/8">
           <div className="flex items-center gap-2">
-            <Sparkles size={16} className="text-[#B8FF00]" />
+            <Compass size={16} className="text-[#B8FF00]" />
             <h3 className="text-sm font-bold text-[#F2F1ED] uppercase tracking-wider">
               Catálogo de Jornadas Prontas
             </h3>
