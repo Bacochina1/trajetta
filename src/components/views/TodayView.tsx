@@ -361,7 +361,7 @@ export function TodayView() {
                         variant="ghost"
                         size="sm"
                         onClick={() => undoJourneyDay(activeJourney.id)}
-                        className="text-[11px] text-[#8E9499] hover:text-[#F08A76] hover:bg-white/5 px-2.5 flex items-center gap-1"
+                        className="text-[11px] text-[#8E9499] hover:text-[#F08A76] hover:bg-white/5 px-2.5 min-h-[44px] flex items-center gap-1"
                         title="Desfazer check-in de hoje"
                       >
                         <RotateCcw size={12} /> Desfazer
