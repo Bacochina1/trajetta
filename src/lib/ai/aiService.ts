@@ -308,8 +308,9 @@ ${memoriesList ? `Notas relevantes:\n${memoriesList}` : ''}
           const errText = await res.text();
           console.warn(`[NVIDIA AI] Model ${model} failed (${res.status}): ${errText.slice(0, 100)}`);
         }
-      } catch (err: any) {
-        console.warn(`[NVIDIA AI] Model ${model} error or timeout:`, err?.message || err);
+      } catch (err: unknown) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.warn(`[NVIDIA AI] Model ${model} error or timeout:`, errorMsg);
       }
     }
   }
@@ -344,8 +345,8 @@ Reconheça o progresso sem empolgação excessiva, aponte um ajuste simples para
 
 export function getDynamicStrategicResponse(
   messages: ChatMessage[],
-  contextPack?: ContextPack,
-  ragContext?: TrajettaRagContext
+  _contextPack?: ContextPack,
+  _ragContext?: TrajettaRagContext
 ): string {
   const lastMsg = messages[messages.length - 1]?.content || '';
   const q = lastMsg.trim();

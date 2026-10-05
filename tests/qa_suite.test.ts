@@ -1,9 +1,8 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { prisma } from '../src/lib/db';
 import { hashPassword, verifyPassword, createSessionToken, verifySessionToken } from '../src/lib/auth/auth';
 import { callNvidiaAI, generateWeeklyReviewReflection } from '../src/lib/ai/aiService';
 import { renderWelcomeEmail, renderWeeklyReviewEmail, sendEmail } from '../src/lib/email/emailService';
-import { STRIPE_PLANS } from '../src/lib/stripe';
 
 describe('QA TESTER SUITE: TRAJETTA FULL-STACK SYSTEM', () => {
   // -------------------------------------------------------------

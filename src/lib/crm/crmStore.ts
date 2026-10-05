@@ -157,7 +157,7 @@ export async function updateLead(
 ): Promise<CrmLead | null> {
   await ensureDbReady();
   try {
-    const dataToUpdate: any = {};
+    const dataToUpdate: Record<string, unknown> = {};
     if (updates.name !== undefined) dataToUpdate.name = updates.name;
     if (updates.phone !== undefined) dataToUpdate.phone = updates.phone;
     if (updates.status !== undefined) dataToUpdate.status = updates.status;

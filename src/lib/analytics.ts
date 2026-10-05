@@ -123,7 +123,7 @@ export type MarketingEventName =
  */
 export function trackMarketingEvent(
   eventName: MarketingEventName,
-  properties: Record<string, any> = {}
+  properties: Record<string, unknown> = {}
 ) {
   if (typeof window === 'undefined') return;
 
@@ -136,14 +136,19 @@ export function trackMarketingEvent(
     ...properties,
   };
 
+  const win = window as unknown as {
+    dataLayer?: unknown[];
+    posthog?: { capture?: (event: string, data: unknown) => void };
+  };
+
   // 1. Google Tag Manager / dataLayer
-  if ((window as any).dataLayer && Array.isArray((window as any).dataLayer)) {
-    (window as any).dataLayer.push(payload);
+  if (win.dataLayer && Array.isArray(win.dataLayer)) {
+    win.dataLayer.push(payload);
   }
 
   // 2. PostHog if available
-  if ((window as any).posthog && typeof (window as any).posthog.capture === 'function') {
-    (window as any).posthog.capture(eventName, payload);
+  if (win.posthog && typeof win.posthog.capture === 'function') {
+    win.posthog.capture(eventName, payload);
   }
 
   // 3. Development logger

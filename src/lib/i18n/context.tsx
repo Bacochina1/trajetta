@@ -30,7 +30,7 @@ export function I18nProvider({
   useEffect(() => {
     // If an explicit initialLocale was provided (e.g. forcedLocale on /en or /), respect it directly!
     if (initialLocale) {
-      setLocaleState(initialLocale);
+      setLocaleState(prev => (prev !== initialLocale ? initialLocale : prev));
       return;
     }
 

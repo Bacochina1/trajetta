@@ -293,7 +293,7 @@ export const memoryService = {
     };
   },
 
-  async extractAndSaveChatMemory(userId: string, userMessage: string, aiResponse: string) {
+  async extractAndSaveChatMemory(userId: string, userMessage: string, _aiResponse: string) {
     if (!userId || userId === 'demo-user') return;
     const text = userMessage.trim();
     if (text.length < 8) return;

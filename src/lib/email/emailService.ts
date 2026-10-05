@@ -838,10 +838,10 @@ export function renderNewsletterWelcomeEmail(email: string): string {
                 </tr>
               </table>
               <p style="font-size: 11px; color: #5B626C; margin: 0 0 6px 0; line-height: 1.5;">
-                Trajetta • Sistema Pessoal de Evolução Sustentável • São Paulo, SP
+                Trajetta • Sistema Pessoal de Evolução Sustentável • São Paulo, SP • ${currentYear}
               </p>
               <p style="font-size: 11px; color: #4B525B; margin: 0; line-height: 1.5;">
-                Você recebeu esta mensagem porque cadastrou seu e-mail no rodapé de <a href="https://trajettacompany.com.br" target="_blank" style="color: #7E8691; text-decoration: underline;">trajettacompany.com.br</a>.<br>
+                Destinatário: ${email} • Você recebeu esta mensagem porque cadastrou seu e-mail no rodapé de <a href="https://trajettacompany.com.br" target="_blank" style="color: #7E8691; text-decoration: underline;">trajettacompany.com.br</a>.<br>
                 Contato direto: <a href="mailto:companytrajetta@gmail.com" style="color: #7E8691; text-decoration: underline;">companytrajetta@gmail.com</a>
               </p>
             </td>
