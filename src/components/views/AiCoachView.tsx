@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useTrajetta } from '@/context/TrajettaContext';
 import { Button } from '@/components/ui/Button';
-import { Brain, Send, Compass, ArrowRight, RefreshCw, Sparkles, Flame, Target, Scale } from 'lucide-react';
+import { Brain, Send, Compass, ArrowRight, RefreshCw, Flame, Target, Scale } from 'lucide-react';
 import { generatePersonalizedPrompts, PromptSuggestion } from '@/lib/ai/promptSuggestions';
 import { FormattedMessage } from '@/components/ui/FormattedMessage';
 

@@ -21,7 +21,6 @@ import {
   RotateCcw,
   Brain,
   Plus,
-  Sparkles,
   ExternalLink,
   Receipt,
   XCircle,
@@ -68,6 +67,8 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
 
   const [exportSuccess, setExportSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showResetZeroConfirm, setShowResetZeroConfirm] = useState(false);
+  const [showPurgeMemoriesConfirm, setShowPurgeMemoriesConfirm] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
 
   // Subscription & Billing Governance State
@@ -267,10 +268,10 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
   };
 
   const handlePurgeMemories = async () => {
-    if (!confirm('Deseja realmente apagar todas as memórias da IA?')) return;
     try {
       await fetch('/api/memory/all', { method: 'DELETE' });
       setMemories([]);
+      setShowPurgeMemoriesConfirm(false);
     } catch {
       // error
     }
@@ -868,13 +869,33 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           </div>
 
           {memories.length > 0 && (
-            <button
-              onClick={handlePurgeMemories}
-              className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg border border-red-500/20 hover:bg-red-500/10"
-            >
-              <Trash2 size={13} />
-              <span>Limpar Todas</span>
-            </button>
+            !showPurgeMemoriesConfirm ? (
+              <button
+                type="button"
+                onClick={() => setShowPurgeMemoriesConfirm(true)}
+                className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg border border-red-500/20 hover:bg-red-500/10"
+              >
+                <Trash2 size={13} />
+                <span>Limpar Todas</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-1.5 bg-red-500/15 border border-red-500/40 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={handlePurgeMemories}
+                  className="px-2.5 py-1 rounded-lg text-xs font-bold bg-red-500 text-white hover:bg-red-600 transition-colors"
+                >
+                  Confirmar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPurgeMemoriesConfirm(false)}
+                  className="px-2 py-1 rounded-lg text-xs text-[#8E9499] hover:text-[#F2F1ED]"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )
           )}
         </div>
 
@@ -1013,17 +1034,35 @@ export function ProfileView({ onOpenPaywall }: ProfileViewProps) {
           >
             <span>Refazer Onboarding</span>
           </button>
-          <button
-            onClick={() => {
-              if (window.confirm('Tem certeza que deseja limpar todos os dados e recomeçar sua conta 100% do zero?')) {
-                resetToZero();
-              }
-            }}
-            className="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 transition-all flex items-center gap-2 select-none tactile-btn"
-          >
-            <RotateCcw size={14} />
-            <span>Resetar do Zero</span>
-          </button>
+          {!showResetZeroConfirm ? (
+            <button
+              onClick={() => setShowResetZeroConfirm(true)}
+              className="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 transition-all flex items-center gap-2 select-none tactile-btn"
+            >
+              <RotateCcw size={14} />
+              <span>Resetar do Zero</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 bg-amber-500/15 border border-amber-500/40 p-1 rounded-xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowResetZeroConfirm(false);
+                  resetToZero();
+                }}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-black hover:bg-amber-400 transition-colors"
+              >
+                Confirmar Reset
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowResetZeroConfirm(false)}
+                className="px-2.5 py-1.5 rounded-lg text-xs text-[#8E9499] hover:text-[#F2F1ED]"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -10,7 +10,6 @@ import {
   X,
   Target,
   Repeat,
-  Sparkles,
   ChevronRight,
   TrendingUp,
   TrendingDown,

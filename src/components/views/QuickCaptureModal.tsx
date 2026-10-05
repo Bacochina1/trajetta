@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useTrajetta } from '@/context/TrajettaContext';
-import { Sparkles, ArrowRight, Check, Target, Repeat, Clock, Milestone, Brain } from 'lucide-react';
+import { ArrowRight, Check, Target, Repeat, Clock, Milestone, Brain } from 'lucide-react';
 import { AreaBadge } from '@/components/ui/AreaBadge';
 import { LifeArea } from '@/types';
 
