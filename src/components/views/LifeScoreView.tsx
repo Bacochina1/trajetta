@@ -17,7 +17,7 @@ import {
   Share2,
   Activity,
   ShieldCheck,
-  Sparkles,
+  Feather,
   Layers,
   Compass,
   Zap,
@@ -365,7 +365,7 @@ export function LifeScoreView() {
 
             {/* Philosophy Notice */}
             <div className="flex items-center gap-2 text-[11px] text-[#8E9499] bg-[#14181F]/60 px-3 py-2 rounded-xl border border-white/5">
-              <Sparkles size={13} className="text-[#B8FF00] flex-shrink-0" />
+              <Feather size={13} className="text-[#B8FF00] flex-shrink-0" />
               <span>
                 <strong>Sem punições:</strong> Se você pausar um dia, seu progresso não é zerado. Apenas retome no ritmo suave.
               </span>
